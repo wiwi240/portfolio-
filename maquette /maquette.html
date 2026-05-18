@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>William MAHI — Développeur Fullstack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #030303;
+            --fg: #F5F5F7;
+            --border: #1F1F1F;
+            --accent: #3B82F6;
+            --accent-muted: rgba(59, 130, 246, 0.1);
+            --muted: rgba(245, 245, 247, 0.6);
+            --muted-fg: rgba(245, 245, 247, 0.4);
+            --muted-subtle: rgba(245, 245, 247, 0.15);
+            --radius: 1rem;
+            --radius-sm: 0.5rem;
+            --font: 'Inter', system-ui, -apple-system, sans-serif;
+            --transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--accent-muted);
+            color: var(--fg);
+        }
+
+        /* ===== UTILITIES ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(3, 3, 3, 0.7);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.05em;
+            color: var(--fg);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--fg);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 1.5rem;
+            overflow: hidden;
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(to right, var(--border) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+            background-size: 4rem 4rem;
+            mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, #000 70%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, #000 70%, transparent 100%);
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-name {
+            font-size: clamp(3rem, 12vw, 10rem);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+            color: var(--fg);
+            animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+        }
+
+        .hero-role {
+            margin-top: 2rem;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            animation: fadeUp 0.8s 0.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+        }
+
+        .hero-tagline {
+            margin-top: 1rem;
+            max-width: 480px;
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--muted-fg);
+            animation: fadeUp 0.8s 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+        }
+
+        .hero-cta {
+            margin-top: 3rem;
+            animation: fadeUp 0.8s 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            color: var(--muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+            color: var(--fg);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline svg {
+            width: 1rem;
+            height: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-outline:hover svg {
+            transform: translateY(2px);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: fadeIn 1s 1.2s ease forwards;
+            opacity: 0;
+        }
+
+        .scroll-mouse {
+            width: 24px;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            padding-top: 8px;
+        }
+
+        .scroll-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--muted-fg);
+            border-radius: 50%;
+            animation: scrollBounce 1.5s ease-in-out infinite;
+        }
+
+        /* ===== SECTIONS COMMON ===== */
+        .section {
+            padding: 8rem 0;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--fg);
+        }
+
+        /* ===== PROJECTS ===== */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .project-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .project-card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .project-image {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            background: linear-gradient(135deg, #0a0a0a 0%, #141414 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.05) 100%);
+        }
+
+        .project-image-placeholder {
+            font-size: 0.75rem;
+            color: var(--muted-fg);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            z-index: 1;
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
+        .project-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--fg);
+            margin-bottom: 0.5rem;
+        }
+
+        .project-desc {
+            font-size: 0.875rem;
+            color: var(--muted-fg);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .project-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--muted);
+            background: transparent;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .btn-sm:hover {
+            border-color: var(--accent);
+            color: var(--fg);
+            background: var(--accent-muted);
+        }
+
+        /* ===== STACK ===== */
+        .stack-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .stack-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .stack-category {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .stack-category:hover {
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .stack-category-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stack-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+        }
+
+        .stack-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9375rem;
+            color: var(--muted);
+            transition: var(--transition);
+        }
+
+        .stack-item:hover {
+            color: var(--fg);
+        }
+
+        .stack-icon {
+            width: 20px;
+            height: 20px;
+            color: var(--muted-fg);
+            flex-shrink: 0;
+        }
+
+        /* ===== CONTACT ===== */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--fg);
+            font-family: var(--font);
+            font-size: 0.9375rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--muted-subtle);
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-muted);
+        }
+
+        .form-textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: var(--fg);
+            color: var(--bg);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font);
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+            color: var(--fg);
+            transform: translateY(-1px);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 0.8125rem;
+            color: var(--muted-fg);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links a {
+                font-size: 0.8125rem;
+            }
+
+            .section {
+                padding: 5rem 0;
+            }
+
+            .stack-category {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container navbar-inner">
+            <a href="#" class="logo">W. MAHI</a>
+            <ul class="nav-links">
+                <li><a href="#projects">Projets</a></li>
+                <li><a href="#stack">Stack</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-content">
+            <h1 class="hero-name">WILLIAM<br>MAHI</h1>
+            <p class="hero-role">Développeur Web Fullstack</p>
+            <p class="hero-tagline">
+                Je conçois et développe des interfaces performantes, accessibles et 
+                soigneusement architecturées. Focus sur la qualité du code et l'expérience utilisateur.
+            </p>
+            <div class="hero-cta">
+                <a href="#projects" class="btn-outline">
+                    Voir les projets
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-mouse">
+                <div class="scroll-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="section" id="projects">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-label">Sélection</p>
+                <h2 class="section-title">Projets récents</h2>
+            </div>
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <article class="project-card">
+                    <div class="project-image">
+                        <span class="project-image-placeholder">Image Projet</span>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">SaaS Dashboard</h3>
+                        <p class="project-desc">Tableau de bord analytics avec visualisation de données temps réel et rapports automatisés.</p>
+                        <div class="project-stack">
+                            <span class="badge">Next.js</span>
+                            <span class="badge">TypeScript</span>
+                            <span class="badge">Prisma</span>
+                            <span class="badge">Tailwind</span>
+                        </div>
+                        <div class="project-actions">
+                            <a href="#" class="btn-sm">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                                Repo
+                            </a>
+                            <a href="#" class="btn-sm">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                Demo
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 2 -->
+                <article class="project-card">
+                    <div class="project-image">
+                        <span class="project-image-placeholder">Image Projet</span>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">API REST E-commerce</h3>
+                        <p class="project-desc">Architecture microservices avec authentification JWT, paiement Stripe et gestion d'inventaire.</p>
+                        <div class="project-stack">
+                            <span class="badge">Node.js</span>
+                            <span class="badge">Express</span>
+                            <span class="badge">PostgreSQL</span>
+                            <span class="badge">Docker</span>
+                        </div>
+                        <div class="project-actions">
+                            <a href="#" class="btn-sm">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                                Repo
+                            </a>
+                            <a href="#" class="btn-sm">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                Demo
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 3 -->
+                <article class="project-card">
+                    <div class="project-image">
+                        <span class="project-image-placeholder">Image Projet</span>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Application Mobile</h3>
+                        <p class="project-desc">PWA cross-platform avec offline-first, notifications push et synchronisation cloud.</p>
+                        <div class="project-stack">
+                            <span class="badge">React Native</span>
+                            <span class="badge">Firebase</span>
+                            <span class="badge">Redux</span>
+                        </div>
+                        <div class="project-actions">
+                            <a href="#" class="btn-sm">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                                Repo
+                            </a>
+                            <a href="#" class="btn-sm">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                Demo
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 4 -->
+                <article class="project-card">
+                    <div class="project-image">
+                        <span class="project-image-placeholder">Image Projet</span>
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Portfolio CMS</h3>
+                        <p class="project-desc">Système de gestion de contenu headless avec éditeur Markdown et déploiement automatique.</p>
+                        <div class="project-stack">
+                            <span class="badge">Astro</span>
+                            <span class="badge">MDX</span>
+                            <span class="badge">Vercel</span>
+                        </div>
+                        <div class="project-actions">
+                            <a href="#" class="btn-sm">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                                Repo
+                            </a>
+                            <a href="#" class="btn-sm">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                Demo
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- STACK -->
+    <section class="section" id="stack">
+        <div class="container">
+            <div class="section-header">
+                <p class="section-label">Technologies</p>
+                <h2 class="section-title">Stack technique</h2>
+            </div>
+            <div class="stack-grid">
+                <!-- Frontend -->
+                <div class="stack-category">
+                    <h3 class="stack-category-title">Frontend</h3>
+                    <div class="stack-list">
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                            React / Next.js
+                        </div>
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                            TypeScript
+                        </div>
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7V4h3M4 17v3h3M20 7V4h-3M20 17v3h-3M9 9h6v6H9z"/></svg>
+                            Tailwind CSS
+                        </div>
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                            Framer Motion
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Backend -->
+                <div class="stack-category">
+                    <h3 class="stack-category-title">Backend</h3>
+                    <div class="stack-list">
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                            Node.js
+                        </div>
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                            PostgreSQL
+                        </div>
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                            Prisma ORM
+                        </div>
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                            JWT / Auth
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools -->
+                <div class="stack-category">
+                    <h3 class="stack-category-title">Outils</h3>
+                    <div class="stack-list">
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+                            Git / GitHub
+                        </div>
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                            Docker
+                        </div>
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                            Vercel
+                        </div>
+                        <div class="stack-item">
+                            <svg class="stack-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            CI/CD
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="section-header" style="text-align: center;">
+                <p class="section-label">Collaborons</p>
+                <h2 class="section-title">Me contacter</h2>
+            </div>
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('Formulaire de démonstration — backend à connecter');">
+                <div class="form-group">
+                    <label class="form-label" for="name">Nom</label>
+                    <input type="text" id="name" class="form-input" placeholder="Votre nom" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="votre@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="message">Message</label>
+                    <textarea id="message" class="form-textarea" placeholder="Parlez-moi de votre projet..." required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Envoyer le message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2026 William MAHI. Construit avec soin.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

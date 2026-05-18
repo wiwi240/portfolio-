@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0a0c10;
+  --bg-elevated: #12161e;
+  --surface: rgba(18, 22, 30, 0.88);
+  --surface-strong: #1a2029;
+  --fg: #f4f7fb;
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #d4633d;
+  --accent-muted: rgba(212, 99, 61, 0.14);
+  --muted: #b3bac7;
+  --muted-fg: #8d96a7;
+  --muted-subtle: rgba(179, 186, 199, 0.34);
+  --radius: 1.5rem;
+  --radius-sm: 0.9rem;
+  --font: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+
+  font-family: var(--font);
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--fg);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+body {
+  min-width: 320px;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at top left, rgba(212, 99, 61, 0.14), transparent 24%),
+    radial-gradient(circle at 84% 12%, rgba(255, 255, 255, 0.055), transparent 20%),
+    var(--bg);
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: var(--accent-muted);
+  color: var(--fg);
+}
+
+#root {
+  min-height: 100vh;
+}
