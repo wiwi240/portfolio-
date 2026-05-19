@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0a0c10;
-  --bg-elevated: #12161e;
-  --surface: rgba(18, 22, 30, 0.88);
-  --surface-strong: #1a2029;
-  --fg: #f4f7fb;
-  --border: rgba(255, 255, 255, 0.08);
-  --accent: #d4633d;
-  --accent-muted: rgba(212, 99, 61, 0.14);
-  --muted: #b3bac7;
-  --muted-fg: #8d96a7;
-  --muted-subtle: rgba(179, 186, 199, 0.34);
-  --radius: 1.5rem;
-  --radius-sm: 0.9rem;
-  --font: 'Outfit', system-ui, sans-serif;
+  --bg: #040815;
+  --bg-elevated: #0a1226;
+  --surface: rgba(11, 20, 40, 0.74);
+  --surface-strong: #111c36;
+  --fg: #eef6ff;
+  --border: rgba(132, 168, 255, 0.18);
+  --accent: #39e7ff;
+  --accent-strong: #18b8ff;
+  --accent-secondary: #8a63ff;
+  --accent-muted: rgba(57, 231, 255, 0.18);
+  --muted: #a8b7d4;
+  --muted-fg: #7e92b8;
+  --muted-subtle: rgba(168, 183, 212, 0.28);
+  --radius: 1.8rem;
+  --radius-sm: 1rem;
+  --font: 'Outfit', 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -23,6 +25,7 @@
   font-weight: 400;
   color: var(--fg);
   background: var(--bg);
+  color-scheme: dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -47,9 +50,30 @@ body {
   min-width: 320px;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at top left, rgba(212, 99, 61, 0.14), transparent 24%),
-    radial-gradient(circle at 84% 12%, rgba(255, 255, 255, 0.055), transparent 20%),
+    radial-gradient(circle at 12% 0%, rgba(57, 231, 255, 0.16), transparent 24%),
+    radial-gradient(circle at 88% 10%, rgba(138, 99, 255, 0.14), transparent 20%),
+    radial-gradient(circle at 52% 100%, rgba(24, 184, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 24%),
     var(--bg);
+}
+
+body,
+button,
+input,
+textarea {
+  letter-spacing: -0.01em;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 600;
+  letter-spacing: -0.045em;
+}
+
+p {
+  max-width: 68ch;
 }
 
 a {

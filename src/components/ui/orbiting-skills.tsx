@@ -373,19 +373,19 @@ OrbitingSkill.displayName = 'OrbitingSkill'
 const GlowingOrbitPath = memo(({ radius, glowColor = 'cyan', animationDelay = 0 }: GlowingOrbitPathProps) => {
   const glowColors = {
     cyan: {
-      primary: 'rgba(6, 182, 212, 0.28)',
-      secondary: 'rgba(6, 182, 212, 0.12)',
-      border: 'rgba(6, 182, 212, 0.24)',
+      primary: 'rgba(57, 231, 255, 0.32)',
+      secondary: 'rgba(57, 231, 255, 0.14)',
+      border: 'rgba(57, 231, 255, 0.28)',
     },
     purple: {
-      primary: 'rgba(147, 51, 234, 0.24)',
-      secondary: 'rgba(147, 51, 234, 0.1)',
-      border: 'rgba(147, 51, 234, 0.22)',
+      primary: 'rgba(138, 99, 255, 0.28)',
+      secondary: 'rgba(138, 99, 255, 0.12)',
+      border: 'rgba(138, 99, 255, 0.24)',
     },
     amber: {
-      primary: 'rgba(212, 99, 61, 0.24)',
-      secondary: 'rgba(212, 99, 61, 0.1)',
-      border: 'rgba(212, 99, 61, 0.22)',
+      primary: 'rgba(24, 184, 255, 0.24)',
+      secondary: 'rgba(24, 184, 255, 0.1)',
+      border: 'rgba(24, 184, 255, 0.22)',
     },
   }
 
@@ -455,13 +455,13 @@ export default function OrbitingSkills({ defaultVariant = null }: OrbitingSkills
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        <div className="relative z-10 flex h-30 w-30 items-center justify-center rounded-full bg-gradient-to-br from-gray-700 to-gray-950 shadow-2xl md:h-32 md:w-32">
+        <div className="relative z-10 flex h-30 w-30 items-center justify-center rounded-full bg-gradient-to-br from-slate-700 to-slate-950 shadow-2xl md:h-32 md:w-32">
           <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-xl animate-pulse" />
           <div
             className="absolute inset-0 rounded-full bg-purple-500/15 blur-2xl animate-pulse"
             style={{ animationDelay: '1s' }}
           />
-          <div className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full border border-white/10 bg-black/40 font-mono text-xs font-semibold tracking-[0.24em] text-white md:h-26 md:w-26">
+          <div className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full border border-white/10 bg-black/36 font-mono text-xs font-semibold tracking-[0.24em] text-white md:h-26 md:w-26">
             SKILL
           </div>
         </div>

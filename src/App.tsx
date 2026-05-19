@@ -1,155 +1,130 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { CoreSpinLoader } from '@/components/ui/core-spin-loader'
+import DotField from '@/components/ui/dot-field'
+import { Gallery6 } from '@/components/ui/gallery6'
 import OrbitingSkills from '@/components/ui/orbiting-skills'
-import { ParticleTextEffect } from '@/components/ui/particle-text-effect'
+import RotatingText from '@/components/ui/rotating-text'
 import './App.css'
 
-type Project = {
-  title: string
-  category: string
-  summary: string
-  problem: string
-  solution: string
-  challenges: string[]
-  stack: string[]
-  signals: string[]
-  featured?: boolean
+type ContactFormState = {
+  name: string
+  email: string
+  message: string
 }
 
-type ProcessStep = {
-  step: string
-  title: string
+type ContactSubmissionState = {
+  status: 'idle' | 'submitting' | 'success' | 'error'
+  message: string
+  errors: string[]
+}
+
+type ApiHealthState = {
+  status: 'idle' | 'loading' | 'success' | 'error'
+  label: string
   detail: string
 }
 
-const projects: Project[] = [
+const projectGalleryItems = [
   {
+    id: 'rubber-duck',
     title: 'Rubber Duck',
-    category: 'Dev tool pedagogique',
     summary:
-      'Un outil qui aide les developpeurs a raisonner par etapes au lieu de dependre immediatement d une reponse toute faite.',
-    problem:
-      'Beaucoup d outils IA court-circuitent la reflexion. Le projet part de l idee inverse: assister sans remplacer le raisonnement.',
-    solution:
-      'Conception d une interface de guidage, d une progression par etapes et d une structure capable de garder le contexte du probleme.',
-    challenges: [
-      'Architecture claire entre moteur de prompts, etat de session et interface.',
-      'Equilibre entre aide concrete et autonomie de l utilisateur.',
-      'Base monorepo pour faire evoluer le produit proprement.',
-    ],
-    stack: ['React', 'TypeScript', 'Vite', 'Node.js', 'pnpm'],
-    signals: ['Prototype produit', 'UX pedagogique', 'Base extensible'],
-    featured: true,
+      'Dev tool pedagogique pour aider au raisonnement par etapes, avec une interface de guidage, une logique de contexte et une structure produit exploitable.',
+    url: 'contact',
+    image:
+      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80',
   },
   {
+    id: 'memory-graph',
     title: 'Memory Graph',
-    category: 'Desktop app local-first',
     summary:
-      'Une application de memoire technique type Obsidian, orientee developpeur, avec relations, structuration locale et logique evolutive.',
-    problem:
-      'Les notes techniques se fragmentent vite. Il faut une structure locale, durable, rapide et plus exploitable qu un simple dossier Markdown.',
-    solution:
-      'Approche local-first avec notes reliees, base embarquee et modelisation pensee pour lier contenus, tags et pistes de recherche.',
-    challenges: [
-      'Modele de donnees pour les relations semantiques.',
-      'Gestion locale fiable avec perspective de synchronisation differee.',
-      'Interface desktop lisible malgre un contenu dense.',
-    ],
-    stack: ['React', 'TypeScript', 'Tauri', 'SQLite', 'Prisma'],
-    signals: ['Local-first', 'Architecture data', 'Produit personnel fort'],
+      'Application desktop local-first orientee developpeur, pensee pour structurer les notes techniques, relier les contenus et garder une base de travail durable.',
+    url: 'contact',
+    image:
+      'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80',
   },
   {
+    id: 'sakura-line',
     title: 'Sakura Line',
-    category: 'Site metier et back-office',
     summary:
-      'Un site vitrine et une base admin plus serieuse pour un studio tattoo, avec une attention particuliere a la clarte du design et a la tenue du back-office.',
-    problem:
-      'Le besoin n est pas seulement de montrer une facade. Il faut aussi une structure lisible, un parcours propre et une logique metier exploitable.',
-    solution:
-      'Refonte du front, mise en place d une API plus praticable et traitement du site comme un produit de service plutot qu une simple maquette.',
-    challenges: [
-      'Concilier direction visuelle forte et lisibilite immediate.',
-      'Structurer les flux admin et les payloads proprement.',
-      'Garder une base simple a maintenir.',
-    ],
-    stack: ['React', 'TypeScript', 'Express', 'PostgreSQL', 'CSS'],
-    signals: ['UI production-ready', 'Flux admin', 'Base metier saine'],
+      'Site metier et base admin plus serieuse pour un studio tattoo, avec direction visuelle plus nette, back-office plus clair et structure plus maintenable.',
+    url: 'contact',
+    image:
+      'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=80',
   },
 ]
 
-const processSteps: ProcessStep[] = [
-  {
-    step: '01',
-    title: 'Comprendre le probleme',
-    detail:
-      'Je commence par clarifier le besoin, les points de friction et la vraie valeur attendue avant de parler interface ou stack.',
-  },
-  {
-    step: '02',
-    title: 'Poser une architecture simple',
-    detail:
-      'Je cherche une structure front et serveur lisible, capable de tenir dans le temps sans sur-ingenierie prematuree.',
-  },
-  {
-    step: '03',
-    title: 'Construire un MVP net',
-    detail:
-      'Je privilegie une premiere version exploitable rapidement, avec des conventions propres et des flux deja solides.',
-  },
-  {
-    step: '04',
-    title: 'Iterer sur l UX et le produit',
-    detail:
-      'Je corrige ce qui ralentit la lecture, les usages et la comprehension generale du produit.',
-  },
-  {
-    step: '05',
-    title: 'Stabiliser et rendre maintenable',
-    detail:
-      'Je termine par la fiabilite, la clarte du code, les ajustements de structure et les points critiques de production.',
-  },
-]
+const ROUTE_SWAP_DELAY_MS = 180
+const LOADER_DURATION_MS = 850
+const initialContactFormState: ContactFormState = {
+  name: '',
+  email: '',
+  message: '',
+}
 
-function App() {
-  const [route, setRoute] = useState<'intro' | 'portfolio'>(() => {
-    if (typeof window === 'undefined') {
-      return 'intro'
-    }
-
-    return window.sessionStorage.getItem('portfolio-view') === 'portfolio' ? 'portfolio' : 'intro'
-  })
-
-  useEffect(() => {
-    window.sessionStorage.setItem('portfolio-view', route)
-  }, [route])
-
-  const handleStart = () => {
-    setRoute('portfolio')
-    window.requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    })
-  }
-
-  const handleBackToIntro = () => {
-    setRoute('intro')
-    window.requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    })
-  }
-
-  if (route === 'intro') {
-    return (
-      <div className="intro-shell">
-        <ParticleTextEffect
-          words={['WILLIAM', 'MAHI', 'FULLSTACK', 'PORTFOLIO', 'REACT', 'NODE']}
-          className="intro-particle"
-          title=""
-          caption=""
+function IntroPage({ onEnter }: { onEnter: () => void }) {
+  return (
+    <div className="intro-shell">
+      <div className="intro-visual" aria-hidden="true">
+        <DotField
+          dotRadius={2.2}
+          dotSpacing={12}
+          cursorRadius={560}
+          bulgeStrength={92}
+          glowRadius={220}
+          sparkle={false}
+          waveAmplitude={0}
+          gradientFrom="rgba(57, 231, 255, 0.64)"
+          gradientTo="rgba(138, 99, 255, 0.34)"
+          glowColor="#112544"
         />
+      </div>
 
-        <div className="intro-overlay">
-          <button type="button" className="intro-start" onClick={handleStart}>
+      <div className="intro-overlay">
+        <div className="intro-copy">
+          <p className="intro-kicker">William Mahi</p>
+          <h1 className="intro-title">
+            <span className="intro-title-line intro-title-line-role">
+              <span className="intro-role-prefix">Developpeur</span>
+              <RotatingText
+                texts={['fullstack', 'backend', 'database']}
+                mainClassName="intro-role-rotator"
+                splitLevelClassName="intro-role-split"
+                elementLevelClassName="intro-role-element"
+                staggerFrom="last"
+                initial={{ y: '100%', opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: '-120%', opacity: 0 }}
+                staggerDuration={0.02}
+                transition={{ type: 'spring', damping: 28, stiffness: 360 }}
+                rotationInterval={2400}
+              />
+            </span>
+            <span className="intro-title-line">Frontend net.</span>
+            <span className="intro-title-line intro-title-line-accent">
+              Produit lisible.
+              <span className="intro-inline-chip" aria-hidden="true">
+                React / TS
+              </span>
+            </span>
+            <span className="intro-title-line">Rendu plus futuriste.</span>
+          </h1>
+          <p className="intro-lead">
+            Portfolio fullstack centre sur des interfaces techniques plus propres, une execution stable et une
+            lecture immediate des projets, de la stack et du contact.
+          </p>
+
+          <div className="intro-signal-row" aria-label="Signaux d orientation">
+            <span className="intro-signal">React</span>
+            <span className="intro-signal">TypeScript</span>
+            <span className="intro-signal">Node</span>
+            <span className="intro-signal">UI systems</span>
+          </div>
+
+          <button type="button" className="intro-start" onClick={onEnter}>
             <span className="intro-start-glow" aria-hidden="true" />
-            <span className="intro-start-label">Start</span>
+            <span className="intro-start-label">Entrer</span>
             <span className="intro-start-icon" aria-hidden="true">
               <span />
               <span />
@@ -157,37 +132,92 @@ function App() {
           </button>
         </div>
       </div>
-    )
+    </div>
+  )
+}
+
+function PortfolioPage({
+  onBackToIntro,
+  contactForm,
+  onContactChange,
+  onContactSubmit,
+  contactSubmission,
+  apiHealth,
+}: {
+  onBackToIntro: () => void
+  contactForm: ContactFormState
+  onContactChange: (field: keyof ContactFormState, value: string) => void
+  onContactSubmit: (event: FormEvent<HTMLFormElement>) => void
+  contactSubmission: ContactSubmissionState
+  apiHealth: ApiHealthState
+}) {
+  const scrollToSection = (sectionId: string) => {
+    const target = document.getElementById(sectionId)
+    if (!target) {
+      return
+    }
+
+    target.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
   }
 
   return (
     <div className="portfolio-shell">
-      <a href="#content" className="skip-link">
+      <button
+        type="button"
+        className="skip-link"
+        onClick={() => {
+          scrollToSection('content')
+        }}
+      >
         Aller au contenu
-      </a>
+      </button>
 
       <header className="portfolio-nav">
         <div className="portfolio-nav-inner">
-          <a href="#top" className="portfolio-logo">
+          <button
+            type="button"
+            className="portfolio-logo portfolio-link-button"
+            onClick={() => {
+              scrollToSection('top')
+            }}
+          >
             William Mahi
-          </a>
+          </button>
 
           <nav className="portfolio-nav-links" aria-label="Sections du portfolio">
-            <a href="#projects" className="portfolio-nav-link">
+            <button
+              type="button"
+              className="portfolio-nav-link portfolio-link-button"
+              onClick={() => {
+                scrollToSection('projects')
+              }}
+            >
               Projets
-            </a>
-            <a href="#stack" className="portfolio-nav-link">
+            </button>
+            <button
+              type="button"
+              className="portfolio-nav-link portfolio-link-button"
+              onClick={() => {
+                scrollToSection('stack')
+              }}
+            >
               Stack
-            </a>
-            <a href="#process" className="portfolio-nav-link">
-              Process
-            </a>
-            <a href="#contact" className="portfolio-nav-link">
+            </button>
+            <button
+              type="button"
+              className="portfolio-nav-link portfolio-link-button"
+              onClick={() => {
+                scrollToSection('contact')
+              }}
+            >
               Contact
-            </a>
+            </button>
           </nav>
 
-          <button type="button" className="portfolio-back" onClick={handleBackToIntro}>
+          <button type="button" className="portfolio-back" onClick={onBackToIntro}>
             Intro
           </button>
         </div>
@@ -199,27 +229,67 @@ function App() {
             <div className="portfolio-hero-copy">
               <p className="portfolio-kicker">Developpeur fullstack JavaScript / TypeScript</p>
               <h1 className="portfolio-title">
-                Applications utiles, architecture lisible, projets plus serieux qu une vitrine vide.
+                <span className="portfolio-title-line">Applications utiles.</span>
+                <span className="portfolio-title-line">
+                  Execution serieuse.
+                  <span className="portfolio-title-chip">Live systems</span>
+                </span>
+                <span className="portfolio-title-line">Architecture lisible.</span>
               </h1>
               <p className="portfolio-lead">
-                Je construis des applications web et desktop avec React, TypeScript et une attention
-                forte portee a la maintenabilite, a l experience developpeur et a la clarte produit.
+                Developpement d applications web et desktop avec React et TypeScript, avec une attention
+                forte portee a la maintenabilite, a la clarte produit et a la qualite d execution.
               </p>
 
+              <div className="portfolio-hero-rail" aria-label="Axes de travail">
+                <div className="portfolio-hero-rail-item">
+                  <span className="portfolio-project-label">Build</span>
+                  <p>Front React structure, composants robustes, circulation claire de l information.</p>
+                </div>
+                <div className="portfolio-hero-rail-item">
+                  <span className="portfolio-project-label">System</span>
+                  <p>Back Node pragmatique, conventions simples, dette technique tenue sous controle.</p>
+                </div>
+              </div>
+
               <div className="portfolio-cta-row">
-                <a href="#projects" className="portfolio-button">
+                <button
+                  type="button"
+                  className="portfolio-button"
+                  onClick={() => {
+                    scrollToSection('projects')
+                  }}
+                >
                   Voir mes projets
-                </a>
-                <a href="#contact" className="portfolio-button portfolio-button-secondary">
+                </button>
+                <button
+                  type="button"
+                  className="portfolio-button portfolio-button-secondary"
+                  onClick={() => {
+                    scrollToSection('contact')
+                  }}
+                >
                   Contact
-                </a>
+                </button>
               </div>
             </div>
 
             <aside className="portfolio-hero-panel" aria-label="Positionnement">
               <div className="portfolio-panel-block">
                 <span className="portfolio-panel-label">Positionnement</span>
-                <p className="portfolio-panel-value">Fullstack React / TypeScript oriente produit et dev tools.</p>
+                <p className="portfolio-panel-value">
+                  Developpement fullstack React / TypeScript, avec attention portee a la clarte produit, a l
+                  execution front et a la solidite technique.
+                </p>
+              </div>
+
+              <div className="portfolio-panel-block">
+                <span className="portfolio-panel-label">Connexion API</span>
+                <div className={`portfolio-status-badge is-${apiHealth.status}`}>
+                  <span className="portfolio-status-dot" aria-hidden="true" />
+                  <span>{apiHealth.label}</span>
+                </div>
+                <p className="portfolio-panel-value">{apiHealth.detail}</p>
               </div>
 
               <div className="portfolio-panel-block">
@@ -227,7 +297,7 @@ function App() {
                 <ul className="portfolio-bullet-list">
                   <li>interfaces React lisibles</li>
                   <li>APIs Node propres</li>
-                  <li>outils local-first et IA utile</li>
+                  <li>projets utiles pour produit, client ou equipe technique</li>
                 </ul>
               </div>
 
@@ -248,89 +318,28 @@ function App() {
         <section id="projects" className="portfolio-section">
           <div className="portfolio-heading">
             <p className="portfolio-kicker">Projets</p>
-            <h2 className="portfolio-section-title">Le coeur du portfolio doit montrer ce que je sais construire.</h2>
+            <h2 className="portfolio-section-title">
+              Des projets lisibles pour evaluer le niveau, la logique et l execution.
+            </h2>
             <p className="portfolio-section-lead">
-              Trois projets suffisent si le niveau de detail, les choix techniques et les contraintes sont
-              clairement visibles.
+              Une selection courte suffit si les choix techniques, la logique produit et le niveau d execution
+              restent visibles en quelques minutes.
             </p>
           </div>
 
-          <div className="portfolio-project-list">
-            {projects.map((project) => (
-              <article
-                key={project.title}
-                className={`portfolio-project${project.featured ? ' is-featured' : ''}`}
-              >
-                <div className={`project-preview project-preview-${project.title.toLowerCase().replaceAll(' ', '-')}`}>
-                  <div className="project-preview-window">
-                    <div className="project-preview-topbar">
-                      <span />
-                      <span />
-                      <span />
-                    </div>
-                    <div className="project-preview-canvas">
-                      <div className="project-preview-sidebar" />
-                      <div className="project-preview-main">
-                        <div className="project-preview-meter" />
-                        <div className="project-preview-meter project-preview-meter-wide" />
-                        <div className="project-preview-grid">
-                          <span />
-                          <span />
-                          <span />
-                        </div>
-                        <div className="project-preview-log">
-                          {project.signals.map((signal) => (
-                            <div key={signal} className="project-preview-log-line">
-                              {signal}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="portfolio-project-content">
-                  <p className="portfolio-card-kicker">{project.category}</p>
-                  <h3 className="portfolio-project-title">{project.title}</h3>
-                  <p className="portfolio-project-summary">{project.summary}</p>
-
-                  <div className="portfolio-project-block">
-                    <span className="portfolio-project-label">Probleme</span>
-                    <p>{project.problem}</p>
-                  </div>
-
-                  <div className="portfolio-project-block">
-                    <span className="portfolio-project-label">Solution</span>
-                    <p>{project.solution}</p>
-                  </div>
-
-                  <div className="portfolio-project-block">
-                    <span className="portfolio-project-label">Challenges techniques</span>
-                    <ul className="portfolio-bullet-list">
-                      {project.challenges.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="portfolio-tags">
-                    {project.stack.map((item) => (
-                      <span key={item} className="portfolio-tag">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
+          <Gallery6
+            heading="Mes projets"
+            demoUrl="contact"
+            demoLabel="Prendre contact"
+            items={projectGalleryItems}
+            onNavigateToSection={scrollToSection}
+          />
         </section>
 
         <section id="stack" className="portfolio-section portfolio-section-alt">
           <div className="portfolio-heading">
             <p className="portfolio-kicker">Stack / competences</p>
-            <h2 className="portfolio-section-title">Des categories credibles valent mieux qu une pluie de logos.</h2>
+            <h2 className="portfolio-section-title">Une stack claire pour situer rapidement les bases de travail.</h2>
             <p className="portfolio-section-lead">
               Cette vue regroupe les langages et frameworks principaux: Python, HTML, TypeScript,
               JavaScript, Bootstrap, CSS, GraphQL, Ruby, Ruby on Rails, React, Tailwind CSS et Next.js.
@@ -342,8 +351,7 @@ function App() {
               <div className="portfolio-stack-visual-head">
                 <span className="portfolio-project-label">Orbit global</span>
                 <p className="portfolio-stack-visual-text">
-                  Une roue unique qui regroupe langages, frameworks et outils de travail dans le meme
-                  systeme visuel.
+                  Une vue unique pour situer rapidement langages, frameworks et outils de travail.
                 </p>
               </div>
               <OrbitingSkills defaultVariant="all" />
@@ -351,96 +359,102 @@ function App() {
           </div>
         </section>
 
-        <section id="process" className="portfolio-section">
-          <div className="portfolio-heading">
-            <p className="portfolio-kicker">Process de travail</p>
-            <h2 className="portfolio-section-title">Je cherche d abord une structure saine, puis j affine.</h2>
-          </div>
-
-          <div className="portfolio-process-grid">
-            {processSteps.map((item) => (
-              <article key={item.step} className="portfolio-process-card">
-                <span className="portfolio-process-step">{item.step}</span>
-                <h3 className="portfolio-process-title">{item.title}</h3>
-                <p className="portfolio-process-text">{item.detail}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="portfolio-section portfolio-section-alt">
-          <div className="portfolio-about-grid">
-            <article className="portfolio-about-card">
-              <p className="portfolio-kicker">About Me</p>
-              <h2 className="portfolio-section-title">Profil fullstack avec un biais clair pour les outils utiles.</h2>
-              <p className="portfolio-about-text">
-                Developpeur fullstack oriente JavaScript / TypeScript. J aime construire des applications
-                utiles avec une attention particuliere portee a l architecture, a l experience
-                developpeur et a la lisibilite des produits.
-              </p>
-            </article>
-
-            <article className="portfolio-about-card">
-              <p className="portfolio-kicker">Axes de travail</p>
-              <ul className="portfolio-bullet-list">
-                <li>architecture propre</li>
-                <li>outils dev et IA utile</li>
-                <li>logique local-first</li>
-                <li>UX technique et maintainable</li>
-              </ul>
-            </article>
-          </div>
-        </section>
-
-        <section className="portfolio-section">
-          <div className="portfolio-heading">
-            <p className="portfolio-kicker">GitHub / experience</p>
-            <h2 className="portfolio-section-title">Les projets compensent si l experience pro est encore courte.</h2>
-          </div>
-
-          <div className="portfolio-experience-grid">
-            <article className="portfolio-experience-card">
-              <span className="portfolio-project-label">Trajectoire</span>
-              <h3 className="portfolio-experience-title">Developpeur Fullstack — projets personnels</h3>
-              <p className="portfolio-experience-text">
-                Applications React/TypeScript, architecture monorepo, outils orientes developpeurs et
-                experimentation produit avec exigence de clarte.
-              </p>
-            </article>
-
-            <article className="portfolio-experience-card">
-              <span className="portfolio-project-label">GitHub</span>
-              <p className="portfolio-experience-text">
-                La version finale du portfolio doit pousser seulement les projets propres, documentes et
-                techniquement defensables. Le compte GitHub doit servir de preuve, pas de bruit.
-              </p>
-            </article>
-          </div>
-        </section>
-
         <section id="contact" className="portfolio-section portfolio-contact-section">
           <div className="portfolio-contact-card">
-            <p className="portfolio-kicker">Contact</p>
-            <h2 className="portfolio-contact-title">Disponible pour missions, collaboration ou opportunites developpeur.</h2>
-            <p className="portfolio-contact-text">
-              La structure est en place. Il reste a brancher les vrais liens de contact, GitHub, LinkedIn
-              et le CV avant publication.
-            </p>
+            <div className="portfolio-contact-copy">
+              <p className="portfolio-kicker">Contact</p>
+              <h2 className="portfolio-contact-title">Disponible pour recrutement, mission ou collaboration.</h2>
+              <p className="portfolio-contact-text">
+                Formulaire branche au backend Express via `/api/contact`. Le statut de connexion ci-dessus
+                confirme que le front atteint bien l API.
+              </p>
 
-            <div className="portfolio-contact-grid">
-              <div className="portfolio-contact-item">
-                <span className="portfolio-project-label">Email</span>
-                <p>Ajouter l adresse finale</p>
-              </div>
-              <div className="portfolio-contact-item">
-                <span className="portfolio-project-label">GitHub</span>
-                <p>Epingler 3 projets forts</p>
-              </div>
-              <div className="portfolio-contact-item">
-                <span className="portfolio-project-label">LinkedIn / CV</span>
-                <p>Brancher les liens reels</p>
+              <div className="portfolio-contact-grid">
+                <div className="portfolio-contact-item">
+                  <span className="portfolio-project-label">Route front</span>
+                  <p>`/#/portfolio` pour le contenu principal et `/#/` pour l accueil.</p>
+                </div>
+                <div className="portfolio-contact-item">
+                  <span className="portfolio-project-label">Proxy dev</span>
+                  <p>`/api/*` vers `http://localhost:4000` dans Vite.</p>
+                </div>
+                <div className="portfolio-contact-item">
+                  <span className="portfolio-project-label">Endpoint</span>
+                  <p>`POST /api/contact` avec validation serveur et fallback memoire/DB.</p>
+                </div>
               </div>
             </div>
+
+            <form className="portfolio-contact-form" onSubmit={onContactSubmit}>
+              <label className="portfolio-field">
+                <span className="portfolio-field-label">Nom</span>
+                <input
+                  type="text"
+                  name="name"
+                  value={contactForm.name}
+                  onChange={(event) => {
+                    onContactChange('name', event.target.value)
+                  }}
+                  className="portfolio-input"
+                  autoComplete="name"
+                  placeholder="William Mahi"
+                  required
+                />
+              </label>
+
+              <label className="portfolio-field">
+                <span className="portfolio-field-label">Email</span>
+                <input
+                  type="email"
+                  name="email"
+                  value={contactForm.email}
+                  onChange={(event) => {
+                    onContactChange('email', event.target.value)
+                  }}
+                  className="portfolio-input"
+                  autoComplete="email"
+                  placeholder="contact@exemple.com"
+                  required
+                />
+              </label>
+
+              <label className="portfolio-field">
+                <span className="portfolio-field-label">Message</span>
+                <textarea
+                  name="message"
+                  value={contactForm.message}
+                  onChange={(event) => {
+                    onContactChange('message', event.target.value)
+                  }}
+                  className="portfolio-input portfolio-textarea"
+                  placeholder="Bonjour, je souhaite discuter d une mission ou d un recrutement."
+                  required
+                  minLength={10}
+                />
+              </label>
+
+              <button
+                type="submit"
+                className="portfolio-button portfolio-contact-submit"
+                disabled={contactSubmission.status === 'submitting'}
+              >
+                {contactSubmission.status === 'submitting' ? 'Envoi...' : 'Envoyer'}
+              </button>
+
+              {contactSubmission.message ? (
+                <p className={`portfolio-form-feedback is-${contactSubmission.status}`}>
+                  {contactSubmission.message}
+                </p>
+              ) : null}
+
+              {contactSubmission.errors.length > 0 ? (
+                <ul className="portfolio-form-errors">
+                  {contactSubmission.errors.map((error) => (
+                    <li key={error}>{error}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </form>
           </div>
         </section>
       </main>
@@ -448,4 +462,230 @@ function App() {
   )
 }
 
-export default App
+function AppShell() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const timeoutIdsRef = useRef<number[]>([])
+  const hasCheckedApiHealthRef = useRef(false)
+  const [isPageLoading, setIsPageLoading] = useState(false)
+  const [contactForm, setContactForm] = useState<ContactFormState>(initialContactFormState)
+  const [contactSubmission, setContactSubmission] = useState<ContactSubmissionState>({
+    status: 'idle',
+    message: '',
+    errors: [],
+  })
+  const [apiHealth, setApiHealth] = useState<ApiHealthState>({
+    status: 'loading',
+    label: 'Verification API...',
+    detail: 'Controle de la connexion au backend en cours.',
+  })
+
+  const clearPendingTimeouts = () => {
+    timeoutIdsRef.current.forEach((timeoutId) => {
+      window.clearTimeout(timeoutId)
+    })
+    timeoutIdsRef.current = []
+  }
+
+  const scheduleTimeout = (callback: () => void, delay: number) => {
+    const timeoutId = window.setTimeout(() => {
+      timeoutIdsRef.current = timeoutIdsRef.current.filter((currentId) => currentId !== timeoutId)
+      callback()
+    }, delay)
+
+    timeoutIdsRef.current.push(timeoutId)
+  }
+
+  const navigateWithLoader = (nextPath: '/' | '/portfolio') => {
+    if (nextPath === location.pathname) {
+      return
+    }
+
+    clearPendingTimeouts()
+    setIsPageLoading(true)
+
+    scheduleTimeout(() => {
+      navigate(nextPath)
+      window.scrollTo({ top: 0, behavior: 'auto' })
+
+      scheduleTimeout(() => {
+        setIsPageLoading(false)
+      }, LOADER_DURATION_MS)
+    }, ROUTE_SWAP_DELAY_MS)
+  }
+
+  useEffect(() => {
+    return () => {
+      clearPendingTimeouts()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (location.pathname !== '/portfolio') {
+      hasCheckedApiHealthRef.current = false
+      return
+    }
+
+    if (hasCheckedApiHealthRef.current) {
+      return
+    }
+
+    hasCheckedApiHealthRef.current = true
+
+    let isCancelled = false
+
+    const checkApiHealth = async () => {
+      setApiHealth({
+        status: 'loading',
+        label: 'Verification API...',
+        detail: 'Controle de la connexion au backend en cours.',
+      })
+
+      try {
+        const response = await fetch('/api/health')
+        const payload = await response.json()
+
+        if (isCancelled) {
+          return
+        }
+
+        if (!response.ok) {
+          throw new Error(payload?.message ?? 'Health check echoue.')
+        }
+
+        const databaseLabel =
+          payload.database === 'connected'
+            ? 'database connectee'
+            : payload.database === 'not_configured'
+              ? 'database non configuree'
+              : 'database degradee'
+
+        setApiHealth({
+          status: 'success',
+          label: 'API connectee',
+          detail: `${payload.service} repond. Etat: ${databaseLabel}.`,
+        })
+      } catch (error) {
+        if (isCancelled) {
+          return
+        }
+
+        setApiHealth({
+          status: 'error',
+          label: 'API indisponible',
+          detail: error instanceof Error ? error.message : 'Connexion au backend impossible.',
+        })
+      }
+    }
+
+    void checkApiHealth()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [location.pathname])
+
+  const handleContactChange = (field: keyof ContactFormState, value: string) => {
+    setContactForm((currentState) => ({
+      ...currentState,
+      [field]: value,
+    }))
+
+    if (contactSubmission.status !== 'idle') {
+      setContactSubmission({
+        status: 'idle',
+        message: '',
+        errors: [],
+      })
+    }
+  }
+
+  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    setContactSubmission({
+      status: 'submitting',
+      message: '',
+      errors: [],
+    })
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactForm),
+      })
+
+      const payload = await response.json()
+
+      if (!response.ok) {
+        setContactSubmission({
+          status: 'error',
+          message: payload?.message ?? 'Envoi impossible.',
+          errors: Array.isArray(payload?.errors) ? payload.errors : [],
+        })
+        return
+      }
+
+      setContactSubmission({
+        status: 'success',
+        message: `${payload?.message ?? 'Message envoye.'} Stockage: ${payload?.storage ?? 'inconnu'}.`,
+        errors: [],
+      })
+      setContactForm(initialContactFormState)
+    } catch (error) {
+      setContactSubmission({
+        status: 'error',
+        message: error instanceof Error ? error.message : 'Erreur reseau pendant la soumission.',
+        errors: [],
+      })
+    }
+  }
+
+  if (isPageLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#07090d] px-6">
+        <CoreSpinLoader />
+      </div>
+    )
+  }
+
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <IntroPage
+            onEnter={() => {
+              navigateWithLoader('/portfolio')
+            }}
+          />
+        }
+      />
+      <Route
+        path="/portfolio"
+        element={
+          <PortfolioPage
+            onBackToIntro={() => {
+              navigateWithLoader('/')
+            }}
+            contactForm={contactForm}
+            onContactChange={handleContactChange}
+            onContactSubmit={(event) => {
+              void handleContactSubmit(event)
+            }}
+            contactSubmission={contactSubmission}
+            apiHealth={apiHealth}
+          />
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  )
+}
+
+export default function App() {
+  return <AppShell />
+}
