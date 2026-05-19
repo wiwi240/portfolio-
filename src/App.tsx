@@ -19,12 +19,6 @@ type ContactSubmissionState = {
   errors: string[]
 }
 
-type ApiHealthState = {
-  status: 'idle' | 'loading' | 'success' | 'error'
-  label: string
-  detail: string
-}
-
 const projectGalleryItems = [
   {
     id: 'rubber-duck',
@@ -142,14 +136,12 @@ function PortfolioPage({
   onContactChange,
   onContactSubmit,
   contactSubmission,
-  apiHealth,
 }: {
   onBackToIntro: () => void
   contactForm: ContactFormState
   onContactChange: (field: keyof ContactFormState, value: string) => void
   onContactSubmit: (event: FormEvent<HTMLFormElement>) => void
   contactSubmission: ContactSubmissionState
-  apiHealth: ApiHealthState
 }) {
   const scrollToSection = (sectionId: string) => {
     const target = document.getElementById(sectionId)
@@ -226,101 +218,30 @@ function PortfolioPage({
       <main id="content">
         <section id="top" className="portfolio-hero">
           <div className="portfolio-hero-grid">
-            <div className="portfolio-hero-copy">
-              <p className="portfolio-kicker">Developpeur fullstack JavaScript / TypeScript</p>
-              <h1 className="portfolio-title">
-                <span className="portfolio-title-line">Applications utiles.</span>
-                <span className="portfolio-title-line">
-                  Execution serieuse.
-                  <span className="portfolio-title-chip">Live systems</span>
-                </span>
-                <span className="portfolio-title-line">Architecture lisible.</span>
-              </h1>
-              <p className="portfolio-lead">
-                Developpement d applications web et desktop avec React et TypeScript, avec une attention
-                forte portee a la maintenabilite, a la clarte produit et a la qualite d execution.
-              </p>
-
-              <div className="portfolio-hero-rail" aria-label="Axes de travail">
-                <div className="portfolio-hero-rail-item">
-                  <span className="portfolio-project-label">Build</span>
-                  <p>Front React structure, composants robustes, circulation claire de l information.</p>
-                </div>
-                <div className="portfolio-hero-rail-item">
-                  <span className="portfolio-project-label">System</span>
-                  <p>Back Node pragmatique, conventions simples, dette technique tenue sous controle.</p>
-                </div>
-              </div>
-
-              <div className="portfolio-cta-row">
-                <button
-                  type="button"
-                  className="portfolio-button"
-                  onClick={() => {
-                    scrollToSection('projects')
-                  }}
-                >
-                  Voir mes projets
-                </button>
-                <button
-                  type="button"
-                  className="portfolio-button portfolio-button-secondary"
-                  onClick={() => {
-                    scrollToSection('contact')
-                  }}
-                >
-                  Contact
-                </button>
+            <div className="portfolio-hero-copy portfolio-hero-copy-rotating">
+              <div className="portfolio-hero-rotating-line">
+                <span className="portfolio-hero-rotating-prefix">Developpeur</span>
+                <RotatingText
+                  texts={['fullstack', 'backend', 'front', 'database']}
+                  mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+                  staggerFrom="last"
+                  initial={{ y: '100%' }}
+                  animate={{ y: 0 }}
+                  exit={{ y: '-120%' }}
+                  staggerDuration={0.025}
+                  splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                  transition={{ type: 'spring', damping: 30, stiffness: 400 }}
+                  rotationInterval={2000}
+                />
               </div>
             </div>
-
-            <aside className="portfolio-hero-panel" aria-label="Positionnement">
-              <div className="portfolio-panel-block">
-                <span className="portfolio-panel-label">Positionnement</span>
-                <p className="portfolio-panel-value">
-                  Developpement fullstack React / TypeScript, avec attention portee a la clarte produit, a l
-                  execution front et a la solidite technique.
-                </p>
-              </div>
-
-              <div className="portfolio-panel-block">
-                <span className="portfolio-panel-label">Connexion API</span>
-                <div className={`portfolio-status-badge is-${apiHealth.status}`}>
-                  <span className="portfolio-status-dot" aria-hidden="true" />
-                  <span>{apiHealth.label}</span>
-                </div>
-                <p className="portfolio-panel-value">{apiHealth.detail}</p>
-              </div>
-
-              <div className="portfolio-panel-block">
-                <span className="portfolio-panel-label">Focus actuel</span>
-                <ul className="portfolio-bullet-list">
-                  <li>interfaces React lisibles</li>
-                  <li>APIs Node propres</li>
-                  <li>projets utiles pour produit, client ou equipe technique</li>
-                </ul>
-              </div>
-
-              <div className="portfolio-micro-grid" aria-label="Signaux de profil">
-                <div className="portfolio-micro-card">
-                  <span className="portfolio-micro-number">3</span>
-                  <span className="portfolio-micro-copy">projets phares a pousser</span>
-                </div>
-                <div className="portfolio-micro-card">
-                  <span className="portfolio-micro-number">60-70%</span>
-                  <span className="portfolio-micro-copy">du portfolio reserve aux preuves</span>
-                </div>
-              </div>
-            </aside>
           </div>
         </section>
 
         <section id="projects" className="portfolio-section">
           <div className="portfolio-heading">
             <p className="portfolio-kicker">Projets</p>
-            <h2 className="portfolio-section-title">
-              Des projets lisibles pour evaluer le niveau, la logique et l execution.
-            </h2>
+            <h2 className="portfolio-section-title">Projets lisibles, execution visible.</h2>
             <p className="portfolio-section-lead">
               Une selection courte suffit si les choix techniques, la logique produit et le niveau d execution
               restent visibles en quelques minutes.
@@ -339,7 +260,7 @@ function PortfolioPage({
         <section id="stack" className="portfolio-section portfolio-section-alt">
           <div className="portfolio-heading">
             <p className="portfolio-kicker">Stack / competences</p>
-            <h2 className="portfolio-section-title">Une stack claire pour situer rapidement les bases de travail.</h2>
+            <h2 className="portfolio-section-title">Stack claire, base solide.</h2>
             <p className="portfolio-section-lead">
               Cette vue regroupe les langages et frameworks principaux: Python, HTML, TypeScript,
               JavaScript, Bootstrap, CSS, GraphQL, Ruby, Ruby on Rails, React, Tailwind CSS et Next.js.
@@ -363,10 +284,9 @@ function PortfolioPage({
           <div className="portfolio-contact-card">
             <div className="portfolio-contact-copy">
               <p className="portfolio-kicker">Contact</p>
-              <h2 className="portfolio-contact-title">Disponible pour recrutement, mission ou collaboration.</h2>
+              <h2 className="portfolio-contact-title">Disponible pour mission ou recrutement.</h2>
               <p className="portfolio-contact-text">
-                Formulaire branche au backend Express via `/api/contact`. Le statut de connexion ci-dessus
-                confirme que le front atteint bien l API.
+                Un formulaire simple pour prendre contact rapidement, sans surcharge visuelle.
               </p>
 
               <div className="portfolio-contact-grid">
@@ -386,6 +306,7 @@ function PortfolioPage({
             </div>
 
             <form className="portfolio-contact-form" onSubmit={onContactSubmit}>
+              <h2 className="portfolio-contact-title">Parlons mission ou recrutement.</h2>
               <label className="portfolio-field">
                 <span className="portfolio-field-label">Nom</span>
                 <input
@@ -466,18 +387,12 @@ function AppShell() {
   const navigate = useNavigate()
   const location = useLocation()
   const timeoutIdsRef = useRef<number[]>([])
-  const hasCheckedApiHealthRef = useRef(false)
   const [isPageLoading, setIsPageLoading] = useState(false)
   const [contactForm, setContactForm] = useState<ContactFormState>(initialContactFormState)
   const [contactSubmission, setContactSubmission] = useState<ContactSubmissionState>({
     status: 'idle',
     message: '',
     errors: [],
-  })
-  const [apiHealth, setApiHealth] = useState<ApiHealthState>({
-    status: 'loading',
-    label: 'Verification API...',
-    detail: 'Controle de la connexion au backend en cours.',
   })
 
   const clearPendingTimeouts = () => {
@@ -519,71 +434,6 @@ function AppShell() {
       clearPendingTimeouts()
     }
   }, [])
-
-  useEffect(() => {
-    if (location.pathname !== '/portfolio') {
-      hasCheckedApiHealthRef.current = false
-      return
-    }
-
-    if (hasCheckedApiHealthRef.current) {
-      return
-    }
-
-    hasCheckedApiHealthRef.current = true
-
-    let isCancelled = false
-
-    const checkApiHealth = async () => {
-      setApiHealth({
-        status: 'loading',
-        label: 'Verification API...',
-        detail: 'Controle de la connexion au backend en cours.',
-      })
-
-      try {
-        const response = await fetch('/api/health')
-        const payload = await response.json()
-
-        if (isCancelled) {
-          return
-        }
-
-        if (!response.ok) {
-          throw new Error(payload?.message ?? 'Health check echoue.')
-        }
-
-        const databaseLabel =
-          payload.database === 'connected'
-            ? 'database connectee'
-            : payload.database === 'not_configured'
-              ? 'database non configuree'
-              : 'database degradee'
-
-        setApiHealth({
-          status: 'success',
-          label: 'API connectee',
-          detail: `${payload.service} repond. Etat: ${databaseLabel}.`,
-        })
-      } catch (error) {
-        if (isCancelled) {
-          return
-        }
-
-        setApiHealth({
-          status: 'error',
-          label: 'API indisponible',
-          detail: error instanceof Error ? error.message : 'Connexion au backend impossible.',
-        })
-      }
-    }
-
-    void checkApiHealth()
-
-    return () => {
-      isCancelled = true
-    }
-  }, [location.pathname])
 
   const handleContactChange = (field: keyof ContactFormState, value: string) => {
     setContactForm((currentState) => ({
@@ -677,7 +527,6 @@ function AppShell() {
               void handleContactSubmit(event)
             }}
             contactSubmission={contactSubmission}
-            apiHealth={apiHealth}
           />
         }
       />

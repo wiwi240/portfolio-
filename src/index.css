@@ -16,7 +16,8 @@
   --muted-subtle: rgba(168, 183, 212, 0.28);
   --radius: 1.8rem;
   --radius-sm: 1rem;
-  --font: 'Outfit', 'Segoe UI', sans-serif;
+  --font: 'Satoshi', 'Segoe UI', sans-serif;
+  --font-display: 'Cabinet Grotesk', 'Satoshi', 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -68,6 +69,7 @@ h1,
 h2,
 h3,
 h4 {
+  font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.045em;
 }

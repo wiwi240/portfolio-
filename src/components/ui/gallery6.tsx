@@ -60,7 +60,7 @@ const Gallery6 = ({
     <section className="py-8 md:py-12">
       <div className="mb-8 flex flex-col justify-between gap-6 md:mb-12 md:flex-row md:items-end">
         <div className="max-w-2xl">
-          <h3 className="mb-3 text-3xl font-semibold tracking-tight text-[var(--fg)] md:text-4xl lg:text-5xl">
+          <h3 className="mb-3 text-2xl font-semibold tracking-tight text-[var(--fg)] md:text-3xl lg:text-4xl">
             {heading}
           </h3>
           <a
@@ -116,11 +116,11 @@ const Gallery6 = ({
               },
             },
           }}
-          className="relative left-[-1rem]"
+          className="relative"
         >
-          <CarouselContent className="-mr-4 ml-4 md:ml-8">
+          <CarouselContent className="-ml-4">
             {items.map((item) => (
-              <CarouselItem key={item.id} className="pl-4 md:max-w-[480px]">
+              <CarouselItem key={item.id} className="pl-4 md:basis-[440px] lg:basis-[480px]">
                 <a
                   href={item.url}
                   className="group flex h-full flex-col justify-between rounded-[1.7rem] border border-[rgba(132,168,255,0.16)] bg-[linear-gradient(180deg,rgba(57,231,255,0.07),rgba(138,99,255,0.05)),rgba(10,18,36,0.92)] p-4 shadow-[0_24px_70px_rgba(3,7,14,0.28)] transition-transform duration-300 hover:-translate-y-1"
@@ -148,7 +148,7 @@ const Gallery6 = ({
                   </div>
 
                   <div className="pt-4">
-                    <div className="mb-2 line-clamp-3 break-words text-lg font-medium tracking-[-0.03em] text-[var(--fg)] md:mb-3 md:text-xl lg:text-2xl">
+                    <div className="mb-2 line-clamp-3 break-words text-base font-medium tracking-[-0.03em] text-[var(--fg)] md:mb-3 md:text-lg lg:text-xl">
                       {item.title}
                     </div>
                     <div className="mb-8 line-clamp-3 text-sm text-[var(--muted)] md:mb-10 md:text-base">
