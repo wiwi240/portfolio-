@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #ccd7e2;
-  --bg-elevated: #c3d0dc;
-  --surface: rgba(238, 244, 249, 0.72);
-  --surface-strong: #e9f0f6;
-  --fg: #1f3448;
-  --border: rgba(99, 128, 156, 0.22);
-  --accent: #39e7ff;
-  --accent-strong: #18b8ff;
-  --accent-secondary: #8a63ff;
-  --accent-muted: rgba(57, 231, 255, 0.16);
-  --muted: #52697f;
-  --muted-fg: #72879b;
-  --muted-subtle: rgba(114, 135, 155, 0.18);
+  --bg: #9db6c7;
+  --bg-elevated: #adc2d0;
+  --surface: rgba(248, 249, 250, 0.96);
+  --surface-strong: #e8ecef;
+  --fg: #10212c;
+  --border: rgba(16, 33, 44, 0.14);
+  --accent: #1c8db3;
+  --accent-strong: #146f90;
+  --accent-secondary: #c58a52;
+  --accent-muted: rgba(28, 141, 179, 0.12);
+  --muted: #425a69;
+  --muted-fg: #566f7f;
+  --muted-subtle: rgba(66, 90, 105, 0.14);
   --radius: 1.8rem;
   --radius-sm: 1rem;
   --font: 'Satoshi', 'Segoe UI', sans-serif;
@@ -35,19 +35,19 @@
 }
 
 html.dark {
-  --bg: #050a10;
-  --bg-elevated: #0b121b;
-  --surface: rgba(11, 18, 27, 0.82);
-  --surface-strong: #111a26;
-  --fg: #e7f0fa;
-  --border: rgba(99, 128, 156, 0.22);
-  --accent: #39e7ff;
-  --accent-strong: #18b8ff;
-  --accent-secondary: #8a63ff;
-  --accent-muted: rgba(57, 231, 255, 0.16);
-  --muted: #95a9bf;
-  --muted-fg: #6f869d;
-  --muted-subtle: rgba(111, 134, 157, 0.18);
+  --bg: #0d1419;
+  --bg-elevated: #131b21;
+  --surface: rgba(28, 33, 38, 0.84);
+  --surface-strong: #202830;
+  --fg: #eaf3f8;
+  --border: rgba(237, 241, 244, 0.1);
+  --accent: #39d0e8;
+  --accent-strong: #25a9c0;
+  --accent-secondary: #d19a66;
+  --accent-muted: rgba(57, 208, 232, 0.14);
+  --muted: #a7b1b8;
+  --muted-fg: #7f8c95;
+  --muted-subtle: rgba(127, 140, 149, 0.18);
   --text-color-primary: var(--fg);
   color-scheme: dark;
 }
@@ -69,25 +69,11 @@ html {
 body {
   min-width: 320px;
   overflow-x: hidden;
-  background:
-    radial-gradient(circle at 14% 10%, rgba(170, 188, 204, 0.88), transparent 18%),
-    radial-gradient(circle at 84% 10%, rgba(143, 170, 196, 0.62), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(109, 144, 176, 0.42), transparent 30%),
-    radial-gradient(circle at 50% 40%, rgba(214, 223, 232, 0.66), transparent 34%),
-    linear-gradient(140deg, rgba(229, 236, 243, 0.5), transparent 40%),
-    linear-gradient(180deg, #dce4ec 0%, #d1dbe5 44%, #c5d2de 100%),
-    var(--bg);
+  background: var(--bg);
 }
 
 html.dark body {
-  background:
-    radial-gradient(circle at 14% 10%, rgba(34, 68, 102, 0.36), transparent 18%),
-    radial-gradient(circle at 84% 10%, rgba(18, 46, 72, 0.32), transparent 24%),
-    radial-gradient(circle at 50% 100%, rgba(9, 26, 44, 0.3), transparent 30%),
-    radial-gradient(circle at 50% 40%, rgba(20, 39, 58, 0.34), transparent 34%),
-    linear-gradient(140deg, rgba(15, 25, 36, 0.38), transparent 40%),
-    linear-gradient(180deg, #0f1722 0%, #09111a 44%, #04080d 100%),
-    var(--bg);
+  background: var(--bg);
 }
 
 body,

@@ -8,14 +8,12 @@ type ThemeSwitchProps = {
 }
 
 export function ThemeSwitch({ className = '' }: ThemeSwitchProps) {
-  const [theme, setTheme] = React.useState<'light' | 'dark'>('light')
+  const [theme, setTheme] = React.useState<'light' | 'dark'>('dark')
 
   React.useEffect(() => {
-    const savedTheme =
-      localStorage.getItem('theme') ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    const savedTheme = (localStorage.getItem('theme') as 'light' | 'dark' | null) ?? 'dark'
 
-    setTheme(savedTheme as 'light' | 'dark')
+    setTheme(savedTheme)
     document.documentElement.classList.toggle('dark', savedTheme === 'dark')
   }, [])
 

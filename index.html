@@ -18,6 +18,10 @@
     />
     <meta name="theme-color" content="#09090b" />
     <title>William Mahi | Developpeur Fullstack</title>
+    <script>
+      const savedTheme = localStorage.getItem('theme') ?? 'dark'
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark')
+    </script>
   </head>
   <body>
     <div id="root"></div>

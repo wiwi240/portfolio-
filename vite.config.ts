@@ -6,6 +6,7 @@ import path from 'node:path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  assetsInclude: ['**/*.glb'],
   plugins: [
     tailwindcss(),
     react(),

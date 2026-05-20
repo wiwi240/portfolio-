@@ -10,7 +10,6 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel'
-
 interface GalleryItem {
   id: string
   title: string
@@ -126,10 +125,13 @@ const Gallery6 = ({
         >
           <CarouselContent className="-ml-4">
             {items.map((item) => (
-              <CarouselItem key={item.id} className="pl-4 md:basis-[440px] lg:basis-[480px]">
+              <CarouselItem
+                key={item.id}
+                className="pl-4 md:basis-[520px] lg:basis-[580px] xl:basis-[640px]"
+              >
                 <a
                   href={item.url}
-                  className="group flex h-full flex-col justify-between rounded-[1.7rem] border border-[rgba(132,168,255,0.16)] bg-[linear-gradient(180deg,rgba(57,231,255,0.07),rgba(138,99,255,0.05)),rgba(10,18,36,0.92)] p-4 shadow-[0_24px_70px_rgba(3,7,14,0.28)] transition-transform duration-300 hover:-translate-y-1"
+                  className="group flex h-full flex-col justify-between rounded-[1.85rem] border border-[rgba(132,168,255,0.16)] bg-[linear-gradient(180deg,rgba(57,231,255,0.07),rgba(138,99,255,0.05)),rgba(10,18,36,0.92)] p-5 shadow-[0_24px_70px_rgba(3,7,14,0.28)] transition-[box-shadow,border-color] duration-300 hover:border-[rgba(132,168,255,0.24)] hover:shadow-[0_32px_90px_rgba(3,7,14,0.34)] md:p-6"
                   onClick={(event) => {
                     if (!onNavigateToSection) {
                       return
@@ -140,9 +142,9 @@ const Gallery6 = ({
                   }}
                 >
                   <div>
-                    <div className="flex aspect-[3/2] overflow-hidden rounded-[1.25rem] border border-[rgba(132,168,255,0.15)]">
+                    <div className="flex aspect-[16/10] overflow-hidden rounded-[1.35rem] border border-[rgba(132,168,255,0.15)]">
                       <div className="flex-1">
-                        <div className="relative h-full w-full origin-bottom transition duration-300 group-hover:scale-105">
+                        <div className="relative h-full w-full origin-bottom transition duration-300 group-hover:scale-[1.03]">
                           <img
                             src={item.image}
                             alt={item.title}
@@ -153,14 +155,14 @@ const Gallery6 = ({
                     </div>
                   </div>
 
-                  <div className="pt-4">
-                    <div className="mb-2 line-clamp-3 break-words text-base font-medium tracking-[-0.03em] text-[var(--fg)] md:mb-3 md:text-lg lg:text-xl">
+                  <div className="pt-5">
+                    <div className="mb-3 line-clamp-2 break-words text-[1.2rem] font-medium leading-[1.08] tracking-[-0.04em] text-[var(--fg)] md:text-[1.45rem] lg:text-[1.6rem]">
                       {item.title}
                     </div>
-                    <div className="mb-8 line-clamp-3 text-sm text-[var(--muted)] md:mb-10 md:text-base">
+                    <div className="mb-7 line-clamp-4 max-w-[56ch] text-sm leading-7 text-[var(--muted)] md:text-base">
                       {item.summary}
                     </div>
-                    <div className="flex items-center text-sm text-[var(--fg)]/82">
+                    <div className="flex items-center text-sm font-medium text-[var(--fg)]/86">
                       Voir le projet
                       <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-1" />
                     </div>
