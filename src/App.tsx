@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { CoreSpinLoader } from '@/components/ui/core-spin-loader'
-import DotField from '@/components/ui/dot-field'
+import { useState, type FormEvent } from 'react'
+import { FaGithub, FaLinkedinIn } from 'react-icons/fa6'
+import { LuFolderOpen, LuMail, LuMessageSquare } from 'react-icons/lu'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { Gallery6 } from '@/components/ui/gallery6'
+import GradientMenu from '@/components/ui/gradient-menu'
+import GridScan from '@/components/ui/grid-scan'
 import OrbitingSkills from '@/components/ui/orbiting-skills'
-import RotatingText from '@/components/ui/rotating-text'
+import { ThemeSwitch } from '@/components/ui/theme-switch'
 import './App.css'
 
 type ContactFormState = {
@@ -30,114 +32,37 @@ const projectGalleryItems = [
       'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80',
   },
   {
-    id: 'memory-graph',
-    title: 'Memory Graph',
-    summary:
-      'Application desktop local-first orientee developpeur, pensee pour structurer les notes techniques, relier les contenus et garder une base de travail durable.',
-    url: 'contact',
-    image:
-      'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1400&q=80',
-  },
-  {
     id: 'sakura-line',
-    title: 'Sakura Line',
+    title: 'Sakura Line Studio',
     summary:
-      'Site metier et base admin plus serieuse pour un studio tattoo, avec direction visuelle plus nette, back-office plus clair et structure plus maintenable.',
+      'Site pour une tatoueuse avec univers sakura, pense pour l autogestion du contenu, une presentation claire de l activite et une mise a jour simple du site.',
     url: 'contact',
     image:
       'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=80',
   },
+  {
+    id: 'questonnaut',
+    title: 'Questonnaut',
+    summary:
+      'Application de creation d habitudes gamifiee, pensee pour rendre le suivi plus engageant, plus lisible et plus motivant au quotidien.',
+    url: 'contact',
+    image:
+      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80',
+  },
 ]
 
-const ROUTE_SWAP_DELAY_MS = 180
-const LOADER_DURATION_MS = 850
 const initialContactFormState: ContactFormState = {
   name: '',
   email: '',
   message: '',
 }
 
-function IntroPage({ onEnter }: { onEnter: () => void }) {
-  return (
-    <div className="intro-shell">
-      <div className="intro-visual" aria-hidden="true">
-        <DotField
-          dotRadius={2.2}
-          dotSpacing={12}
-          cursorRadius={560}
-          bulgeStrength={92}
-          glowRadius={220}
-          sparkle={false}
-          waveAmplitude={0}
-          gradientFrom="rgba(57, 231, 255, 0.64)"
-          gradientTo="rgba(138, 99, 255, 0.34)"
-          glowColor="#112544"
-        />
-      </div>
-
-      <div className="intro-overlay">
-        <div className="intro-copy">
-          <p className="intro-kicker">William Mahi</p>
-          <h1 className="intro-title">
-            <span className="intro-title-line intro-title-line-role">
-              <span className="intro-role-prefix">Developpeur</span>
-              <RotatingText
-                texts={['fullstack', 'backend', 'database']}
-                mainClassName="intro-role-rotator"
-                splitLevelClassName="intro-role-split"
-                elementLevelClassName="intro-role-element"
-                staggerFrom="last"
-                initial={{ y: '100%', opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: '-120%', opacity: 0 }}
-                staggerDuration={0.02}
-                transition={{ type: 'spring', damping: 28, stiffness: 360 }}
-                rotationInterval={2400}
-              />
-            </span>
-            <span className="intro-title-line">Frontend net.</span>
-            <span className="intro-title-line intro-title-line-accent">
-              Produit lisible.
-              <span className="intro-inline-chip" aria-hidden="true">
-                React / TS
-              </span>
-            </span>
-            <span className="intro-title-line">Rendu plus futuriste.</span>
-          </h1>
-          <p className="intro-lead">
-            Portfolio fullstack centre sur des interfaces techniques plus propres, une execution stable et une
-            lecture immediate des projets, de la stack et du contact.
-          </p>
-
-          <div className="intro-signal-row" aria-label="Signaux d orientation">
-            <span className="intro-signal">React</span>
-            <span className="intro-signal">TypeScript</span>
-            <span className="intro-signal">Node</span>
-            <span className="intro-signal">UI systems</span>
-          </div>
-
-          <button type="button" className="intro-start" onClick={onEnter}>
-            <span className="intro-start-glow" aria-hidden="true" />
-            <span className="intro-start-label">Entrer</span>
-            <span className="intro-start-icon" aria-hidden="true">
-              <span />
-              <span />
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function PortfolioPage({
-  onBackToIntro,
   contactForm,
   onContactChange,
   onContactSubmit,
   contactSubmission,
 }: {
-  onBackToIntro: () => void
   contactForm: ContactFormState
   onContactChange: (field: keyof ContactFormState, value: string) => void
   onContactSubmit: (event: FormEvent<HTMLFormElement>) => void
@@ -154,6 +79,50 @@ function PortfolioPage({
       block: 'start',
     })
   }
+
+  const heroMenuItems = [
+    {
+      title: 'Voir projets',
+      icon: <LuFolderOpen />,
+      gradientFrom: '#56ccf2',
+      gradientTo: '#2f80ed',
+      onClick: () => {
+        scrollToSection('projects')
+      },
+    },
+    {
+      title: 'Contacter',
+      icon: <LuMessageSquare />,
+      gradientFrom: '#ff9966',
+      gradientTo: '#ff5e62',
+      onClick: () => {
+        scrollToSection('contact')
+      },
+    },
+    {
+      title: 'GitHub',
+      icon: <FaGithub />,
+      gradientFrom: '#8b5cf6',
+      gradientTo: '#d946ef',
+      href: 'https://github.com/your-github-handle',
+      external: true,
+    },
+    {
+      title: 'Mail',
+      icon: <LuMail />,
+      gradientFrom: '#80ff72',
+      gradientTo: '#7ee8fa',
+      href: 'mailto:contact@example.com',
+    },
+    {
+      title: 'LinkedIn',
+      icon: <FaLinkedinIn />,
+      gradientFrom: '#60a5fa',
+      gradientTo: '#2563eb',
+      href: 'https://www.linkedin.com/in/your-linkedin-handle',
+      external: true,
+    },
+  ]
 
   return (
     <div className="portfolio-shell">
@@ -208,50 +177,51 @@ function PortfolioPage({
               Contact
             </button>
           </nav>
-
-          <button type="button" className="portfolio-back" onClick={onBackToIntro}>
-            Intro
-          </button>
+          <ThemeSwitch className="portfolio-theme-switch" />
         </div>
       </header>
 
       <main id="content">
         <section id="top" className="portfolio-hero">
+          <div className="portfolio-hero-background" aria-hidden="true">
+            <GridScan
+              sensitivity={0}
+              lineThickness={1.15}
+              linesColor="#41566f"
+              gridScale={0.11}
+              lineStyle="solid"
+              lineJitter={0.015}
+              scanColor="#39e7ff"
+              scanOpacity={0.28}
+              scanDirection="pingpong"
+              scanSoftness={2.2}
+              scanGlow={0.7}
+              scanPhaseTaper={0.88}
+              scanDuration={2.6}
+              scanDelay={1.4}
+              enablePost
+              bloomIntensity={0.42}
+              bloomThreshold={0.08}
+              bloomSmoothing={0.16}
+              chromaticAberration={0.0018}
+              noiseIntensity={0.008}
+              scanOnClick
+            />
+          </div>
           <div className="portfolio-hero-grid">
-            <div className="portfolio-hero-copy portfolio-hero-copy-rotating">
-              <div className="portfolio-hero-rotating-line">
-                <span className="portfolio-hero-rotating-prefix">Developpeur</span>
-                <RotatingText
-                  texts={['fullstack', 'backend', 'front', 'database']}
-                  mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
-                  staggerFrom="last"
-                  initial={{ y: '100%' }}
-                  animate={{ y: 0 }}
-                  exit={{ y: '-120%' }}
-                  staggerDuration={0.025}
-                  splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-                  transition={{ type: 'spring', damping: 30, stiffness: 400 }}
-                  rotationInterval={2000}
-                />
-              </div>
+            <div className="portfolio-hero-copy portfolio-hero-copy-main">
+              <h1 className="portfolio-title">Build solide. Maintenance durable.</h1>
+              <p className="portfolio-lead">
+                Developpement front et back avec une execution propre, une logique claire et des choix techniques
+                faciles a lire.
+              </p>
+              <GradientMenu items={heroMenuItems} className="mt-5" />
             </div>
           </div>
         </section>
 
         <section id="projects" className="portfolio-section">
-          <div className="portfolio-heading">
-            <p className="portfolio-kicker">Projets</p>
-            <h2 className="portfolio-section-title">Projets lisibles, execution visible.</h2>
-            <p className="portfolio-section-lead">
-              Une selection courte suffit si les choix techniques, la logique produit et le niveau d execution
-              restent visibles en quelques minutes.
-            </p>
-          </div>
-
           <Gallery6
-            heading="Mes projets"
-            demoUrl="contact"
-            demoLabel="Prendre contact"
             items={projectGalleryItems}
             onNavigateToSection={scrollToSection}
           />
@@ -384,56 +354,12 @@ function PortfolioPage({
 }
 
 function AppShell() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const timeoutIdsRef = useRef<number[]>([])
-  const [isPageLoading, setIsPageLoading] = useState(false)
   const [contactForm, setContactForm] = useState<ContactFormState>(initialContactFormState)
   const [contactSubmission, setContactSubmission] = useState<ContactSubmissionState>({
     status: 'idle',
     message: '',
     errors: [],
   })
-
-  const clearPendingTimeouts = () => {
-    timeoutIdsRef.current.forEach((timeoutId) => {
-      window.clearTimeout(timeoutId)
-    })
-    timeoutIdsRef.current = []
-  }
-
-  const scheduleTimeout = (callback: () => void, delay: number) => {
-    const timeoutId = window.setTimeout(() => {
-      timeoutIdsRef.current = timeoutIdsRef.current.filter((currentId) => currentId !== timeoutId)
-      callback()
-    }, delay)
-
-    timeoutIdsRef.current.push(timeoutId)
-  }
-
-  const navigateWithLoader = (nextPath: '/' | '/portfolio') => {
-    if (nextPath === location.pathname) {
-      return
-    }
-
-    clearPendingTimeouts()
-    setIsPageLoading(true)
-
-    scheduleTimeout(() => {
-      navigate(nextPath)
-      window.scrollTo({ top: 0, behavior: 'auto' })
-
-      scheduleTimeout(() => {
-        setIsPageLoading(false)
-      }, LOADER_DURATION_MS)
-    }, ROUTE_SWAP_DELAY_MS)
-  }
-
-  useEffect(() => {
-    return () => {
-      clearPendingTimeouts()
-    }
-  }, [])
 
   const handleContactChange = (field: keyof ContactFormState, value: string) => {
     setContactForm((currentState) => ({
@@ -494,33 +420,13 @@ function AppShell() {
     }
   }
 
-  if (isPageLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#07090d] px-6">
-        <CoreSpinLoader />
-      </div>
-    )
-  }
-
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <IntroPage
-            onEnter={() => {
-              navigateWithLoader('/portfolio')
-            }}
-          />
-        }
-      />
+      <Route path="/" element={<Navigate to="/portfolio" replace />} />
       <Route
         path="/portfolio"
         element={
           <PortfolioPage
-            onBackToIntro={() => {
-              navigateWithLoader('/')
-            }}
             contactForm={contactForm}
             onContactChange={handleContactChange}
             onContactSubmit={(event) => {
@@ -530,7 +436,7 @@ function AppShell() {
           />
         }
       />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/portfolio" replace />} />
     </Routes>
   )
 }

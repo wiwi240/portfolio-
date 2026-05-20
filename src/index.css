@@ -1,36 +1,55 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #040815;
-  --bg-elevated: #0a1226;
-  --surface: rgba(11, 20, 40, 0.74);
-  --surface-strong: #111c36;
-  --fg: #eef6ff;
-  --border: rgba(132, 168, 255, 0.18);
+  --bg: #ccd7e2;
+  --bg-elevated: #c3d0dc;
+  --surface: rgba(238, 244, 249, 0.72);
+  --surface-strong: #e9f0f6;
+  --fg: #1f3448;
+  --border: rgba(99, 128, 156, 0.22);
   --accent: #39e7ff;
   --accent-strong: #18b8ff;
   --accent-secondary: #8a63ff;
-  --accent-muted: rgba(57, 231, 255, 0.18);
-  --muted: #a8b7d4;
-  --muted-fg: #7e92b8;
-  --muted-subtle: rgba(168, 183, 212, 0.28);
+  --accent-muted: rgba(57, 231, 255, 0.16);
+  --muted: #52697f;
+  --muted-fg: #72879b;
+  --muted-subtle: rgba(114, 135, 155, 0.18);
   --radius: 1.8rem;
   --radius-sm: 1rem;
   --font: 'Satoshi', 'Segoe UI', sans-serif;
   --font-display: 'Cabinet Grotesk', 'Satoshi', 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  --text-color-primary: var(--fg);
 
   font-family: var(--font);
   line-height: 1.6;
   font-weight: 400;
   color: var(--fg);
   background: var(--bg);
-  color-scheme: dark;
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html.dark {
+  --bg: #050a10;
+  --bg-elevated: #0b121b;
+  --surface: rgba(11, 18, 27, 0.82);
+  --surface-strong: #111a26;
+  --fg: #e7f0fa;
+  --border: rgba(99, 128, 156, 0.22);
+  --accent: #39e7ff;
+  --accent-strong: #18b8ff;
+  --accent-secondary: #8a63ff;
+  --accent-muted: rgba(57, 231, 255, 0.16);
+  --muted: #95a9bf;
+  --muted-fg: #6f869d;
+  --muted-subtle: rgba(111, 134, 157, 0.18);
+  --text-color-primary: var(--fg);
+  color-scheme: dark;
 }
 
 html {
@@ -51,10 +70,23 @@ body {
   min-width: 320px;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 12% 0%, rgba(57, 231, 255, 0.16), transparent 24%),
-    radial-gradient(circle at 88% 10%, rgba(138, 99, 255, 0.14), transparent 20%),
-    radial-gradient(circle at 52% 100%, rgba(24, 184, 255, 0.08), transparent 28%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 24%),
+    radial-gradient(circle at 14% 10%, rgba(170, 188, 204, 0.88), transparent 18%),
+    radial-gradient(circle at 84% 10%, rgba(143, 170, 196, 0.62), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(109, 144, 176, 0.42), transparent 30%),
+    radial-gradient(circle at 50% 40%, rgba(214, 223, 232, 0.66), transparent 34%),
+    linear-gradient(140deg, rgba(229, 236, 243, 0.5), transparent 40%),
+    linear-gradient(180deg, #dce4ec 0%, #d1dbe5 44%, #c5d2de 100%),
+    var(--bg);
+}
+
+html.dark body {
+  background:
+    radial-gradient(circle at 14% 10%, rgba(34, 68, 102, 0.36), transparent 18%),
+    radial-gradient(circle at 84% 10%, rgba(18, 46, 72, 0.32), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(9, 26, 44, 0.3), transparent 30%),
+    radial-gradient(circle at 50% 40%, rgba(20, 39, 58, 0.34), transparent 34%),
+    linear-gradient(140deg, rgba(15, 25, 36, 0.38), transparent 40%),
+    linear-gradient(180deg, #0f1722 0%, #09111a 44%, #04080d 100%),
     var(--bg);
 }
 

@@ -28,9 +28,9 @@ interface Gallery6Props {
 }
 
 const Gallery6 = ({
-  heading = 'Featured Projects',
+  heading,
   demoUrl = 'contact',
-  demoLabel = 'Voir le contact',
+  demoLabel,
   items = [],
   onNavigateToSection,
 }: Gallery6Props) => {
@@ -58,53 +58,59 @@ const Gallery6 = ({
 
   return (
     <section className="py-8 md:py-12">
-      <div className="mb-8 flex flex-col justify-between gap-6 md:mb-12 md:flex-row md:items-end">
-        <div className="max-w-2xl">
-          <h3 className="mb-3 text-2xl font-semibold tracking-tight text-[var(--fg)] md:text-3xl lg:text-4xl">
-            {heading}
-          </h3>
-          <a
-            href={demoUrl}
-            className="group inline-flex items-center gap-1 text-sm font-medium text-[var(--fg)]/82 md:text-base"
-            onClick={(event) => {
-              if (!onNavigateToSection) {
-                return
-              }
+      {heading || demoLabel ? (
+        <div className="mb-8 flex flex-col justify-between gap-6 md:mb-12 md:flex-row md:items-end">
+          <div className="max-w-2xl">
+            {heading ? (
+              <h3 className="mb-3 text-2xl font-semibold tracking-tight text-[var(--fg)] md:text-3xl lg:text-4xl">
+                {heading}
+              </h3>
+            ) : null}
+            {demoLabel ? (
+              <a
+                href={demoUrl}
+                className="group inline-flex items-center gap-1 text-sm font-medium text-[var(--fg)]/82 md:text-base"
+                onClick={(event) => {
+                  if (!onNavigateToSection) {
+                    return
+                  }
 
-              event.preventDefault()
-              onNavigateToSection(demoUrl)
-            }}
-          >
-            {demoLabel}
-            <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-1" />
-          </a>
-        </div>
+                  event.preventDefault()
+                  onNavigateToSection(demoUrl)
+                }}
+              >
+                {demoLabel}
+                <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-1" />
+              </a>
+            ) : null}
+          </div>
 
-        <div className="flex shrink-0 items-center justify-start gap-2">
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => {
-              carouselApi?.scrollPrev()
-            }}
-            disabled={!canScrollPrev}
-            className="disabled:pointer-events-auto"
-          >
-            <ArrowLeft className="size-5" />
-          </Button>
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => {
-              carouselApi?.scrollNext()
-            }}
-            disabled={!canScrollNext}
-            className="disabled:pointer-events-auto"
-          >
-            <ArrowRight className="size-5" />
-          </Button>
+          <div className="flex shrink-0 items-center justify-start gap-2">
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => {
+                carouselApi?.scrollPrev()
+              }}
+              disabled={!canScrollPrev}
+              className="disabled:pointer-events-auto"
+            >
+              <ArrowLeft className="size-5" />
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => {
+                carouselApi?.scrollNext()
+              }}
+              disabled={!canScrollNext}
+              className="disabled:pointer-events-auto"
+            >
+              <ArrowRight className="size-5" />
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : null}
 
       <div className="w-full">
         <Carousel
