@@ -1168,7 +1168,82 @@ html.dark .portfolio-about-block {
 }
 
 .portfolio-contact-section {
-  padding-bottom: 6rem;
+  padding-top: clamp(3rem, 6vw, 4.5rem);
+  padding-bottom: 4.5rem;
+}
+
+.portfolio-footer {
+  width: min(1380px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 0 0 2.5rem;
+}
+
+.portfolio-footer-inner {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  padding-top: 1.35rem;
+  border-top: 1px solid rgba(16, 33, 44, 0.08);
+  text-align: center;
+}
+
+html.dark .portfolio-footer-inner {
+  border-top-color: rgba(237, 241, 244, 0.08);
+}
+
+.portfolio-footer-meta {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+}
+
+.portfolio-footer-brand {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.portfolio-footer-copy {
+  max-width: 46ch;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.portfolio-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.portfolio-footer-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(16, 33, 44, 0.08);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(248, 249, 250, 0.42);
+}
+
+html.dark .portfolio-footer-link {
+  border-color: rgba(237, 241, 244, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.portfolio-footer-note {
+  color: var(--muted-fg);
+  font-size: 0.82rem;
+  line-height: 1.5;
 }
 
 .portfolio-contact-card {
@@ -1404,6 +1479,10 @@ html.dark .portfolio-input:focus-visible {
 @media (max-width: 720px) {
   .portfolio-hero,
   .portfolio-section {
+    width: min(1380px, calc(100% - 1rem));
+  }
+
+  .portfolio-footer {
     width: min(1380px, calc(100% - 1rem));
   }
 

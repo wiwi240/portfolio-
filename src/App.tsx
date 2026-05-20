@@ -106,6 +106,32 @@ function PortfolioPage() {
     },
   ]
 
+  const contactMenuItems = [
+    {
+      title: 'Mail',
+      icon: <LuMail />,
+      gradientFrom: '#80ff72',
+      gradientTo: '#7ee8fa',
+      href: 'mailto:contact@example.com',
+    },
+    {
+      title: 'GitHub',
+      icon: <FaGithub />,
+      gradientFrom: '#8b5cf6',
+      gradientTo: '#d946ef',
+      href: 'https://github.com/your-github-handle',
+      external: true,
+    },
+    {
+      title: 'LinkedIn',
+      icon: <FaLinkedinIn />,
+      gradientFrom: '#60a5fa',
+      gradientTo: '#2563eb',
+      href: 'https://www.linkedin.com/in/your-linkedin-handle',
+      external: true,
+    },
+  ]
+
   return (
     <div className="portfolio-shell">
       <button
@@ -300,7 +326,36 @@ function PortfolioPage() {
             </div>
           </div>
         </section>
+
+        <section id="contact" className="portfolio-section portfolio-section-alt portfolio-contact-section">
+          <div className="portfolio-heading">
+            <p className="portfolio-kicker">Contact</p>
+            <h2 className="portfolio-contact-title">Un projet en tete ?</h2>
+            <p className="portfolio-contact-text">
+              Si mon approche te parle, on peut echanger simplement autour d une idee, d un besoin
+              produit ou d une collaboration.
+            </p>
+            <GradientMenu items={contactMenuItems} className="mt-8" />
+          </div>
+        </section>
       </main>
+
+      <footer className="portfolio-footer">
+        <div className="portfolio-footer-inner">
+          <div className="portfolio-footer-meta">
+            <p className="portfolio-footer-brand">William Mahi</p>
+            <p className="portfolio-footer-copy">
+              Portfolio personnel. Conception, integration front-end et structuration produit.
+            </p>
+          </div>
+          <div className="portfolio-footer-links" aria-label="Informations legales">
+            <span className="portfolio-footer-link">Mentions legales</span>
+            <span className="portfolio-footer-link">Politique de confidentialite</span>
+            <span className="portfolio-footer-link">Conditions d utilisation</span>
+          </div>
+          <p className="portfolio-footer-note">© {new Date().getFullYear()} William Mahi. Tous droits reserves.</p>
+        </div>
+      </footer>
     </div>
   )
 }
