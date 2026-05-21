@@ -5,8 +5,17 @@ const nodemailer = require('nodemailer')
 
 dotenv.config()
 
+const NODE_ENV = process.env.NODE_ENV ?? 'development'
+const IS_PRODUCTION = NODE_ENV === 'production'
 const PORT = Number.parseInt(process.env.PORT ?? '4000', 10)
-const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ?? 'http://localhost:5173'
+const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN?.trim() || ''
+const defaultAllowedOrigins = [
+  CLIENT_ORIGIN,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '',
+  process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : '',
+  !IS_PRODUCTION ? 'http://localhost:5173' : '',
+]
+const ALLOWED_ORIGINS = [...new Set(defaultAllowedOrigins.flatMap((value) => value.split(',')).map((origin) => origin.trim()).filter(Boolean))]
 const DATABASE_URL = process.env.DATABASE_URL?.trim() || null
 const SMTP_HOST = process.env.SMTP_HOST?.trim() || ''
 const SMTP_PORT = Number.parseInt(process.env.SMTP_PORT ?? '587', 10)
@@ -15,15 +24,30 @@ const SMTP_USER = process.env.SMTP_USER?.trim() || ''
 const SMTP_PASS = process.env.SMTP_PASS?.trim() || ''
 const MAIL_TO = process.env.MAIL_TO?.trim() || 'william.mahipro@gmail.com'
 const MAIL_FROM = process.env.MAIL_FROM?.trim() || SMTP_USER || MAIL_TO
+const ADMIN_MESSAGES_TOKEN = process.env.ADMIN_MESSAGES_TOKEN?.trim() || ''
+const CONTACT_RATE_LIMIT_WINDOW_MS = Number.parseInt(process.env.CONTACT_RATE_LIMIT_WINDOW_MS ?? '600000', 10)
+const CONTACT_RATE_LIMIT_MAX = Number.parseInt(process.env.CONTACT_RATE_LIMIT_MAX ?? '5', 10)
 
 const app = express()
 app.disable('x-powered-by')
 app.use(express.json({ limit: '1mb' }))
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', CLIENT_ORIGIN)
+  const requestOrigin = req.headers.origin
+  res.setHeader('Vary', 'Origin')
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Token')
+
+  if (requestOrigin) {
+    if (!ALLOWED_ORIGINS.includes(requestOrigin)) {
+      res.status(403).json({
+        message: 'Origin non autorisee.',
+      })
+      return
+    }
+
+    res.setHeader('Access-Control-Allow-Origin', requestOrigin)
+  }
 
   if (req.method === 'OPTIONS') {
     res.status(204).end()
@@ -39,6 +63,7 @@ let mailerReady = false
 const fallbackMessages = []
 let nextMessageId = 1
 let mailTransporter = null
+const contactRateLimitStore = new Map()
 
 function isMailerConfigured() {
   return Boolean(SMTP_HOST && SMTP_PORT && SMTP_USER && SMTP_PASS && MAIL_TO && MAIL_FROM)
@@ -62,6 +87,94 @@ function createMailTransporter() {
 
 function normalizeText(value) {
   return typeof value === 'string' ? value.trim() : ''
+}
+
+function getClientIp(req) {
+  const forwardedFor = req.headers['x-forwarded-for']
+
+  if (typeof forwardedFor === 'string' && forwardedFor.trim()) {
+    return forwardedFor.split(',')[0].trim()
+  }
+
+  return req.ip || req.socket?.remoteAddress || 'unknown'
+}
+
+function checkContactRateLimitMemory(req) {
+  const now = Date.now()
+  const clientIp = getClientIp(req)
+  const entry = contactRateLimitStore.get(clientIp)
+
+  if (!entry || now > entry.resetAt) {
+    contactRateLimitStore.set(clientIp, {
+      count: 1,
+      resetAt: now + CONTACT_RATE_LIMIT_WINDOW_MS,
+    })
+
+    return {
+      allowed: true,
+      remaining: CONTACT_RATE_LIMIT_MAX - 1,
+      resetAt: now + CONTACT_RATE_LIMIT_WINDOW_MS,
+    }
+  }
+
+  if (entry.count >= CONTACT_RATE_LIMIT_MAX) {
+    return {
+      allowed: false,
+      remaining: 0,
+      resetAt: entry.resetAt,
+    }
+  }
+
+  entry.count += 1
+
+  return {
+    allowed: true,
+    remaining: Math.max(CONTACT_RATE_LIMIT_MAX - entry.count, 0),
+    resetAt: entry.resetAt,
+  }
+}
+
+async function checkContactRateLimit(req) {
+  if (!databaseReady || !pool) {
+    return checkContactRateLimitMemory(req)
+  }
+
+  const clientIp = getClientIp(req)
+  const now = Date.now()
+  const windowStartedAt = new Date(now - CONTACT_RATE_LIMIT_WINDOW_MS)
+
+  const result = await pool.query(
+    `
+      INSERT INTO contact_rate_limits (client_ip, window_started_at, request_count)
+      VALUES ($1, NOW(), 1)
+      ON CONFLICT (client_ip)
+      DO UPDATE
+      SET
+        window_started_at = CASE
+          WHEN contact_rate_limits.window_started_at < $2
+            THEN NOW()
+          ELSE contact_rate_limits.window_started_at
+        END,
+        request_count = CASE
+          WHEN contact_rate_limits.window_started_at < $2
+            THEN 1
+          ELSE contact_rate_limits.request_count + 1
+        END
+      RETURNING request_count, window_started_at
+    `,
+    [clientIp, windowStartedAt.toISOString()],
+  )
+
+  const row = result.rows[0]
+  const resetAt = new Date(row.window_started_at).getTime() + CONTACT_RATE_LIMIT_WINDOW_MS
+  const allowed = row.request_count <= CONTACT_RATE_LIMIT_MAX
+  const remaining = allowed ? Math.max(CONTACT_RATE_LIMIT_MAX - row.request_count, 0) : 0
+
+  return {
+    allowed,
+    remaining,
+    resetAt,
+  }
 }
 
 function validateContactPayload(payload) {
@@ -95,6 +208,10 @@ function validateContactPayload(payload) {
 
 async function initDatabase() {
   if (!DATABASE_URL) {
+    if (IS_PRODUCTION) {
+      throw new Error('DATABASE_URL is required in production.')
+    }
+
     return
   }
 
@@ -112,6 +229,19 @@ async function initDatabase() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `)
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS contact_rate_limits (
+      client_ip TEXT PRIMARY KEY,
+      window_started_at TIMESTAMPTZ NOT NULL,
+      request_count INTEGER NOT NULL
+    )
+  `)
+
+  await pool.query(`
+    DELETE FROM contact_rate_limits
+    WHERE window_started_at < NOW() - ($1::text || ' milliseconds')::interval
+  `, [CONTACT_RATE_LIMIT_WINDOW_MS])
 
   databaseReady = true
 }
@@ -143,6 +273,10 @@ async function storeMessage(data) {
       storage: 'database',
       record: result.rows[0],
     }
+  }
+
+  if (IS_PRODUCTION) {
+    throw new Error('Database storage is required in production.')
   }
 
   const record = {
@@ -251,11 +385,25 @@ app.get('/api/health', async (_req, res) => {
 app.get('/', (_req, res) => {
   res.json({
     message: 'Portfolio backend is running.',
-    endpoints: ['/api/health', '/api/messages', '/api/contact'],
+    endpoints: ['/api/health', '/api/contact'],
   })
 })
 
-app.get('/api/messages', async (_req, res) => {
+app.get('/api/messages', async (req, res) => {
+  if (!ADMIN_MESSAGES_TOKEN) {
+    res.status(404).json({
+      message: 'Route introuvable.',
+    })
+    return
+  }
+
+  if (req.headers['x-admin-token'] !== ADMIN_MESSAGES_TOKEN) {
+    res.status(401).json({
+      message: 'Acces non autorise.',
+    })
+    return
+  }
+
   if (databaseReady && pool) {
     const result = await pool.query(`
       SELECT id, name, email, message, created_at
@@ -278,6 +426,18 @@ app.get('/api/messages', async (_req, res) => {
 })
 
 app.post('/api/contact', async (req, res) => {
+  const rateLimit = await checkContactRateLimit(req)
+  res.setHeader('X-RateLimit-Limit', String(CONTACT_RATE_LIMIT_MAX))
+  res.setHeader('X-RateLimit-Remaining', String(rateLimit.remaining))
+  res.setHeader('X-RateLimit-Reset', String(rateLimit.resetAt))
+
+  if (!rateLimit.allowed) {
+    res.status(429).json({
+      message: 'Trop de tentatives. Reessaie plus tard.',
+    })
+    return
+  }
+
   const validation = validateContactPayload(req.body)
 
   if (!validation.isValid) {
@@ -344,7 +504,7 @@ async function startServer() {
 
   return app.listen(PORT, () => {
     console.log(`Backend running on http://localhost:${PORT}`)
-    console.log(`Accepted origin: ${CLIENT_ORIGIN}`)
+    console.log(`Accepted origins: ${ALLOWED_ORIGINS.join(', ') || 'none'}`)
     console.log(`Storage mode: ${databaseReady ? 'database' : 'memory'}`)
     console.log(`Mailer mode: ${mailerReady ? 'smtp' : 'disabled'}`)
   })
@@ -356,8 +516,11 @@ if (require.main === module) {
 
 module.exports = {
   app,
+  checkContactRateLimit,
+  checkContactRateLimitMemory,
   createMailTransporter,
   escapeHtml,
+  getClientIp,
   isMailerConfigured,
   sendContactNotification,
   startServer,

@@ -13,7 +13,7 @@ const buttonVariants = cva(
           'bg-[linear-gradient(180deg,var(--accent),var(--accent-strong))] text-[var(--bg)] shadow-[0_16px_34px_rgba(57,231,255,0.22)] hover:-translate-y-px hover:shadow-[0_22px_42px_rgba(57,231,255,0.28)]',
         destructive: 'bg-[#b63d3d] text-white hover:bg-[#9f3535]',
         outline:
-          'border border-[rgba(132,168,255,0.18)] bg-[linear-gradient(180deg,rgba(57,231,255,0.06),rgba(138,99,255,0.03))] text-[var(--fg)] hover:-translate-y-px hover:bg-[linear-gradient(180deg,rgba(57,231,255,0.1),rgba(138,99,255,0.05))] hover:text-[var(--fg)]',
+          'border border-[rgba(16,33,44,0.10)] bg-[rgba(248,249,250,0.82)] text-[var(--fg)] shadow-[0_10px_24px_rgba(76,103,119,0.08)] hover:-translate-y-px hover:border-[rgba(28,141,179,0.18)] hover:bg-[rgba(248,249,250,0.96)] hover:text-[var(--fg)] dark:border-white/8 dark:bg-white/6 dark:shadow-[0_10px_24px_rgba(0,0,0,0.18)] dark:hover:bg-white/10',
         secondary:
           'bg-[linear-gradient(180deg,rgba(138,99,255,0.12),rgba(57,231,255,0.05))] text-[var(--fg)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:-translate-y-px hover:bg-[linear-gradient(180deg,rgba(138,99,255,0.16),rgba(57,231,255,0.08))]',
         ghost: 'text-[var(--fg)] hover:bg-white/8 hover:text-[var(--fg)]',

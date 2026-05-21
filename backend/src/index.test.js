@@ -1,7 +1,7 @@
 const test = require('node:test')
 const assert = require('node:assert/strict')
 
-const { normalizeText, validateContactPayload } = require('./index')
+const { checkContactRateLimitMemory, getClientIp, normalizeText, validateContactPayload } = require('./index')
 
 test('normalizeText trims strings and ignores non-string values', () => {
   assert.equal(normalizeText('  William  '), 'William')
@@ -31,4 +31,35 @@ test('validateContactPayload rejects invalid payloads', () => {
 
   assert.equal(result.isValid, false)
   assert.equal(result.errors.length, 3)
+})
+
+test('getClientIp prefers x-forwarded-for first value', () => {
+  const ip = getClientIp({
+    headers: {
+      'x-forwarded-for': '203.0.113.10, 10.0.0.1',
+    },
+    ip: '127.0.0.1',
+    socket: { remoteAddress: '127.0.0.1' },
+  })
+
+  assert.equal(ip, '203.0.113.10')
+})
+
+test('checkContactRateLimitMemory allows first requests then blocks after limit', () => {
+  const req = {
+    headers: {},
+    ip: '198.51.100.7',
+    socket: { remoteAddress: '198.51.100.7' },
+  }
+
+  let lastResult = null
+
+  for (let index = 0; index < 5; index += 1) {
+    lastResult = checkContactRateLimitMemory(req)
+    assert.equal(lastResult.allowed, true)
+  }
+
+  const blockedResult = checkContactRateLimitMemory(req)
+  assert.equal(blockedResult.allowed, false)
+  assert.equal(blockedResult.remaining, 0)
 })

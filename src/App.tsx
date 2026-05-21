@@ -84,7 +84,7 @@ const copy = {
             'Outil pedagogique pour aider au raisonnement par etapes, avec une interface de guidage, une logique de contexte et une structure produit exploitable.',
           url: 'stack',
           image:
-            'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1763568258844-b31a923568b8?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=80&w=1400',
         },
         {
           id: 'sakura-line',
@@ -93,7 +93,7 @@ const copy = {
             "Site pour une tatoueuse a l'univers sakura, pense pour l'autogestion du contenu, avec une presentation claire de l'activite et des mises a jour simples.",
           url: 'stack',
           image:
-            'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1775135786145-7073d65228a1?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=80&w=1400',
         },
         {
           id: 'questonnaut',
@@ -102,7 +102,16 @@ const copy = {
             'Application de creation d habitudes gamifiee, concue pour rendre le suivi plus engageant, plus lisible et plus motivant au quotidien.',
           url: 'stack',
           image:
-            'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1764664281860-c5725fafa634?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=80&w=1400',
+        },
+        {
+          id: 'portfolio',
+          title: 'Portfolio',
+          summary:
+            'Portfolio personnel concu pour presenter mon approche, mes projets et ma maniere de construire des interfaces lisibles avec une base technique maintenable.',
+          url: 'stack',
+          image:
+            'https://images.unsplash.com/photo-1520583457224-aee11bad5112?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGRldmVsb3BlciUyMGRlc2t8ZW58MHx8MHx8fDA%3D&ixlib=rb-4.1.0&q=80&w=1400',
         },
       ],
     },
@@ -130,6 +139,13 @@ const copy = {
       email: 'Mail',
       github: 'GitHub',
       linkedin: 'LinkedIn',
+    },
+    mailModal: {
+      title: 'Me contacter',
+      text: "Tu peux m'ecrire directement par email. Si ton client mail ne s'ouvre pas bien, l'adresse reste visible ici.",
+      copy: 'Copier le mail',
+      copied: 'Mail copie',
+      close: 'Fermer',
     },
     theme: {
       light: 'Activer le theme clair',
@@ -201,7 +217,7 @@ const copy = {
             'A pedagogical tool designed to support step-by-step reasoning, with guided interactions, contextual logic, and a usable product structure.',
           url: 'stack',
           image:
-            'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1763568258844-b31a923568b8?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=80&w=1400',
         },
         {
           id: 'sakura-line',
@@ -210,7 +226,7 @@ const copy = {
             'A website for a tattoo artist with a sakura-inspired visual world, built for easy content management, clear presentation, and simple updates.',
           url: 'stack',
           image:
-            'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1775135786145-7073d65228a1?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=80&w=1400',
         },
         {
           id: 'questonnaut',
@@ -219,7 +235,16 @@ const copy = {
             'A gamified habit-building app designed to make progress tracking more engaging, more readable, and more motivating every day.',
           url: 'stack',
           image:
-            'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80',
+            'https://images.unsplash.com/photo-1764664281860-c5725fafa634?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=80&w=1400',
+        },
+        {
+          id: 'portfolio',
+          title: 'Portfolio',
+          summary:
+            'A personal portfolio built to present my approach, my projects, and the way I design readable interfaces on top of a maintainable technical foundation.',
+          url: 'stack',
+          image:
+            'https://images.unsplash.com/photo-1520583457224-aee11bad5112?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGRldmVsb3BlciUyMGRlc2t8ZW58MHx8MHx8fDA%3D&ixlib=rb-4.1.0&q=80&w=1400',
         },
       ],
     },
@@ -248,6 +273,13 @@ const copy = {
       github: 'GitHub',
       linkedin: 'LinkedIn',
     },
+    mailModal: {
+      title: 'Get in touch',
+      text: 'You can email me directly. If your mail client does not open properly, the address stays visible here.',
+      copy: 'Copy email',
+      copied: 'Email copied',
+      close: 'Close',
+    },
     theme: {
       light: 'Enable light theme',
       dark: 'Enable dark theme',
@@ -258,8 +290,11 @@ const copy = {
 function PortfolioPage() {
   const [language, setLanguage] = useState<Language>('fr')
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false)
+  const [isMailModalOpen, setIsMailModalOpen] = useState(false)
+  const [isEmailCopied, setIsEmailCopied] = useState(false)
   const languageMenuRef = useRef<HTMLDivElement | null>(null)
   const content = copy[language]
+  const contactEmail = 'william.mahipro@gmail.com'
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language')
@@ -295,6 +330,7 @@ function PortfolioPage() {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsLanguageMenuOpen(false)
+        setIsMailModalOpen(false)
       }
     }
 
@@ -307,6 +343,34 @@ function PortfolioPage() {
     }
   }, [])
 
+  useEffect(() => {
+    if (!isMailModalOpen) {
+      return
+    }
+
+    const { body } = document
+    const previousOverflow = body.style.overflow
+    body.style.overflow = 'hidden'
+
+    return () => {
+      body.style.overflow = previousOverflow
+    }
+  }, [isMailModalOpen])
+
+  useEffect(() => {
+    if (!isEmailCopied) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setIsEmailCopied(false)
+    }, 1800)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [isEmailCopied])
+
   const scrollToSection = (sectionId: string) => {
     const target = document.getElementById(sectionId)
     if (!target) {
@@ -317,6 +381,15 @@ function PortfolioPage() {
       behavior: 'smooth',
       block: 'start',
     })
+  }
+
+  const copyEmailToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(contactEmail)
+      setIsEmailCopied(true)
+    } catch {
+      setIsEmailCopied(false)
+    }
   }
 
   const heroMenuItems = [
@@ -342,7 +415,9 @@ function PortfolioPage() {
       icon: <LuMail />,
       gradientFrom: '#80ff72',
       gradientTo: '#7ee8fa',
-      href: 'mailto:william.mahipro@gmail.com',
+      onClick: () => {
+        setIsMailModalOpen(true)
+      },
     },
     {
       title: content.actions.linkedin,
@@ -360,7 +435,9 @@ function PortfolioPage() {
       icon: <LuMail />,
       gradientFrom: '#80ff72',
       gradientTo: '#7ee8fa',
-      href: 'mailto:william.mahipro@gmail.com',
+      onClick: () => {
+        setIsMailModalOpen(true)
+      },
     },
     {
       title: content.actions.github,
@@ -384,6 +461,57 @@ function PortfolioPage() {
 
   return (
     <div className="portfolio-shell">
+      {isMailModalOpen ? (
+        <div
+          className="portfolio-modal-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="mail-modal-title"
+          onClick={() => {
+            setIsMailModalOpen(false)
+          }}
+        >
+          <div
+            className="portfolio-modal"
+            onClick={(event) => {
+              event.stopPropagation()
+            }}
+          >
+            <div className="portfolio-modal-header">
+              <h2 id="mail-modal-title" className="portfolio-modal-title">
+                {content.mailModal.title}
+              </h2>
+              <button
+                type="button"
+                className="portfolio-modal-close"
+                aria-label={content.mailModal.close}
+                onClick={() => {
+                  setIsMailModalOpen(false)
+                }}
+              >
+                ×
+              </button>
+            </div>
+            <p className="portfolio-modal-text">{content.mailModal.text}</p>
+            <div className="portfolio-modal-email">{contactEmail}</div>
+            <div className="portfolio-modal-actions">
+              <button type="button" className="portfolio-button" onClick={copyEmailToClipboard}>
+                {isEmailCopied ? content.mailModal.copied : content.mailModal.copy}
+              </button>
+              <button
+                type="button"
+                className="portfolio-button portfolio-button-secondary"
+                onClick={() => {
+                  setIsMailModalOpen(false)
+                }}
+              >
+                {content.mailModal.close}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <button
         type="button"
         className="skip-link"
@@ -531,7 +659,7 @@ function PortfolioPage() {
           <ChevronDown aria-hidden="true" />
         </button>
 
-        <section id="projects" className="portfolio-section">
+        <section id="projects" className="portfolio-section portfolio-projects-section">
           <Gallery6
             items={content.projects.items}
             itemCtaLabel={content.projects.ctaLabel}
