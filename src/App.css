@@ -1875,9 +1875,9 @@ html.dark .portfolio-input:focus-visible {
   }
 
   .portfolio-stack-visual {
-    min-height: 320px;
-    padding: 0.25rem 0 0.5rem;
-    overflow: hidden;
+    min-height: 560px;
+    padding: 0.5rem 0 1rem;
+    overflow: visible;
   }
 
   .portfolio-stack-visual-head {
