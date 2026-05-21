@@ -130,7 +130,7 @@ const Gallery6 = ({
             {items.map((item) => (
               <CarouselItem
                 key={item.id}
-                className="flex pl-6 py-6 md:basis-[440px] lg:basis-[500px] xl:basis-[560px]"
+                className="flex basis-[86vw] pl-6 py-5 max-sm:max-w-[22rem] md:basis-[440px] md:py-6 lg:basis-[500px] xl:basis-[560px]"
               >
                 <ElectricBorder
                   color="#7df9ff"
@@ -142,7 +142,7 @@ const Gallery6 = ({
                 >
                   <a
                     href={item.url}
-                    className="group flex h-[30rem] w-full flex-col justify-between rounded-2xl border border-[rgba(16,33,44,0.07)] bg-[rgba(248,249,250,0.9)] p-5 shadow-[0_22px_60px_rgba(76,103,119,0.10)] transition-[transform,box-shadow,border-color,background-color] duration-300 hover:-translate-y-0.5 hover:border-[rgba(28,141,179,0.16)] hover:shadow-[0_28px_72px_rgba(76,103,119,0.14)] dark:border-white/7 dark:bg-[rgba(28,33,38,0.82)] dark:shadow-[0_28px_72px_rgba(0,0,0,0.26)] md:h-[31rem] md:p-6"
+                    className="group flex h-[27rem] w-full flex-col justify-between rounded-2xl border border-[rgba(16,33,44,0.07)] bg-[rgba(248,249,250,0.9)] p-4 shadow-[0_22px_60px_rgba(76,103,119,0.10)] transition-[transform,box-shadow,border-color,background-color] duration-300 hover:-translate-y-0.5 hover:border-[rgba(28,141,179,0.16)] hover:shadow-[0_28px_72px_rgba(76,103,119,0.14)] dark:border-white/7 dark:bg-[rgba(28,33,38,0.82)] dark:shadow-[0_28px_72px_rgba(0,0,0,0.26)] sm:h-[28rem] sm:p-5 md:h-[31rem] md:p-6"
                     onClick={(event) => {
                       if (!onNavigateToSection) {
                         return
@@ -167,10 +167,10 @@ const Gallery6 = ({
                     </div>
 
                     <div className="pt-5">
-                      <div className="mb-3 line-clamp-2 break-words text-[1.2rem] font-medium leading-[1.08] tracking-[-0.04em] text-[var(--fg)] md:text-[1.45rem] lg:text-[1.55rem]">
+                      <div className="mb-3 line-clamp-2 break-words text-[1.05rem] font-medium leading-[1.08] tracking-[-0.04em] text-[var(--fg)] sm:text-[1.15rem] md:text-[1.45rem] lg:text-[1.55rem]">
                         {item.title}
                       </div>
-                      <div className="mb-7 line-clamp-4 max-w-[56ch] text-sm leading-7 text-[var(--muted)] md:text-base">
+                      <div className="mb-6 line-clamp-4 max-w-[56ch] text-[0.92rem] leading-6 text-[var(--muted)] md:mb-7 md:text-base md:leading-7">
                         {item.summary}
                       </div>
                       <div className="flex items-center text-sm font-medium text-[var(--fg)]/86">

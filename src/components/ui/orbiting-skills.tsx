@@ -471,7 +471,7 @@ export default function OrbitingSkills({ defaultVariant = null }: OrbitingSkills
   return (
     <div className="relative flex w-full items-center justify-center px-4 py-8">
       <div
-        className="relative flex h-[430px] w-[430px] max-w-full items-center justify-center md:h-[470px] md:w-[470px]"
+        className="relative flex h-[340px] w-[340px] max-w-full items-center justify-center sm:h-[400px] sm:w-[400px] md:h-[470px] md:w-[470px]"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >

@@ -24,7 +24,7 @@ type GradientStyle = CSSProperties & {
 export default function GradientMenu({ items, className }: GradientMenuProps) {
   return (
     <div className={['flex w-full justify-center', className].filter(Boolean).join(' ')}>
-      <ul className="flex flex-wrap justify-center gap-4 sm:gap-5">
+      <ul className="flex flex-wrap justify-center gap-3 sm:gap-5">
         {items.map(({ title, icon, gradientFrom, gradientTo, href, onClick, external, ariaLabel }) => {
           const style = {
             '--gradient-from': gradientFrom,
@@ -32,7 +32,7 @@ export default function GradientMenu({ items, className }: GradientMenuProps) {
           } satisfies GradientStyle
 
           const sharedClassName =
-            'group relative flex h-[56px] w-[56px] items-center justify-center overflow-hidden rounded-full border border-[rgba(16,33,44,0.12)] bg-[rgba(248,249,250,0.78)] shadow-[0_16px_36px_rgba(76,103,119,0.10)] backdrop-blur-md transition-all duration-500 hover:w-[168px] hover:border-[rgba(28,141,179,0.18)] hover:shadow-[0_18px_34px_rgba(76,103,119,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40 dark:border-white/8 dark:bg-white/6 dark:shadow-[0_16px_36px_rgba(0,0,0,0.18)]'
+            'group relative flex h-[52px] w-[52px] items-center justify-center overflow-hidden rounded-full border border-[rgba(16,33,44,0.12)] bg-[rgba(248,249,250,0.78)] shadow-[0_16px_36px_rgba(76,103,119,0.10)] backdrop-blur-md transition-all duration-500 hover:w-[152px] hover:border-[rgba(28,141,179,0.18)] hover:shadow-[0_18px_34px_rgba(76,103,119,0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/40 dark:border-white/8 dark:bg-white/6 dark:shadow-[0_16px_36px_rgba(0,0,0,0.18)] sm:h-[56px] sm:w-[56px] sm:hover:w-[168px]'
 
           const content = (
             <>
