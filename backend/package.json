@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "API Express pour le portfolio",
-  "packageManager": "pnpm@11.1.1",
+  "packageManager": "pnpm@10.17.0",
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
