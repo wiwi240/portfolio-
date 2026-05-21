@@ -469,9 +469,9 @@ export default function OrbitingSkills({ defaultVariant = null }: OrbitingSkills
   }, [isPaused])
 
   return (
-    <div className="relative flex w-full items-center justify-center px-4 py-8">
+    <div className="relative flex w-full items-center justify-center overflow-hidden px-2 py-6 sm:px-4 sm:py-8">
       <div
-        className="relative flex h-[340px] w-[340px] max-w-full items-center justify-center sm:h-[400px] sm:w-[400px] md:h-[470px] md:w-[470px]"
+        className="relative flex h-[300px] w-[300px] max-w-full items-center justify-center sm:h-[400px] sm:w-[400px] md:h-[470px] md:w-[470px]"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
