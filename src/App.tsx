@@ -407,7 +407,7 @@ function PortfolioPage() {
       icon: <FaGithub />,
       gradientFrom: '#8b5cf6',
       gradientTo: '#d946ef',
-      href: 'https://github.com/dashboard',
+      href: 'https://github.com/wiwi240',
       external: true,
     },
     {
@@ -444,7 +444,7 @@ function PortfolioPage() {
       icon: <FaGithub />,
       gradientFrom: '#8b5cf6',
       gradientTo: '#d946ef',
-      href: 'https://github.com/dashboard',
+      href: 'https://github.com/wiwi240',
       external: true,
     },
     {
