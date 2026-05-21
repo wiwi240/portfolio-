@@ -1,12 +1,20 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const { Pool } = require('pg')
+const nodemailer = require('nodemailer')
 
 dotenv.config()
 
 const PORT = Number.parseInt(process.env.PORT ?? '4000', 10)
 const CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ?? 'http://localhost:5173'
 const DATABASE_URL = process.env.DATABASE_URL?.trim() || null
+const SMTP_HOST = process.env.SMTP_HOST?.trim() || ''
+const SMTP_PORT = Number.parseInt(process.env.SMTP_PORT ?? '587', 10)
+const SMTP_SECURE = process.env.SMTP_SECURE === 'true'
+const SMTP_USER = process.env.SMTP_USER?.trim() || ''
+const SMTP_PASS = process.env.SMTP_PASS?.trim() || ''
+const MAIL_TO = process.env.MAIL_TO?.trim() || 'william.mahipro@gmail.com'
+const MAIL_FROM = process.env.MAIL_FROM?.trim() || SMTP_USER || MAIL_TO
 
 const app = express()
 app.disable('x-powered-by')
@@ -27,8 +35,30 @@ app.use((req, res, next) => {
 
 let pool = null
 let databaseReady = false
+let mailerReady = false
 const fallbackMessages = []
 let nextMessageId = 1
+let mailTransporter = null
+
+function isMailerConfigured() {
+  return Boolean(SMTP_HOST && SMTP_PORT && SMTP_USER && SMTP_PASS && MAIL_TO && MAIL_FROM)
+}
+
+function createMailTransporter() {
+  if (!isMailerConfigured()) {
+    return null
+  }
+
+  return nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_SECURE,
+    auth: {
+      user: SMTP_USER,
+      pass: SMTP_PASS,
+    },
+  })
+}
 
 function normalizeText(value) {
   return typeof value === 'string' ? value.trim() : ''
@@ -86,6 +116,18 @@ async function initDatabase() {
   databaseReady = true
 }
 
+async function initMailer() {
+  mailTransporter = createMailTransporter()
+
+  if (!mailTransporter) {
+    mailerReady = false
+    return
+  }
+
+  await mailTransporter.verify()
+  mailerReady = true
+}
+
 async function storeMessage(data) {
   if (databaseReady && pool) {
     const result = await pool.query(
@@ -120,6 +162,61 @@ async function storeMessage(data) {
   }
 }
 
+async function sendContactNotification(record) {
+  if (!mailerReady || !mailTransporter) {
+    return {
+      delivered: false,
+      reason: 'not_configured',
+    }
+  }
+
+  const subject = `Nouveau message portfolio - ${record.name}`
+  const text = [
+    `Nom: ${record.name}`,
+    `Email: ${record.email}`,
+    '',
+    'Message:',
+    record.message,
+    '',
+    `Recu le: ${record.created_at}`,
+    `ID: ${record.id}`,
+  ].join('\n')
+
+  const html = `
+    <h2>Nouveau message portfolio</h2>
+    <p><strong>Nom :</strong> ${escapeHtml(record.name)}</p>
+    <p><strong>Email :</strong> ${escapeHtml(record.email)}</p>
+    <p><strong>Message :</strong></p>
+    <p>${escapeHtml(record.message).replace(/\n/g, '<br />')}</p>
+    <hr />
+    <p><strong>Recu le :</strong> ${escapeHtml(record.created_at)}</p>
+    <p><strong>ID :</strong> ${escapeHtml(String(record.id))}</p>
+  `
+
+  await mailTransporter.sendMail({
+    from: MAIL_FROM,
+    to: MAIL_TO,
+    replyTo: record.email,
+    subject,
+    text,
+    html,
+  })
+
+  return {
+    delivered: true,
+    reason: null,
+  }
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+}
+
 app.get('/api/health', async (_req, res) => {
   if (databaseReady && pool) {
     try {
@@ -128,6 +225,7 @@ app.get('/api/health', async (_req, res) => {
         status: 'ok',
         service: 'portfolio-backend',
         database: 'connected',
+        mailer: mailerReady ? 'configured' : 'not_configured',
       })
       return
     } catch (error) {
@@ -136,6 +234,7 @@ app.get('/api/health', async (_req, res) => {
         status: 'degraded',
         service: 'portfolio-backend',
         database: 'error',
+        mailer: mailerReady ? 'configured' : 'not_configured',
       })
       return
     }
@@ -145,6 +244,7 @@ app.get('/api/health', async (_req, res) => {
     status: 'ok',
     service: 'portfolio-backend',
     database: 'not_configured',
+    mailer: mailerReady ? 'configured' : 'not_configured',
   })
 })
 
@@ -189,11 +289,26 @@ app.post('/api/contact', async (req, res) => {
   }
 
   const result = await storeMessage(validation.data)
+  let delivery = {
+    delivered: false,
+    reason: 'not_configured',
+  }
+
+  try {
+    delivery = await sendContactNotification(result.record)
+  } catch (error) {
+    console.error('Mailer delivery failed:', error.message)
+    delivery = {
+      delivered: false,
+      reason: 'send_failed',
+    }
+  }
 
   res.status(201).json({
     message: 'Message recu.',
     storage: result.storage,
     item: result.record,
+    emailDelivery: delivery,
   })
 })
 
@@ -219,10 +334,19 @@ async function startServer() {
     console.error('Database init failed, fallback to memory storage:', error.message)
   }
 
+  try {
+    await initMailer()
+  } catch (error) {
+    mailerReady = false
+    mailTransporter = null
+    console.error('Mailer init failed, email notifications disabled:', error.message)
+  }
+
   return app.listen(PORT, () => {
     console.log(`Backend running on http://localhost:${PORT}`)
     console.log(`Accepted origin: ${CLIENT_ORIGIN}`)
     console.log(`Storage mode: ${databaseReady ? 'database' : 'memory'}`)
+    console.log(`Mailer mode: ${mailerReady ? 'smtp' : 'disabled'}`)
   })
 }
 
@@ -232,6 +356,10 @@ if (require.main === module) {
 
 module.exports = {
   app,
+  createMailTransporter,
+  escapeHtml,
+  isMailerConfigured,
+  sendContactNotification,
   startServer,
   validateContactPayload,
   normalizeText,

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6'
 import { ChevronDown } from 'lucide-react'
 import { motion } from 'motion/react'
@@ -10,55 +11,302 @@ import OrbitingSkills from '@/components/ui/orbiting-skills'
 import { ThemeSwitch } from '@/components/ui/theme-switch'
 import './App.css'
 
-const projectGalleryItems = [
-  {
-    id: 'rubber-duck',
-    title: 'Rubber Duck',
-    summary:
-      'Dev tool pedagogique pour aider au raisonnement par etapes, avec une interface de guidage, une logique de contexte et une structure produit exploitable.',
-    url: 'stack',
-    image:
-      'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80',
-  },
-  {
-    id: 'sakura-line',
-    title: 'Sakura Line Studio',
-    summary:
-      'Site pour une tatoueuse avec univers sakura, pense pour l autogestion du contenu, une presentation claire de l activite et une mise a jour simple du site.',
-    url: 'stack',
-    image:
-      'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=80',
-  },
-  {
-    id: 'questonnaut',
-    title: 'Questonnaut',
-    summary:
-      'Application de creation d habitudes gamifiee, pensee pour rendre le suivi plus engageant, plus lisible et plus motivant au quotidien.',
-    url: 'stack',
-    image:
-      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80',
-  },
-]
+type Language = 'fr' | 'en'
 
-const aboutItems = [
-  {
-    title: 'Une base claire avant tout.',
-    text:
-      'Je cherche a construire des projets que l on peut comprendre rapidement, reprendre facilement et faire evoluer sans repartir de zero.',
+const languageOptions = [
+  { value: 'fr', shortLabel: 'FR', longLabel: 'Francais' },
+  { value: 'en', shortLabel: 'EN', longLabel: 'English' },
+] as const
+
+const copy = {
+  fr: {
+    meta: {
+      title: 'William Mahi | Developpeur full-stack',
+      description:
+        'Portfolio de William Mahi, developpeur full-stack. Interfaces React soignees, back-end Node fiable et experiences web rapides.',
+    },
+    nav: {
+      skipToContent: 'Aller au contenu',
+      sectionsLabel: 'Sections du portfolio',
+      projects: 'Projets',
+      stack: 'Stack',
+      about: 'A propos',
+    },
+    hero: {
+      title: 'Base solide. Maintenance durable.',
+      lead:
+        'Developpement front-end et back-end avec une execution propre, une logique claire et des choix techniques faciles a lire.',
+      jumpToProjects: 'Defiler vers les projets',
+    },
+    stack: {
+      kicker: 'Stack / competences',
+      title: 'Une stack claire, une base solide.',
+      lead:
+        'Cette vue regroupe les langages et frameworks principaux : Python, HTML, TypeScript, JavaScript, Bootstrap, CSS, GraphQL, Ruby, Ruby on Rails, React, Tailwind CSS et Next.js.',
+      visualLabel: "Vue d'ensemble",
+      visualText:
+        'Une vue unique pour situer rapidement les langages, frameworks et outils de travail.',
+      jumpToAbout: 'Defiler vers la section A propos',
+    },
+    about: {
+      kicker: 'A propos',
+      title: 'Construire quelque chose qui dure.',
+      lead:
+        `"Base solide. Maintenance durable." n'est pas qu'une formule visuelle. C'est une maniere de penser un projet : poser une base propre, faire des choix comprehensibles et garder assez de clarte pour que le produit puisse evoluer sans se fragiliser.`,
+      photoPlaceholder: 'Photo',
+      photoText: 'Emplacement reserve pour ton portrait.',
+      items: [
+        {
+          title: 'Une base claire avant tout.',
+          text:
+            "Je cherche a construire des projets que l'on peut comprendre rapidement, reprendre facilement et faire evoluer sans repartir de zero.",
+        },
+        {
+          title: 'Un produit qui tient quand il evolue.',
+          text:
+            "Pour moi, un projet solide n'est pas seulement un projet qui fonctionne. C'est un projet qui reste propre quand on ajoute des besoins, des pages ou de la logique.",
+        },
+        {
+          title: 'Une execution lisible du front au back.',
+          text:
+            "J'essaie de garder la meme exigence partout : une interface nette, une logique explicite et une structure assez simple pour rester maintenable dans le temps.",
+        },
+      ],
+    },
+    projects: {
+      ctaLabel: 'Voir le projet',
+      jumpToStack: 'Defiler vers la stack',
+      items: [
+        {
+          id: 'rubber-duck',
+          title: 'Rubber Duck',
+          summary:
+            'Outil pedagogique pour aider au raisonnement par etapes, avec une interface de guidage, une logique de contexte et une structure produit exploitable.',
+          url: 'stack',
+          image:
+            'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80',
+        },
+        {
+          id: 'sakura-line',
+          title: 'Sakura Line Studio',
+          summary:
+            "Site pour une tatoueuse a l'univers sakura, pense pour l'autogestion du contenu, avec une presentation claire de l'activite et des mises a jour simples.",
+          url: 'stack',
+          image:
+            'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=80',
+        },
+        {
+          id: 'questonnaut',
+          title: 'Questonnaut',
+          summary:
+            'Application de creation d habitudes gamifiee, concue pour rendre le suivi plus engageant, plus lisible et plus motivant au quotidien.',
+          url: 'stack',
+          image:
+            'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80',
+        },
+      ],
+    },
+    contact: {
+      kicker: 'Contact',
+      title: 'Un projet en tete ?',
+      text:
+        "Si mon approche te parle, on peut echanger simplement autour d'une idee, d'un besoin produit ou d'une collaboration.",
+    },
+    footer: {
+      copy: 'Portfolio personnel. Conception, integration front-end et structuration produit.',
+      legalLabel: 'Informations legales',
+      legal: 'Mentions legales',
+      privacy: 'Politique de confidentialite',
+      terms: "Conditions d'utilisation",
+      rights: 'Tous droits reserves.',
+    },
+    language: {
+      label: 'Selection de la langue',
+      fr: 'FR',
+      en: 'EN',
+    },
+    actions: {
+      viewProjects: 'Voir les projets',
+      email: 'Mail',
+      github: 'GitHub',
+      linkedin: 'LinkedIn',
+    },
+    theme: {
+      light: 'Activer le theme clair',
+      dark: 'Activer le theme sombre',
+    },
   },
-  {
-    title: 'Un produit qui tient quand il evolue.',
-    text:
-      'Pour moi, un projet solide n est pas seulement un projet qui fonctionne. C est un projet qui continue a rester propre quand on ajoute des besoins, des pages ou de la logique.',
+  en: {
+    meta: {
+      title: 'William Mahi | Full-stack developer',
+      description:
+        'Portfolio of William Mahi, full-stack developer. Thoughtful React interfaces, reliable Node back-end, and fast web experiences.',
+    },
+    nav: {
+      skipToContent: 'Skip to content',
+      sectionsLabel: 'Portfolio sections',
+      projects: 'Projects',
+      stack: 'Stack',
+      about: 'About',
+    },
+    hero: {
+      title: 'Solid foundation. Durable maintenance.',
+      lead:
+        'Front-end and back-end development with clean execution, clear logic, and technical choices that are easy to understand.',
+      jumpToProjects: 'Scroll to projects',
+    },
+    stack: {
+      kicker: 'Stack / skills',
+      title: 'Clear stack, solid foundation.',
+      lead:
+        'This view brings together the main languages and frameworks: Python, HTML, TypeScript, JavaScript, Bootstrap, CSS, GraphQL, Ruby, Ruby on Rails, React, Tailwind CSS, and Next.js.',
+      visualLabel: 'Overview',
+      visualText:
+        'A single view to quickly map the main languages, frameworks, and working tools.',
+      jumpToAbout: 'Scroll to the About section',
+    },
+    about: {
+      kicker: 'About',
+      title: 'Build something that lasts.',
+      lead:
+        '"Solid foundation. Durable maintenance." is not just a visual tagline. It is a way to think about a product: start from a clean base, make understandable decisions, and keep enough clarity for the product to evolve without becoming fragile.',
+      photoPlaceholder: 'Photo',
+      photoText: 'Reserved space for your portrait.',
+      items: [
+        {
+          title: 'Clarity first.',
+          text:
+            'I aim to build projects that can be understood quickly, picked up easily, and evolved without starting from scratch.',
+        },
+        {
+          title: 'A product that holds up as it grows.',
+          text:
+            'To me, a solid product is not only one that works. It is one that stays clean when new needs, pages, or logic are added.',
+        },
+        {
+          title: 'Readable execution from front to back.',
+          text:
+            'I try to keep the same standard everywhere: a sharp interface, explicit logic, and a structure simple enough to stay maintainable over time.',
+        },
+      ],
+    },
+    projects: {
+      ctaLabel: 'View project',
+      jumpToStack: 'Scroll to the stack',
+      items: [
+        {
+          id: 'rubber-duck',
+          title: 'Rubber Duck',
+          summary:
+            'A pedagogical tool designed to support step-by-step reasoning, with guided interactions, contextual logic, and a usable product structure.',
+          url: 'stack',
+          image:
+            'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80',
+        },
+        {
+          id: 'sakura-line',
+          title: 'Sakura Line Studio',
+          summary:
+            'A website for a tattoo artist with a sakura-inspired visual world, built for easy content management, clear presentation, and simple updates.',
+          url: 'stack',
+          image:
+            'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=1400&q=80',
+        },
+        {
+          id: 'questonnaut',
+          title: 'Questonnaut',
+          summary:
+            'A gamified habit-building app designed to make progress tracking more engaging, more readable, and more motivating every day.',
+          url: 'stack',
+          image:
+            'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80',
+        },
+      ],
+    },
+    contact: {
+      kicker: 'Contact',
+      title: 'Have a project in mind?',
+      text:
+        'If my approach speaks to you, we can talk simply about an idea, a product need, or a collaboration.',
+    },
+    footer: {
+      copy: 'Personal portfolio. Front-end design, implementation, and product structuring.',
+      legalLabel: 'Legal information',
+      legal: 'Legal notice',
+      privacy: 'Privacy policy',
+      terms: 'Terms of use',
+      rights: 'All rights reserved.',
+    },
+    language: {
+      label: 'Language selection',
+      fr: 'FR',
+      en: 'EN',
+    },
+    actions: {
+      viewProjects: 'View projects',
+      email: 'Email',
+      github: 'GitHub',
+      linkedin: 'LinkedIn',
+    },
+    theme: {
+      light: 'Enable light theme',
+      dark: 'Enable dark theme',
+    },
   },
-  {
-    title: 'Une execution lisible du front au back.',
-    text:
-      'J essaie de garder la meme exigence partout: une interface nette, une logique explicite et une structure assez simple pour rester maintenable dans le temps.',
-  },
-]
+} as const
 
 function PortfolioPage() {
+  const [language, setLanguage] = useState<Language>('fr')
+  const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false)
+  const languageMenuRef = useRef<HTMLDivElement | null>(null)
+  const content = copy[language]
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('language')
+
+    if (savedLanguage === 'fr' || savedLanguage === 'en') {
+      setLanguage(savedLanguage)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('language', language)
+    document.documentElement.lang = language
+    document.title = content.meta.title
+
+    let descriptionTag = document.querySelector('meta[name="description"]')
+
+    if (!descriptionTag) {
+      descriptionTag = document.createElement('meta')
+      descriptionTag.setAttribute('name', 'description')
+      document.head.appendChild(descriptionTag)
+    }
+
+    descriptionTag.setAttribute('content', content.meta.description)
+  }, [content.meta.description, content.meta.title, language])
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!languageMenuRef.current?.contains(event.target as Node)) {
+        setIsLanguageMenuOpen(false)
+      }
+    }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsLanguageMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handlePointerDown)
+    document.addEventListener('keydown', handleEscape)
+
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown)
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [])
+
   const scrollToSection = (sectionId: string) => {
     const target = document.getElementById(sectionId)
     if (!target) {
@@ -73,7 +321,7 @@ function PortfolioPage() {
 
   const heroMenuItems = [
     {
-      title: 'Voir projets',
+      title: content.actions.viewProjects,
       icon: <LuFolderOpen />,
       gradientFrom: '#56ccf2',
       gradientTo: '#2f80ed',
@@ -82,55 +330,57 @@ function PortfolioPage() {
       },
     },
     {
-      title: 'GitHub',
+      title: content.actions.github,
       icon: <FaGithub />,
       gradientFrom: '#8b5cf6',
       gradientTo: '#d946ef',
-      href: 'https://github.com/your-github-handle',
+      href: 'https://github.com/dashboard',
       external: true,
     },
     {
-      title: 'Mail',
+      title: content.actions.email,
       icon: <LuMail />,
       gradientFrom: '#80ff72',
       gradientTo: '#7ee8fa',
-      href: 'mailto:contact@example.com',
+      href: 'mailto:william.mahipro@gmail.com',
     },
     {
-      title: 'LinkedIn',
+      title: content.actions.linkedin,
       icon: <FaLinkedinIn />,
       gradientFrom: '#60a5fa',
       gradientTo: '#2563eb',
-      href: 'https://www.linkedin.com/in/your-linkedin-handle',
+      href: 'https://www.linkedin.com/in/william-mahi-9727243a3/',
       external: true,
     },
   ]
 
   const contactMenuItems = [
     {
-      title: 'Mail',
+      title: content.actions.email,
       icon: <LuMail />,
       gradientFrom: '#80ff72',
       gradientTo: '#7ee8fa',
-      href: 'mailto:contact@example.com',
+      href: 'mailto:william.mahipro@gmail.com',
     },
     {
-      title: 'GitHub',
+      title: content.actions.github,
       icon: <FaGithub />,
       gradientFrom: '#8b5cf6',
       gradientTo: '#d946ef',
-      href: 'https://github.com/your-github-handle',
+      href: 'https://github.com/dashboard',
       external: true,
     },
     {
-      title: 'LinkedIn',
+      title: content.actions.linkedin,
       icon: <FaLinkedinIn />,
       gradientFrom: '#60a5fa',
       gradientTo: '#2563eb',
-      href: 'https://www.linkedin.com/in/your-linkedin-handle',
+      href: 'https://www.linkedin.com/in/william-mahi-9727243a3/',
       external: true,
     },
   ]
+
+  const activeLanguage = languageOptions.find((option) => option.value === language) ?? languageOptions[0]
 
   return (
     <div className="portfolio-shell">
@@ -141,7 +391,7 @@ function PortfolioPage() {
           scrollToSection('content')
         }}
       >
-        Aller au contenu
+        {content.nav.skipToContent}
       </button>
 
       <header className="portfolio-nav">
@@ -156,7 +406,7 @@ function PortfolioPage() {
             William Mahi
           </button>
 
-          <nav className="portfolio-nav-links" aria-label="Sections du portfolio">
+          <nav className="portfolio-nav-links" aria-label={content.nav.sectionsLabel}>
             <button
               type="button"
               className="portfolio-nav-link portfolio-link-button"
@@ -164,7 +414,7 @@ function PortfolioPage() {
                 scrollToSection('projects')
               }}
             >
-              Projets
+              {content.nav.projects}
             </button>
             <button
               type="button"
@@ -173,7 +423,7 @@ function PortfolioPage() {
                 scrollToSection('stack')
               }}
             >
-              Stack
+              {content.nav.stack}
             </button>
             <button
               type="button"
@@ -182,10 +432,56 @@ function PortfolioPage() {
                 scrollToSection('about')
               }}
             >
-              About
+              {content.nav.about}
             </button>
           </nav>
-          <ThemeSwitch className="portfolio-theme-switch" />
+
+          <div className="portfolio-nav-controls">
+            <div className="portfolio-language-menu" ref={languageMenuRef}>
+              <button
+                type="button"
+                className={`portfolio-language-trigger${isLanguageMenuOpen ? ' is-open' : ''}`}
+                onClick={() => {
+                  setIsLanguageMenuOpen((currentValue) => !currentValue)
+                }}
+                aria-label={content.language.label}
+                aria-haspopup="menu"
+                aria-expanded={isLanguageMenuOpen}
+              >
+                <span>{activeLanguage.shortLabel}</span>
+                <ChevronDown
+                  aria-hidden="true"
+                  className={`portfolio-language-trigger-icon${isLanguageMenuOpen ? ' is-open' : ''}`}
+                />
+              </button>
+
+              {isLanguageMenuOpen ? (
+                <div className="portfolio-language-dropdown" role="menu" aria-label={content.language.label}>
+                  {languageOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      className={`portfolio-language-dropdown-item${language === option.value ? ' is-active' : ''}`}
+                      onClick={() => {
+                        setLanguage(option.value)
+                        setIsLanguageMenuOpen(false)
+                      }}
+                      role="menuitemradio"
+                      aria-checked={language === option.value}
+                    >
+                      <span className="portfolio-language-dropdown-short">{option.shortLabel}</span>
+                      <span className="portfolio-language-dropdown-long">{option.longLabel}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+            <ThemeSwitch
+              className="portfolio-theme-switch"
+              lightThemeLabel={content.theme.light}
+              darkThemeLabel={content.theme.dark}
+            />
+          </div>
         </div>
       </header>
 
@@ -218,11 +514,8 @@ function PortfolioPage() {
           </div>
           <div className="portfolio-hero-grid">
             <div className="portfolio-hero-copy-main">
-              <h1 className="portfolio-title">Build solide. Maintenance durable.</h1>
-              <p className="portfolio-lead">
-                Developpement front et back avec une execution propre, une logique claire et des choix techniques
-                faciles a lire.
-              </p>
+              <h1 className="portfolio-title">{content.hero.title}</h1>
+              <p className="portfolio-lead">{content.hero.lead}</p>
               <GradientMenu items={heroMenuItems} className="mt-5" />
             </div>
           </div>
@@ -230,7 +523,7 @@ function PortfolioPage() {
         <button
           type="button"
           className="portfolio-section-jump portfolio-hero-jump"
-          aria-label="Defiler vers les projets"
+          aria-label={content.hero.jumpToProjects}
           onClick={() => {
             scrollToSection('projects')
           }}
@@ -240,13 +533,14 @@ function PortfolioPage() {
 
         <section id="projects" className="portfolio-section">
           <Gallery6
-            items={projectGalleryItems}
+            items={content.projects.items}
+            itemCtaLabel={content.projects.ctaLabel}
             onNavigateToSection={scrollToSection}
           />
           <button
             type="button"
             className="portfolio-section-jump"
-            aria-label="Defiler vers la stack"
+            aria-label={content.projects.jumpToStack}
             onClick={() => {
               scrollToSection('stack')
             }}
@@ -258,17 +552,12 @@ function PortfolioPage() {
         <section id="stack" className="portfolio-section portfolio-section-alt">
           <div className="portfolio-stack-layout">
             <div className="portfolio-heading portfolio-stack-copy">
-              <p className="portfolio-kicker">Stack / competences</p>
-              <h2 className="portfolio-section-title">Stack claire, base solide.</h2>
-              <p className="portfolio-section-lead">
-                Cette vue regroupe les langages et frameworks principaux: Python, HTML, TypeScript,
-                JavaScript, Bootstrap, CSS, GraphQL, Ruby, Ruby on Rails, React, Tailwind CSS et Next.js.
-              </p>
+              <p className="portfolio-kicker">{content.stack.kicker}</p>
+              <h2 className="portfolio-section-title">{content.stack.title}</h2>
+              <p className="portfolio-section-lead">{content.stack.lead}</p>
               <div className="portfolio-stack-visual-head">
-                <span className="portfolio-project-label">Orbit global</span>
-                <p className="portfolio-stack-visual-text">
-                  Une vue unique pour situer rapidement langages, frameworks et outils de travail.
-                </p>
+                <span className="portfolio-project-label">{content.stack.visualLabel}</span>
+                <p className="portfolio-stack-visual-text">{content.stack.visualText}</p>
               </div>
             </div>
 
@@ -279,7 +568,7 @@ function PortfolioPage() {
           <button
             type="button"
             className="portfolio-section-jump"
-            aria-label="Defiler vers la section about me"
+            aria-label={content.stack.jumpToAbout}
             onClick={() => {
               scrollToSection('about')
             }}
@@ -293,23 +582,19 @@ function PortfolioPage() {
             <div className="portfolio-about-photo-card" aria-hidden="true">
               <div className="portfolio-about-photo-frame">
                 <div className="portfolio-about-photo-placeholder">
-                  <span className="portfolio-project-label">Photo</span>
-                  <p className="portfolio-about-photo-text">Emplacement reserve pour ton portrait.</p>
+                  <span className="portfolio-project-label">{content.about.photoPlaceholder}</span>
+                  <p className="portfolio-about-photo-text">{content.about.photoText}</p>
                 </div>
               </div>
             </div>
 
             <div className="portfolio-heading portfolio-about-copy">
-              <p className="portfolio-kicker">About me</p>
-              <h2 className="portfolio-section-title">Construire quelque chose qui dure.</h2>
-              <p className="portfolio-section-lead">
-                "Build solide. Maintenance durable." n est pas juste une formule visuelle. C est une
-                facon de penser un projet: poser une base propre, faire des choix comprenables et
-                garder assez de clarte pour que le produit puisse continuer a vivre sans se fragiliser.
-              </p>
+              <p className="portfolio-kicker">{content.about.kicker}</p>
+              <h2 className="portfolio-section-title">{content.about.title}</h2>
+              <p className="portfolio-section-lead">{content.about.lead}</p>
 
               <div className="portfolio-about-card">
-                {aboutItems.map((item, index) => (
+                {content.about.items.map((item, index) => (
                   <motion.article
                     key={item.title}
                     className="portfolio-about-block"
@@ -329,12 +614,9 @@ function PortfolioPage() {
 
         <section id="contact" className="portfolio-section portfolio-section-alt portfolio-contact-section">
           <div className="portfolio-heading">
-            <p className="portfolio-kicker">Contact</p>
-            <h2 className="portfolio-contact-title">Un projet en tete ?</h2>
-            <p className="portfolio-contact-text">
-              Si mon approche te parle, on peut echanger simplement autour d une idee, d un besoin
-              produit ou d une collaboration.
-            </p>
+            <p className="portfolio-kicker">{content.contact.kicker}</p>
+            <h2 className="portfolio-contact-title">{content.contact.title}</h2>
+            <p className="portfolio-contact-text">{content.contact.text}</p>
             <GradientMenu items={contactMenuItems} className="mt-8" />
           </div>
         </section>
@@ -344,16 +626,16 @@ function PortfolioPage() {
         <div className="portfolio-footer-inner">
           <div className="portfolio-footer-meta">
             <p className="portfolio-footer-brand">William Mahi</p>
-            <p className="portfolio-footer-copy">
-              Portfolio personnel. Conception, integration front-end et structuration produit.
-            </p>
+            <p className="portfolio-footer-copy">{content.footer.copy}</p>
           </div>
-          <div className="portfolio-footer-links" aria-label="Informations legales">
-            <span className="portfolio-footer-link">Mentions legales</span>
-            <span className="portfolio-footer-link">Politique de confidentialite</span>
-            <span className="portfolio-footer-link">Conditions d utilisation</span>
+          <div className="portfolio-footer-links" aria-label={content.footer.legalLabel}>
+            <span className="portfolio-footer-link">{content.footer.legal}</span>
+            <span className="portfolio-footer-link">{content.footer.privacy}</span>
+            <span className="portfolio-footer-link">{content.footer.terms}</span>
           </div>
-          <p className="portfolio-footer-note">© {new Date().getFullYear()} William Mahi. Tous droits reserves.</p>
+          <p className="portfolio-footer-note">
+            © {new Date().getFullYear()} William Mahi. {content.footer.rights}
+          </p>
         </div>
       </footer>
     </div>

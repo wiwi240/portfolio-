@@ -22,7 +22,8 @@ interface Gallery6Props {
   heading?: string
   demoUrl?: string
   demoLabel?: string
-  items?: GalleryItem[]
+  itemCtaLabel?: string
+  items?: readonly GalleryItem[]
   onNavigateToSection?: (sectionId: string) => void
 }
 
@@ -30,6 +31,7 @@ const Gallery6 = ({
   heading,
   demoUrl = 'contact',
   demoLabel,
+  itemCtaLabel = 'Voir le projet',
   items = [],
   onNavigateToSection,
 }: Gallery6Props) => {
@@ -163,7 +165,7 @@ const Gallery6 = ({
                       {item.summary}
                     </div>
                     <div className="flex items-center text-sm font-medium text-[var(--fg)]/86">
-                      Voir le projet
+                      {itemCtaLabel}
                       <ArrowRight className="ml-2 size-5 transition-transform group-hover:translate-x-1" />
                     </div>
                   </div>

@@ -5,9 +5,15 @@ import { Moon, Sun } from 'lucide-react'
 
 type ThemeSwitchProps = {
   className?: string
+  lightThemeLabel?: string
+  darkThemeLabel?: string
 }
 
-export function ThemeSwitch({ className = '' }: ThemeSwitchProps) {
+export function ThemeSwitch({
+  className = '',
+  lightThemeLabel = 'Activer le theme clair',
+  darkThemeLabel = 'Activer le theme sombre',
+}: ThemeSwitchProps) {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('dark')
 
   React.useEffect(() => {
@@ -28,7 +34,7 @@ export function ThemeSwitch({ className = '' }: ThemeSwitchProps) {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={theme === 'light' ? 'Activer le theme sombre' : 'Activer le theme clair'}
+      aria-label={theme === 'light' ? darkThemeLabel : lightThemeLabel}
       className={`relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-[var(--text-color-primary)] transition-opacity hover:opacity-80 ${className}`}
     >
       <Sun

@@ -367,6 +367,117 @@ html.dark .portfolio-shell::after {
   background: rgba(240, 243, 245, 0.98);
 }
 
+.portfolio-nav-controls {
+  display: inline-flex;
+  align-items: center;
+  justify-self: end;
+  gap: 0.55rem;
+}
+
+.portfolio-language-menu {
+  position: relative;
+}
+
+.portfolio-language-trigger {
+  appearance: none;
+  min-width: 72px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(16, 33, 44, 0.12);
+  border-radius: 999px;
+  background: rgba(240, 243, 245, 0.98);
+  color: rgba(16, 33, 44, 0.72);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color var(--transition),
+    border-color var(--transition),
+    background-color var(--transition),
+    transform var(--transition);
+}
+
+.portfolio-language-trigger:hover,
+.portfolio-language-trigger.is-open {
+  color: var(--fg);
+  border-color: rgba(28, 141, 179, 0.22);
+  background: rgba(247, 248, 249, 0.98);
+}
+
+.portfolio-language-trigger-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  transition: transform var(--transition);
+}
+
+.portfolio-language-trigger-icon.is-open {
+  transform: rotate(180deg);
+}
+
+.portfolio-language-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 172px;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.35rem;
+  border: 1px solid rgba(16, 33, 44, 0.12);
+  border-radius: 1rem;
+  background: rgba(248, 249, 250, 0.98);
+  box-shadow: 0 18px 40px rgba(76, 103, 119, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  z-index: 50;
+}
+
+.portfolio-language-dropdown-item {
+  appearance: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 0;
+  border-radius: 0.8rem;
+  background: transparent;
+  color: rgba(16, 33, 44, 0.76);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color var(--transition),
+    background-color var(--transition),
+    transform var(--transition);
+}
+
+.portfolio-language-dropdown-item:hover,
+.portfolio-language-dropdown-item.is-active {
+  background: rgba(28, 141, 179, 0.12);
+  color: var(--fg);
+}
+
+.portfolio-language-dropdown-short {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.portfolio-language-dropdown-long {
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
 .portfolio-theme-switch:hover {
   background: rgba(247, 248, 249, 0.98);
 }
@@ -389,6 +500,36 @@ html.dark .portfolio-back:hover {
 html.dark .portfolio-theme-switch {
   border-color: rgba(237, 241, 244, 0.08);
   background: rgba(255, 255, 255, 0.04);
+}
+
+html.dark .portfolio-language-trigger {
+  border-color: rgba(237, 241, 244, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+html.dark .portfolio-language-trigger {
+  color: rgba(231, 240, 250, 0.62);
+}
+
+html.dark .portfolio-language-trigger:hover,
+html.dark .portfolio-language-trigger.is-open {
+  color: rgba(231, 240, 250, 0.88);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+html.dark .portfolio-language-dropdown {
+  border-color: rgba(237, 241, 244, 0.08);
+  background: rgba(23, 29, 35, 0.94);
+}
+
+html.dark .portfolio-language-dropdown-item {
+  color: rgba(231, 240, 250, 0.7);
+}
+
+html.dark .portfolio-language-dropdown-item:hover,
+html.dark .portfolio-language-dropdown-item.is-active {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.96);
 }
 
 html.dark .portfolio-theme-switch:hover {
@@ -465,7 +606,9 @@ html.dark .portfolio-theme-switch:hover {
 
 .portfolio-back:focus-visible,
 .portfolio-nav-link:focus-visible,
-.portfolio-button:focus-visible {
+.portfolio-button:focus-visible,
+.portfolio-language-trigger:focus-visible,
+.portfolio-language-dropdown-item:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(57, 231, 255, 0.2);
 }
