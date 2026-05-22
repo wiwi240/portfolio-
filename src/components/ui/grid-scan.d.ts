@@ -2,9 +2,6 @@ declare module '@/components/ui/grid-scan' {
   import type { CSSProperties } from 'react'
 
   export type GridScanProps = {
-    enableWebcam?: boolean
-    showPreview?: boolean
-    modelsPath?: string
     sensitivity?: number
     lineThickness?: number
     linesColor?: string

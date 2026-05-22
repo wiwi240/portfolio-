@@ -1,15 +1,19 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6'
 import { ChevronDown } from 'lucide-react'
 import { motion } from 'motion/react'
 import { LuFolderOpen, LuMail } from 'react-icons/lu'
-import { Navigate, Route, Routes } from 'react-router-dom'
-import { Gallery6 } from '@/components/ui/gallery6'
 import GradientMenu from '@/components/ui/gradient-menu'
-import GridScan from '@/components/ui/grid-scan'
-import OrbitingSkills from '@/components/ui/orbiting-skills'
 import { ThemeSwitch } from '@/components/ui/theme-switch'
 import './App.css'
+
+const LazyGallery6 = lazy(async () => {
+  const module = await import('@/components/ui/gallery6')
+  return { default: module.Gallery6 }
+})
+
+const LazyGridScan = lazy(() => import('@/components/ui/grid-scan'))
+const LazyOrbitingSkills = lazy(() => import('@/components/ui/orbiting-skills'))
 
 type Language = 'fr' | 'en'
 
@@ -292,7 +296,12 @@ function PortfolioPage() {
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false)
   const [isMailModalOpen, setIsMailModalOpen] = useState(false)
   const [isEmailCopied, setIsEmailCopied] = useState(false)
+  const [shouldLoadGridScan, setShouldLoadGridScan] = useState(false)
+  const [shouldLoadProjects, setShouldLoadProjects] = useState(false)
+  const [shouldLoadStackVisual, setShouldLoadStackVisual] = useState(false)
   const languageMenuRef = useRef<HTMLDivElement | null>(null)
+  const projectsSectionRef = useRef<HTMLElement | null>(null)
+  const stackVisualRef = useRef<HTMLDivElement | null>(null)
   const content = copy[language]
   const contactEmail = 'william.mahipro@gmail.com'
 
@@ -370,6 +379,74 @@ function PortfolioPage() {
       window.clearTimeout(timeoutId)
     }
   }, [isEmailCopied])
+
+  useEffect(() => {
+    let timeoutId: number | null = null
+    const idleScheduler = window as Window & {
+      requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number
+      cancelIdleCallback?: (handle: number) => void
+    }
+
+    const loadGridScan = () => {
+      setShouldLoadGridScan(true)
+    }
+
+    if (idleScheduler.requestIdleCallback && idleScheduler.cancelIdleCallback) {
+      const idleId = idleScheduler.requestIdleCallback(loadGridScan, { timeout: 1200 })
+      return () => {
+        idleScheduler.cancelIdleCallback?.(idleId)
+      }
+    }
+
+    timeoutId = window.setTimeout(loadGridScan, 350)
+    return () => {
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const projectsSection = projectsSectionRef.current
+    const stackVisual = stackVisualRef.current
+
+    if (!projectsSection && !stackVisual) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return
+          }
+
+          if (entry.target === projectsSection) {
+            setShouldLoadProjects(true)
+          }
+
+          if (entry.target === stackVisual) {
+            setShouldLoadStackVisual(true)
+          }
+
+          observer.unobserve(entry.target)
+        })
+      },
+      { rootMargin: '240px 0px' },
+    )
+
+    if (projectsSection) {
+      observer.observe(projectsSection)
+    }
+
+    if (stackVisual) {
+      observer.observe(stackVisual)
+    }
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   const scrollToSection = (sectionId: string) => {
     const target = document.getElementById(sectionId)
@@ -616,29 +693,33 @@ function PortfolioPage() {
       <main id="content">
         <section id="top" className="portfolio-hero">
           <div className="portfolio-hero-background" aria-hidden="true">
-            <GridScan
-              sensitivity={0}
-              lineThickness={1.15}
-              linesColor="#41566f"
-              gridScale={0.11}
-              lineStyle="solid"
-              lineJitter={0.015}
-              scanColor="#39e7ff"
-              scanOpacity={0.28}
-              scanDirection="pingpong"
-              scanSoftness={2.2}
-              scanGlow={0.7}
-              scanPhaseTaper={0.88}
-              scanDuration={2.6}
-              scanDelay={1.4}
-              enablePost
-              bloomIntensity={0.42}
-              bloomThreshold={0.08}
-              bloomSmoothing={0.16}
-              chromaticAberration={0.0018}
-              noiseIntensity={0.008}
-              scanOnClick
-            />
+            {shouldLoadGridScan ? (
+              <Suspense fallback={null}>
+                <LazyGridScan
+                  sensitivity={0}
+                  lineThickness={1.15}
+                  linesColor="#41566f"
+                  gridScale={0.11}
+                  lineStyle="solid"
+                  lineJitter={0.015}
+                  scanColor="#39e7ff"
+                  scanOpacity={0.28}
+                  scanDirection="pingpong"
+                  scanSoftness={2.2}
+                  scanGlow={0.7}
+                  scanPhaseTaper={0.88}
+                  scanDuration={2.6}
+                  scanDelay={1.4}
+                  enablePost
+                  bloomIntensity={0.42}
+                  bloomThreshold={0.08}
+                  bloomSmoothing={0.16}
+                  chromaticAberration={0.0018}
+                  noiseIntensity={0.008}
+                  scanOnClick
+                />
+              </Suspense>
+            ) : null}
           </div>
           <div className="portfolio-hero-grid">
             <div className="portfolio-hero-copy-main">
@@ -659,12 +740,18 @@ function PortfolioPage() {
           <ChevronDown aria-hidden="true" />
         </button>
 
-        <section id="projects" className="portfolio-section portfolio-projects-section">
-          <Gallery6
-            items={content.projects.items}
-            itemCtaLabel={content.projects.ctaLabel}
-            onNavigateToSection={scrollToSection}
-          />
+        <section id="projects" ref={projectsSectionRef} className="portfolio-section portfolio-projects-section">
+          {shouldLoadProjects ? (
+            <Suspense fallback={<div className="portfolio-projects-fallback" aria-hidden="true" />}>
+              <LazyGallery6
+                items={content.projects.items}
+                itemCtaLabel={content.projects.ctaLabel}
+                onNavigateToSection={scrollToSection}
+              />
+            </Suspense>
+          ) : (
+            <div className="portfolio-projects-fallback" aria-hidden="true" />
+          )}
           <button
             type="button"
             className="portfolio-section-jump"
@@ -689,8 +776,14 @@ function PortfolioPage() {
               </div>
             </div>
 
-            <div className="portfolio-stack-visual">
-              <OrbitingSkills defaultVariant="all" />
+            <div ref={stackVisualRef} className="portfolio-stack-visual">
+              {shouldLoadStackVisual ? (
+                <Suspense fallback={<div className="portfolio-stack-visual-fallback" aria-hidden="true" />}>
+                  <LazyOrbitingSkills defaultVariant="all" />
+                </Suspense>
+              ) : (
+                <div className="portfolio-stack-visual-fallback" aria-hidden="true" />
+              )}
             </div>
           </div>
           <button
@@ -770,16 +863,6 @@ function PortfolioPage() {
   )
 }
 
-function AppShell() {
-  return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/portfolio" replace />} />
-      <Route path="/portfolio" element={<PortfolioPage />} />
-      <Route path="*" element={<Navigate to="/portfolio" replace />} />
-    </Routes>
-  )
-}
-
 export default function App() {
-  return <AppShell />
+  return <PortfolioPage />
 }

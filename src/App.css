@@ -1086,6 +1086,10 @@ html.dark .portfolio-section-jump:hover {
   padding-right: clamp(1rem, 3vw, 2.5rem);
 }
 
+.portfolio-projects-fallback {
+  min-height: clamp(30rem, 56vw, 38rem);
+}
+
 .portfolio-hero + .portfolio-section {
   margin-top: clamp(2rem, 5vw, 4rem);
 }
@@ -1292,6 +1296,10 @@ html.dark .portfolio-section::after {
   min-height: 600px;
   padding: 1.2rem 0 1.8rem;
   margin: 0 auto;
+}
+
+.portfolio-stack-visual-fallback {
+  min-height: inherit;
 }
 
 .portfolio-stack-visual-head {
