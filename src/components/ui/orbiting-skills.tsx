@@ -1,6 +1,6 @@
 "use client"
 
-import { memo, useEffect, useState, type ReactNode } from 'react'
+import { memo, useEffect, useRef, useState, type ReactNode } from 'react'
 
 type IconType =
   | 'html'
@@ -444,9 +444,18 @@ GlowingOrbitPath.displayName = 'GlowingOrbitPath'
 export default function OrbitingSkills({ defaultVariant = null }: OrbitingSkillsProps) {
   const [time, setTime] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+  const [orbitScale, setOrbitScale] = useState(1)
+  const wrapperRef = useRef<HTMLDivElement | null>(null)
   const variant = defaultVariant
   const orbitSet = variant ? orbitSets[variant] : null
   const displayedSkills = orbitSet ? orbitSet.skills : []
+  const maxOrbitRadius = orbitSet
+    ? Math.max(
+        ...orbitSet.orbitConfigs.map((config) => config.radius),
+        ...orbitSet.skills.map((skill) => skill.orbitRadius + (skill.size * 1.25) / 2 + 10),
+      )
+    : 0
+  const orbitCanvasSize = Math.ceil(maxOrbitRadius * 2)
 
   useEffect(() => {
     if (isPaused) {
@@ -468,42 +477,84 @@ export default function OrbitingSkills({ defaultVariant = null }: OrbitingSkills
     return () => cancelAnimationFrame(animationFrameId)
   }, [isPaused])
 
+  useEffect(() => {
+    if (!wrapperRef.current || orbitCanvasSize === 0) {
+      return
+    }
+
+    const updateScale = () => {
+      if (!wrapperRef.current) {
+        return
+      }
+
+      const nextScale = Math.min(1, wrapperRef.current.clientWidth / orbitCanvasSize)
+      setOrbitScale(nextScale > 0 ? nextScale : 1)
+    }
+
+    updateScale()
+
+    const resizeObserver = new ResizeObserver(updateScale)
+    resizeObserver.observe(wrapperRef.current)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [orbitCanvasSize])
+
   return (
-    <div className="relative flex w-full items-center justify-center overflow-x-hidden overflow-y-visible px-2 py-6 sm:px-4 sm:py-8">
+    <div
+      ref={wrapperRef}
+      className="relative flex w-full items-center justify-center overflow-visible px-2 py-6 sm:px-4 sm:py-8"
+      style={{ minHeight: `${orbitCanvasSize * orbitScale}px` }}
+    >
       <div
-        className="relative flex h-[300px] w-[300px] max-w-full items-center justify-center sm:h-[400px] sm:w-[400px] md:h-[470px] md:w-[470px]"
+        className="relative flex items-center justify-center"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        style={{
+          width: `${orbitCanvasSize * orbitScale}px`,
+          height: `${orbitCanvasSize * orbitScale}px`,
+        }}
       >
-        <div className="relative z-10 flex h-30 w-30 items-center justify-center rounded-full border border-[rgba(16,33,44,0.10)] bg-[rgba(248,249,250,0.88)] shadow-[0_20px_54px_rgba(76,103,119,0.12)] md:h-32 md:w-32 dark:border-white/8 dark:bg-[rgba(19,27,33,0.88)] dark:shadow-[0_20px_54px_rgba(0,0,0,0.26)]">
-          <div className="absolute inset-0 rounded-full bg-cyan-500/10 blur-xl animate-pulse" />
-          <div
-            className="absolute inset-0 rounded-full bg-sky-500/10 blur-2xl animate-pulse"
-            style={{ animationDelay: '1s' }}
-          />
-          <div className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full border border-[rgba(16,33,44,0.08)] bg-white/72 font-mono text-xs font-semibold tracking-[0.24em] text-[var(--fg)] md:h-26 md:w-26 dark:border-white/8 dark:bg-black/24 dark:text-white">
-            SKILL
+        <div
+          className="absolute left-1/2 top-1/2"
+          style={{
+            width: `${orbitCanvasSize}px`,
+            height: `${orbitCanvasSize}px`,
+            transform: `translate(-50%, -50%) scale(${orbitScale})`,
+            transformOrigin: 'center',
+          }}
+        >
+          <div className="absolute left-1/2 top-1/2 z-10 flex h-30 w-30 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(16,33,44,0.10)] bg-[rgba(248,249,250,0.88)] shadow-[0_20px_54px_rgba(76,103,119,0.12)] md:h-32 md:w-32 dark:border-white/8 dark:bg-[rgba(19,27,33,0.88)] dark:shadow-[0_20px_54px_rgba(0,0,0,0.26)]">
+            <div className="absolute inset-0 rounded-full bg-cyan-500/10 blur-xl animate-pulse" />
+            <div
+              className="absolute inset-0 rounded-full bg-sky-500/10 blur-2xl animate-pulse"
+              style={{ animationDelay: '1s' }}
+            />
+            <div className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full border border-[rgba(16,33,44,0.08)] bg-white/72 font-mono text-xs font-semibold tracking-[0.24em] text-[var(--fg)] md:h-26 md:w-26 dark:border-white/8 dark:bg-black/24 dark:text-white">
+              SKILL
+            </div>
           </div>
+
+          {orbitSet
+            ? orbitSet.orbitConfigs.map((config) => (
+                <GlowingOrbitPath
+                  key={`path-${config.radius}`}
+                  radius={config.radius}
+                  glowColor={config.glowColor}
+                  animationDelay={config.delay}
+                />
+              ))
+            : null}
+
+          {displayedSkills.map((config) => (
+            <OrbitingSkill
+              key={config.id}
+              config={config}
+              angle={time * config.speed + config.phaseShift}
+            />
+          ))}
         </div>
-
-        {orbitSet
-          ? orbitSet.orbitConfigs.map((config) => (
-              <GlowingOrbitPath
-                key={`path-${config.radius}`}
-                radius={config.radius}
-                glowColor={config.glowColor}
-                animationDelay={config.delay}
-              />
-            ))
-          : null}
-
-        {displayedSkills.map((config) => (
-          <OrbitingSkill
-            key={config.id}
-            config={config}
-            angle={time * config.speed + config.phaseShift}
-          />
-        ))}
       </div>
     </div>
   )

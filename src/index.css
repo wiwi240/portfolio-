@@ -54,6 +54,7 @@ html.dark {
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 *,
@@ -68,7 +69,7 @@ html {
 
 body {
   min-width: 320px;
-  overflow-x: hidden;
+  overflow-x: clip;
   background: var(--bg);
 }
 
@@ -113,4 +114,5 @@ textarea {
 
 #root {
   min-height: 100vh;
+  overflow-x: clip;
 }
