@@ -210,18 +210,19 @@ test('validateContactPayload accumulates all payload errors', () => {
   assert.equal(result.errors.length, 3)
 })
 
-test('getClientIp prefers the first x-forwarded-for value', () => {
+test('getClientIp uses req.ip first', () => {
   const { getClientIp } = loadBackend(DEFAULT_ENV)
   const ip = getClientIp(createRequest({
     headers: { 'x-forwarded-for': '203.0.113.10, 10.0.0.2' },
+    ip: '198.51.100.40',
   }))
-  assert.equal(ip, '203.0.113.10')
+  assert.equal(ip, '198.51.100.40')
 })
 
-test('getClientIp trims the x-forwarded-for value', () => {
+test('getClientIp normalizes ipv4-mapped ipv6 addresses', () => {
   const { getClientIp } = loadBackend(DEFAULT_ENV)
   const ip = getClientIp(createRequest({
-    headers: { 'x-forwarded-for': '   203.0.113.10   ' },
+    ip: '::ffff:203.0.113.10',
   }))
   assert.equal(ip, '203.0.113.10')
 })
@@ -404,7 +405,7 @@ test('responses set allowed headers header', async () => {
 
   try {
     const { response } = await requestJson(baseUrl, '/api/health')
-    assert.equal(response.headers.get('access-control-allow-headers'), 'Content-Type, X-Admin-Token')
+    assert.equal(response.headers.get('access-control-allow-headers'), 'Content-Type')
   } finally {
     await stopTestServer(server)
   }

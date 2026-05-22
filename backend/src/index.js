@@ -21,13 +21,14 @@ const CONTACT_RATE_LIMIT_MAX = Number.parseInt(process.env.CONTACT_RATE_LIMIT_MA
 
 const app = express()
 app.disable('x-powered-by')
+app.set('trust proxy', IS_PRODUCTION ? 1 : false)
 app.use(express.json({ limit: '1mb' }))
 
 app.use((req, res, next) => {
   const requestOrigin = req.headers.origin
   res.setHeader('Vary', 'Origin')
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Token')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
   if (requestOrigin) {
     if (!ALLOWED_ORIGINS.includes(requestOrigin)) {
@@ -59,17 +60,24 @@ function normalizeText(value) {
 }
 
 function getClientIp(req) {
-  const forwardedFor = req.headers['x-forwarded-for']
-
-  if (typeof forwardedFor === 'string' && forwardedFor.trim()) {
-    return forwardedFor.split(',')[0].trim()
+  if (typeof req.ip === 'string' && req.ip.trim()) {
+    return req.ip.replace(/^::ffff:/, '')
   }
 
   return req.ip || req.socket?.remoteAddress || 'unknown'
 }
 
+function pruneExpiredRateLimitEntries(now) {
+  for (const [clientIp, entry] of contactRateLimitStore.entries()) {
+    if (now > entry.resetAt) {
+      contactRateLimitStore.delete(clientIp)
+    }
+  }
+}
+
 function checkContactRateLimitMemory(req) {
   const now = Date.now()
+  pruneExpiredRateLimitEntries(now)
   const clientIp = getClientIp(req)
   const entry = contactRateLimitStore.get(clientIp)
 
