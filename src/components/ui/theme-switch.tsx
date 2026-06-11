@@ -11,8 +11,8 @@ type ThemeSwitchProps = {
 
 export function ThemeSwitch({
   className = '',
-  lightThemeLabel = 'Activer le theme clair',
-  darkThemeLabel = 'Activer le theme sombre',
+  lightThemeLabel = 'Activer le thème clair',
+  darkThemeLabel = 'Activer le thème sombre',
 }: ThemeSwitchProps) {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('dark')
 
