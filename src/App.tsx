@@ -1,309 +1,63 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  ArrowRight,
+  ChevronDown,
+  ChevronRight,
+  Copy,
+  Globe,
+  Mail,
+  Menu,
+  ShieldCheck,
+  Sparkles,
+  X,
+} from 'lucide-react'
+import { motion, useReducedMotion } from 'motion/react'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6'
-import { ChevronDown } from 'lucide-react'
-import { motion } from 'motion/react'
-import { LuFolderOpen, LuMail } from 'react-icons/lu'
-import GradientMenu from '@/components/ui/gradient-menu'
+
 import { ThemeSwitch } from '@/components/ui/theme-switch'
+import {
+  contactEmail,
+  copy,
+  githubUrl,
+  languageOptions,
+  linkedinUrl,
+  projects,
+  timelineItems,
+  type Language,
+} from '@/data/portfolio-content'
 import './App.css'
 
-const LazyGallery6 = lazy(async () => {
-  const module = await import('@/components/ui/gallery6')
-  return { default: module.Gallery6 }
-})
-
-const LazyGridScan = lazy(() => import('@/components/ui/grid-scan'))
 const LazyOrbitingSkills = lazy(() => import('@/components/ui/orbiting-skills'))
 
-type Language = 'fr' | 'en'
+const sectionIds = ['projects', 'stack', 'journey', 'about', 'contact'] as const
+type SectionId = (typeof sectionIds)[number]
 
-const languageOptions = [
-  { value: 'fr', shortLabel: 'FR', longLabel: 'Français' },
-  { value: 'en', shortLabel: 'EN', longLabel: 'English' },
-] as const
+function App() {
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof window === 'undefined') {
+      return 'fr'
+    }
 
-const copy = {
-  fr: {
-    meta: {
-      title: 'William Mahi | Développeur full-stack',
-      description:
-        'Portfolio de William Mahi, développeur full-stack. Interfaces React soignées, back-end Node fiable et expériences web rapides.',
-    },
-    nav: {
-      skipToContent: 'Aller au contenu',
-      sectionsLabel: 'Sections du portfolio',
-      projects: 'Projets',
-      stack: 'Stack',
-      about: 'À propos',
-    },
-    hero: {
-      title: 'Base solide. Maintenance durable.',
-      lead:
-        'Développement front-end et back-end avec une exécution propre, une logique claire et des choix techniques faciles à lire.',
-      jumpToProjects: 'Défiler vers les projets',
-    },
-    stack: {
-      kicker: 'Stack / compétences',
-      title: 'Une stack claire, une base solide.',
-      lead:
-        'Cette vue regroupe les langages et frameworks principaux : Python, HTML, TypeScript, JavaScript, Bootstrap, CSS, GraphQL, Ruby, Ruby on Rails, React, Tailwind CSS et Next.js.',
-      visualLabel: "Vue d'ensemble",
-      visualText:
-        'Une vue unique pour situer rapidement les langages, frameworks et outils de travail.',
-      jumpToAbout: 'Défiler vers la section À propos',
-    },
-    about: {
-      kicker: 'À propos',
-      title: 'Construire quelque chose qui dure.',
-      lead:
-        `"Base solide. Maintenance durable." n'est pas qu'une formule visuelle. C'est une manière de penser un projet : poser une base propre, faire des choix compréhensibles et garder assez de clarté pour que le produit puisse évoluer sans se fragiliser.`,
-      photoPlaceholder: 'Photo',
-      photoText: 'Emplacement réservé pour ton portrait.',
-      items: [
-        {
-          title: 'Une base claire avant tout.',
-          text:
-            "Je cherche à construire des projets que l'on peut comprendre rapidement, reprendre facilement et faire évoluer sans repartir de zéro.",
-        },
-        {
-          title: 'Un produit qui tient quand il évolue.',
-          text:
-            "Pour moi, un projet solide n'est pas seulement un projet qui fonctionne. C'est un projet qui reste propre quand on ajoute des besoins, des pages ou de la logique.",
-        },
-        {
-          title: 'Une exécution lisible du front au back.',
-          text:
-            "J'essaie de garder la même exigence partout : une interface nette, une logique explicite et une structure assez simple pour rester maintenable dans le temps.",
-        },
-      ],
-    },
-    projects: {
-      ctaLabel: 'Voir le projet',
-      jumpToStack: 'Défiler vers la stack',
-      items: [
-        {
-          id: 'rubber-duck',
-          title: 'Rubber Duck',
-          summary:
-            'Outil pédagogique pour aider au raisonnement par étapes, avec une interface de guidage, une logique de contexte et une structure produit exploitable.',
-          url: 'stack',
-          image: '/projects/rubber-duck.png',
-        },
-        {
-          id: 'sakura-line',
-          title: 'Sakura Line Studio',
-          summary:
-            "Site pour une tatoueuse à l'univers sakura, pensé pour l'autogestion du contenu, avec une présentation claire de l'activité et des mises à jour simples.",
-          url: 'stack',
-          image: '/projects/sakura-line.png',
-        },
-        {
-          id: 'questonnaut',
-          title: 'Questonnaut',
-          summary:
-            "Application de création d'habitudes gamifiée, conçue pour rendre le suivi plus engageant, plus lisible et plus motivant au quotidien.",
-          url: 'stack',
-          image: '/projects/questonnaut.png',
-        },
-        {
-          id: 'portfolio',
-          title: 'Portfolio',
-          summary:
-            'Portfolio personnel conçu pour présenter mon approche, mes projets et ma manière de construire des interfaces lisibles avec une base technique maintenable.',
-          url: 'stack',
-          image: '/projects/portfolio.png',
-        },
-      ],
-    },
-    contact: {
-      kicker: 'Contact',
-      title: 'Parlons de votre projet',
-      text:
-        "Si mon approche te parle, on peut échanger simplement autour d'une idée, d'un besoin produit ou d'une collaboration.",
-    },
-    footer: {
-      copy: 'Portfolio personnel. Conception, intégration front-end et structuration produit.',
-      legalLabel: 'Informations légales',
-      legal: 'Mentions légales',
-      privacy: 'Politique de confidentialité',
-      terms: "Conditions d'utilisation",
-      rights: 'Tous droits réservés.',
-    },
-    language: {
-      label: 'Sélection de la langue',
-      fr: 'FR',
-      en: 'EN',
-    },
-    actions: {
-      viewProjects: 'Voir les projets',
-      email: 'Mail',
-      github: 'GitHub',
-      linkedin: 'LinkedIn',
-    },
-    mailModal: {
-      title: 'Me contacter',
-      text: "Tu peux m'écrire directement par email. Si ton client mail ne s'ouvre pas bien, l'adresse reste visible ici.",
-      copy: 'Copier le mail',
-      copied: 'Mail copié',
-      close: 'Fermer',
-    },
-    theme: {
-      light: 'Activer le thème clair',
-      dark: 'Activer le thème sombre',
-    },
-  },
-  en: {
-    meta: {
-      title: 'William Mahi | Full-stack developer',
-      description:
-        'Portfolio of William Mahi, full-stack developer. Thoughtful React interfaces, reliable Node back-end, and fast web experiences.',
-    },
-    nav: {
-      skipToContent: 'Skip to content',
-      sectionsLabel: 'Portfolio sections',
-      projects: 'Projects',
-      stack: 'Stack',
-      about: 'About',
-    },
-    hero: {
-      title: 'Solid foundation. Durable maintenance.',
-      lead:
-        'Front-end and back-end development with clean execution, clear logic, and technical choices that are easy to understand.',
-      jumpToProjects: 'Scroll to projects',
-    },
-    stack: {
-      kicker: 'Stack / skills',
-      title: 'Clear stack, solid foundation.',
-      lead:
-        'This view brings together the main languages and frameworks: Python, HTML, TypeScript, JavaScript, Bootstrap, CSS, GraphQL, Ruby, Ruby on Rails, React, Tailwind CSS, and Next.js.',
-      visualLabel: 'Overview',
-      visualText:
-        'A single view to quickly map the main languages, frameworks, and working tools.',
-      jumpToAbout: 'Scroll to the About section',
-    },
-    about: {
-      kicker: 'About',
-      title: 'Build something that lasts.',
-      lead:
-        '"Solid foundation. Durable maintenance." is not just a visual tagline. It is a way to think about a product: start from a clean base, make understandable decisions, and keep enough clarity for the product to evolve without becoming fragile.',
-      photoPlaceholder: 'Photo',
-      photoText: 'Reserved space for your portrait.',
-      items: [
-        {
-          title: 'Clarity first.',
-          text:
-            'I aim to build projects that can be understood quickly, picked up easily, and evolved without starting from scratch.',
-        },
-        {
-          title: 'A product that holds up as it grows.',
-          text:
-            'To me, a solid product is not only one that works. It is one that stays clean when new needs, pages, or logic are added.',
-        },
-        {
-          title: 'Readable execution from front to back.',
-          text:
-            'I try to keep the same standard everywhere: a sharp interface, explicit logic, and a structure simple enough to stay maintainable over time.',
-        },
-      ],
-    },
-    projects: {
-      ctaLabel: 'View project',
-      jumpToStack: 'Scroll to the stack',
-      items: [
-        {
-          id: 'rubber-duck',
-          title: 'Rubber Duck',
-          summary:
-            'A pedagogical tool designed to support step-by-step reasoning, with guided interactions, contextual logic, and a usable product structure.',
-          url: 'stack',
-          image: '/projects/rubber-duck.png',
-        },
-        {
-          id: 'sakura-line',
-          title: 'Sakura Line Studio',
-          summary:
-            'A website for a tattoo artist with a sakura-inspired visual world, built for easy content management, clear presentation, and simple updates.',
-          url: 'stack',
-          image: '/projects/sakura-line.png',
-        },
-        {
-          id: 'questonnaut',
-          title: 'Questonnaut',
-          summary:
-            'A gamified habit-building app designed to make progress tracking more engaging, more readable, and more motivating every day.',
-          url: 'stack',
-          image: '/projects/questonnaut.png',
-        },
-        {
-          id: 'portfolio',
-          title: 'Portfolio',
-          summary:
-            'A personal portfolio built to present my approach, my projects, and the way I design readable interfaces on top of a maintainable technical foundation.',
-          url: 'stack',
-          image: '/projects/portfolio.png',
-        },
-      ],
-    },
-    contact: {
-      kicker: 'Contact',
-      title: "Let's discuss your project",
-      text:
-        'If my approach speaks to you, we can talk simply about an idea, a product need, or a collaboration.',
-    },
-    footer: {
-      copy: 'Personal portfolio. Front-end design, implementation, and product structuring.',
-      legalLabel: 'Legal information',
-      legal: 'Legal notice',
-      privacy: 'Privacy policy',
-      terms: 'Terms of use',
-      rights: 'All rights reserved.',
-    },
-    language: {
-      label: 'Language selection',
-      fr: 'FR',
-      en: 'EN',
-    },
-    actions: {
-      viewProjects: 'View projects',
-      email: 'Email',
-      github: 'GitHub',
-      linkedin: 'LinkedIn',
-    },
-    mailModal: {
-      title: 'Get in touch',
-      text: 'You can email me directly. If your mail client does not open properly, the address stays visible here.',
-      copy: 'Copy email',
-      copied: 'Email copied',
-      close: 'Close',
-    },
-    theme: {
-      light: 'Enable light theme',
-      dark: 'Enable dark theme',
-    },
-  },
-} as const
-
-function PortfolioPage() {
-  const [language, setLanguage] = useState<Language>('fr')
+    const savedLanguage = localStorage.getItem('language')
+    return savedLanguage === 'en' ? 'en' : 'fr'
+  })
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false)
   const [isMailModalOpen, setIsMailModalOpen] = useState(false)
   const [isEmailCopied, setIsEmailCopied] = useState(false)
-  const [shouldLoadGridScan, setShouldLoadGridScan] = useState(false)
-  const [shouldLoadProjects, setShouldLoadProjects] = useState(false)
-  const [shouldLoadStackVisual, setShouldLoadStackVisual] = useState(false)
+  const [activeSection, setActiveSection] = useState<SectionId>('projects')
   const languageMenuRef = useRef<HTMLDivElement | null>(null)
-  const projectsSectionRef = useRef<HTMLElement | null>(null)
-  const stackVisualRef = useRef<HTMLDivElement | null>(null)
+  const modalRef = useRef<HTMLDivElement | null>(null)
+  const firstModalButtonRef = useRef<HTMLButtonElement | null>(null)
+  const shouldReduceMotion = useReducedMotion()
   const content = copy[language]
-  const contactEmail = 'william.mahipro@gmail.com'
+  const projectItems = projects[language]
+  const timeline = timelineItems[language]
 
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('language')
-
-    if (savedLanguage === 'fr' || savedLanguage === 'en') {
-      setLanguage(savedLanguage)
-    }
-  }, [])
+  const activeLanguage = useMemo(
+    () => languageOptions.find((option) => option.value === language) ?? languageOptions[0],
+    [language],
+  )
 
   useEffect(() => {
     localStorage.setItem('language', language)
@@ -311,7 +65,6 @@ function PortfolioPage() {
     document.title = content.meta.title
 
     let descriptionTag = document.querySelector('meta[name="description"]')
-
     if (!descriptionTag) {
       descriptionTag = document.createElement('meta')
       descriptionTag.setAttribute('name', 'description')
@@ -328,19 +81,46 @@ function PortfolioPage() {
       }
     }
 
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsLanguageMenuOpen(false)
-        setIsMailModalOpen(false)
-      }
-    }
-
     document.addEventListener('mousedown', handlePointerDown)
-    document.addEventListener('keydown', handleEscape)
-
     return () => {
       document.removeEventListener('mousedown', handlePointerDown)
-      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [])
+
+  useEffect(() => {
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section instanceof HTMLElement)
+
+    if (sections.length === 0) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+
+        if (!visibleEntry) {
+          return
+        }
+
+        const id = visibleEntry.target.id as SectionId
+        if (sectionIds.includes(id)) {
+          setActiveSection(id)
+        }
+      },
+      {
+        rootMargin: '-25% 0px -45% 0px',
+        threshold: [0.2, 0.35, 0.5, 0.75],
+      },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+
+    return () => {
+      observer.disconnect()
     }
   }, [])
 
@@ -349,12 +129,45 @@ function PortfolioPage() {
       return
     }
 
-    const { body } = document
-    const previousOverflow = body.style.overflow
-    body.style.overflow = 'hidden'
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    firstModalButtonRef.current?.focus()
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMailModalOpen(false)
+        return
+      }
+
+      if (event.key !== 'Tab' || !modalRef.current) {
+        return
+      }
+
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'button, a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])',
+      )
+
+      if (focusableElements.length === 0) {
+        return
+      }
+
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault()
+        lastElement.focus()
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault()
+        firstElement.focus()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      body.style.overflow = previousOverflow
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', handleKeyDown)
     }
   }, [isMailModalOpen])
 
@@ -372,84 +185,17 @@ function PortfolioPage() {
     }
   }, [isEmailCopied])
 
-  useEffect(() => {
-    let timeoutId: number | null = null
-    const idleScheduler = window as Window & {
-      requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number
-      cancelIdleCallback?: (handle: number) => void
-    }
-
-    const loadGridScan = () => {
-      setShouldLoadGridScan(true)
-    }
-
-    if (idleScheduler.requestIdleCallback && idleScheduler.cancelIdleCallback) {
-      const idleId = idleScheduler.requestIdleCallback(loadGridScan, { timeout: 1200 })
-      return () => {
-        idleScheduler.cancelIdleCallback?.(idleId)
-      }
-    }
-
-    timeoutId = window.setTimeout(loadGridScan, 350)
-    return () => {
-      if (timeoutId !== null) {
-        window.clearTimeout(timeoutId)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    const projectsSection = projectsSectionRef.current
-    const stackVisual = stackVisualRef.current
-
-    if (!projectsSection && !stackVisual) {
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) {
-            return
-          }
-
-          if (entry.target === projectsSection) {
-            setShouldLoadProjects(true)
-          }
-
-          if (entry.target === stackVisual) {
-            setShouldLoadStackVisual(true)
-          }
-
-          observer.unobserve(entry.target)
-        })
-      },
-      { rootMargin: '240px 0px' },
-    )
-
-    if (projectsSection) {
-      observer.observe(projectsSection)
-    }
-
-    if (stackVisual) {
-      observer.observe(stackVisual)
-    }
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
-
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = (sectionId: SectionId | 'top' | 'content') => {
     const target = document.getElementById(sectionId)
     if (!target) {
       return
     }
 
     target.scrollIntoView({
-      behavior: 'smooth',
+      behavior: shouldReduceMotion ? 'auto' : 'smooth',
       block: 'start',
     })
+    setIsMenuOpen(false)
   }
 
   const copyEmailToClipboard = async () => {
@@ -461,72 +207,14 @@ function PortfolioPage() {
     }
   }
 
-  const heroMenuItems = [
-    {
-      title: content.actions.viewProjects,
-      icon: <LuFolderOpen />,
-      gradientFrom: '#56ccf2',
-      gradientTo: '#2f80ed',
-      onClick: () => {
-        scrollToSection('projects')
-      },
-    },
-    {
-      title: content.actions.github,
-      icon: <FaGithub />,
-      gradientFrom: '#8b5cf6',
-      gradientTo: '#d946ef',
-      href: 'https://github.com/wiwi240',
-      external: true,
-    },
-    {
-      title: content.actions.email,
-      icon: <LuMail />,
-      gradientFrom: '#80ff72',
-      gradientTo: '#7ee8fa',
-      onClick: () => {
-        setIsMailModalOpen(true)
-      },
-    },
-    {
-      title: content.actions.linkedin,
-      icon: <FaLinkedinIn />,
-      gradientFrom: '#60a5fa',
-      gradientTo: '#2563eb',
-      href: 'https://www.linkedin.com/in/william-mahi-9727243a3/',
-      external: true,
-    },
-  ]
-
-  const contactMenuItems = [
-    {
-      title: content.actions.email,
-      icon: <LuMail />,
-      gradientFrom: '#80ff72',
-      gradientTo: '#7ee8fa',
-      onClick: () => {
-        setIsMailModalOpen(true)
-      },
-    },
-    {
-      title: content.actions.github,
-      icon: <FaGithub />,
-      gradientFrom: '#8b5cf6',
-      gradientTo: '#d946ef',
-      href: 'https://github.com/wiwi240',
-      external: true,
-    },
-    {
-      title: content.actions.linkedin,
-      icon: <FaLinkedinIn />,
-      gradientFrom: '#60a5fa',
-      gradientTo: '#2563eb',
-      href: 'https://www.linkedin.com/in/william-mahi-9727243a3/',
-      external: true,
-    },
-  ]
-
-  const activeLanguage = languageOptions.find((option) => option.value === language) ?? languageOptions[0]
+  const revealProps = shouldReduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 24 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.2 },
+        transition: { duration: 0.55 },
+      }
 
   return (
     <div className="portfolio-shell">
@@ -541,6 +229,7 @@ function PortfolioPage() {
           }}
         >
           <div
+            ref={modalRef}
             className="portfolio-modal"
             onClick={(event) => {
               event.stopPropagation()
@@ -548,89 +237,71 @@ function PortfolioPage() {
           >
             <div className="portfolio-modal-header">
               <h2 id="mail-modal-title" className="portfolio-modal-title">
-                {content.mailModal.title}
+                {contactEmail}
               </h2>
               <button
                 type="button"
-                className="portfolio-modal-close"
-                aria-label={content.mailModal.close}
+                className="portfolio-icon-button"
+                aria-label={content.actions.close}
                 onClick={() => {
                   setIsMailModalOpen(false)
                 }}
               >
-                ×
+                <X aria-hidden="true" />
               </button>
             </div>
-            <p className="portfolio-modal-text">{content.mailModal.text}</p>
-            <div className="portfolio-modal-email">{contactEmail}</div>
+            <p className="portfolio-modal-text">{content.contact.lead}</p>
             <div className="portfolio-modal-actions">
-              <button type="button" className="portfolio-button" onClick={copyEmailToClipboard}>
-                {isEmailCopied ? content.mailModal.copied : content.mailModal.copy}
-              </button>
               <button
+                ref={firstModalButtonRef}
                 type="button"
-                className="portfolio-button portfolio-button-secondary"
-                onClick={() => {
-                  setIsMailModalOpen(false)
-                }}
+                className="portfolio-button portfolio-button-primary"
+                onClick={copyEmailToClipboard}
               >
-                {content.mailModal.close}
+                <Copy aria-hidden="true" />
+                {isEmailCopied ? content.actions.copiedEmail : content.actions.copyEmail}
               </button>
+              <a className="portfolio-button portfolio-button-secondary" href={`mailto:${contactEmail}`}>
+                <Mail aria-hidden="true" />
+                {content.actions.openMail}
+              </a>
             </div>
           </div>
         </div>
       ) : null}
 
-      <button
-        type="button"
-        className="skip-link"
-        onClick={() => {
-          scrollToSection('content')
-        }}
-      >
+      <a href="#content" className="skip-link">
         {content.nav.skipToContent}
-      </button>
+      </a>
 
       <header className="portfolio-nav">
-        <div className="portfolio-nav-inner">
+        <div className="portfolio-container portfolio-nav-inner">
           <button
             type="button"
-            className="portfolio-logo portfolio-link-button"
+            className="portfolio-brand"
             onClick={() => {
               scrollToSection('top')
             }}
           >
-            William Mahi
+            WM
           </button>
 
           <nav className="portfolio-nav-links" aria-label={content.nav.sectionsLabel}>
-            <button
-              type="button"
-              className="portfolio-nav-link portfolio-link-button"
-              onClick={() => {
-                scrollToSection('projects')
-              }}
-            >
-              {content.nav.projects}
-            </button>
-            <button
-              type="button"
-              className="portfolio-nav-link portfolio-link-button"
-              onClick={() => {
-                scrollToSection('stack')
-              }}
-            >
-              {content.nav.stack}
-            </button>
-            <button
-              type="button"
-              className="portfolio-nav-link portfolio-link-button"
-              onClick={() => {
-                scrollToSection('about')
-              }}
-            >
-              {content.nav.about}
-            </button>
+            {sectionIds.map((sectionId) => {
+              const label = content.nav[sectionId === 'journey' ? 'journey' : sectionId]
+              return (
+                <button
+                  key={sectionId}
+                  type="button"
+                  className={`portfolio-nav-link${activeSection === sectionId ? ' is-active' : ''}`}
+                  onClick={() => {
+                    scrollToSection(sectionId)
+                  }}
+                >
+                  {label}
+                </button>
+              )
+            })}
           </nav>
 
           <div className="portfolio-nav-controls">
@@ -638,18 +309,15 @@ function PortfolioPage() {
               <button
                 type="button"
                 className={`portfolio-language-trigger${isLanguageMenuOpen ? ' is-open' : ''}`}
+                aria-label={content.language.label}
+                aria-expanded={isLanguageMenuOpen}
+                aria-haspopup="menu"
                 onClick={() => {
                   setIsLanguageMenuOpen((currentValue) => !currentValue)
                 }}
-                aria-label={content.language.label}
-                aria-haspopup="menu"
-                aria-expanded={isLanguageMenuOpen}
               >
                 <span>{activeLanguage.shortLabel}</span>
-                <ChevronDown
-                  aria-hidden="true"
-                  className={`portfolio-language-trigger-icon${isLanguageMenuOpen ? ' is-open' : ''}`}
-                />
+                <ChevronDown aria-hidden="true" />
               </button>
 
               {isLanguageMenuOpen ? (
@@ -658,193 +326,337 @@ function PortfolioPage() {
                     <button
                       key={option.value}
                       type="button"
-                      className={`portfolio-language-dropdown-item${language === option.value ? ' is-active' : ''}`}
+                      role="menuitemradio"
+                      aria-checked={language === option.value}
+                      className={`portfolio-language-item${language === option.value ? ' is-active' : ''}`}
                       onClick={() => {
                         setLanguage(option.value)
                         setIsLanguageMenuOpen(false)
                       }}
-                      role="menuitemradio"
-                      aria-checked={language === option.value}
                     >
-                      <span className="portfolio-language-dropdown-short">{option.shortLabel}</span>
-                      <span className="portfolio-language-dropdown-long">{option.longLabel}</span>
+                      <span>{option.shortLabel}</span>
+                      <span>{option.longLabel}</span>
                     </button>
                   ))}
                 </div>
               ) : null}
             </div>
+
             <ThemeSwitch
               className="portfolio-theme-switch"
               lightThemeLabel={content.theme.light}
               darkThemeLabel={content.theme.dark}
             />
+
+            <button
+              type="button"
+              className="portfolio-mobile-toggle"
+              aria-label={isMenuOpen ? content.nav.closeMenu : content.nav.menu}
+              aria-expanded={isMenuOpen}
+              onClick={() => {
+                setIsMenuOpen((currentValue) => !currentValue)
+              }}
+            >
+              {isMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+            </button>
           </div>
         </div>
+
+        {isMenuOpen ? (
+          <div className="portfolio-mobile-panel">
+            <nav className="portfolio-mobile-links" aria-label={content.nav.sectionsLabel}>
+              {sectionIds.map((sectionId) => {
+                const label = content.nav[sectionId === 'journey' ? 'journey' : sectionId]
+                return (
+                  <button
+                    key={sectionId}
+                    type="button"
+                    className="portfolio-mobile-link"
+                    onClick={() => {
+                      scrollToSection(sectionId)
+                    }}
+                  >
+                    {label}
+                  </button>
+                )
+              })}
+            </nav>
+          </div>
+        ) : null}
       </header>
 
       <main id="content">
         <section id="top" className="portfolio-hero">
-          <div className="portfolio-hero-background" aria-hidden="true">
-            {shouldLoadGridScan ? (
-              <Suspense fallback={null}>
-                <LazyGridScan
-                  sensitivity={0}
-                  lineThickness={1.15}
-                  linesColor="#41566f"
-                  gridScale={0.11}
-                  lineStyle="solid"
-                  lineJitter={0.015}
-                  scanColor="#39e7ff"
-                  scanOpacity={0.28}
-                  scanDirection="pingpong"
-                  scanSoftness={2.2}
-                  scanGlow={0.7}
-                  scanPhaseTaper={0.88}
-                  scanDuration={2.6}
-                  scanDelay={1.4}
-                  enablePost
-                  bloomIntensity={0.42}
-                  bloomThreshold={0.08}
-                  bloomSmoothing={0.16}
-                  chromaticAberration={0.0018}
-                  noiseIntensity={0.008}
-                  scanOnClick
-                />
-              </Suspense>
-            ) : null}
-          </div>
-          <div className="portfolio-hero-grid">
-            <div className="portfolio-hero-copy-main">
-              <h1 className="portfolio-title">{content.hero.title}</h1>
-              <p className="portfolio-lead">{content.hero.lead}</p>
-              <GradientMenu items={heroMenuItems} className="mt-5" />
-            </div>
-          </div>
-        </section>
-        <button
-          type="button"
-          className="portfolio-section-jump portfolio-hero-jump"
-          aria-label={content.hero.jumpToProjects}
-          onClick={() => {
-            scrollToSection('projects')
-          }}
-        >
-          <ChevronDown aria-hidden="true" />
-        </button>
-
-        <section id="projects" ref={projectsSectionRef} className="portfolio-section portfolio-projects-section">
-          {shouldLoadProjects ? (
-            <Suspense fallback={<div className="portfolio-projects-fallback" aria-hidden="true" />}>
-              <LazyGallery6
-                items={content.projects.items}
-                itemCtaLabel={content.projects.ctaLabel}
-                onNavigateToSection={scrollToSection}
-              />
-            </Suspense>
-          ) : (
-            <div className="portfolio-projects-fallback" aria-hidden="true" />
-          )}
-          <button
-            type="button"
-            className="portfolio-section-jump"
-            aria-label={content.projects.jumpToStack}
-            onClick={() => {
-              scrollToSection('stack')
-            }}
-          >
-            <ChevronDown aria-hidden="true" />
-          </button>
-        </section>
-
-        <section id="stack" className="portfolio-section portfolio-section-alt">
-          <div className="portfolio-stack-layout">
-            <div className="portfolio-heading portfolio-stack-copy">
-              <p className="portfolio-kicker">{content.stack.kicker}</p>
-              <h2 className="portfolio-section-title">{content.stack.title}</h2>
-              <p className="portfolio-section-lead">{content.stack.lead}</p>
-              <div className="portfolio-stack-visual-head">
-                <span className="portfolio-project-label">{content.stack.visualLabel}</span>
-                <p className="portfolio-stack-visual-text">{content.stack.visualText}</p>
+          <div className="portfolio-container portfolio-hero-grid">
+            <motion.div className="portfolio-hero-copy" {...revealProps}>
+              <span className="portfolio-section-label">{content.hero.label}</span>
+              <h1 className="portfolio-hero-title">
+                <span>{content.hero.titleLines[0]}</span>
+                <span>{content.hero.titleLines[1]}</span>
+                <span className="is-accent">{content.hero.titleLines[2]}</span>
+              </h1>
+              <p className="portfolio-hero-lead">{content.hero.lead}</p>
+              <div className="portfolio-hero-actions">
+                <button
+                  type="button"
+                  className="portfolio-button portfolio-button-primary"
+                  onClick={() => {
+                    scrollToSection('projects')
+                  }}
+                >
+                  {content.hero.primaryCta}
+                  <ArrowRight aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  className="portfolio-button portfolio-button-secondary"
+                  onClick={() => {
+                    setIsMailModalOpen(true)
+                  }}
+                >
+                  {content.hero.secondaryCta}
+                </button>
               </div>
-            </div>
+            </motion.div>
 
-            <div ref={stackVisualRef} className="portfolio-stack-visual">
-              {shouldLoadStackVisual ? (
-                <Suspense fallback={<div className="portfolio-stack-visual-fallback" aria-hidden="true" />}>
-                  <LazyOrbitingSkills defaultVariant="all" />
-                </Suspense>
-              ) : (
-                <div className="portfolio-stack-visual-fallback" aria-hidden="true" />
-              )}
-            </div>
+            <motion.div className="portfolio-hero-visual" {...revealProps}>
+              <div className="portfolio-hero-arc arc-one" />
+              <div className="portfolio-hero-arc arc-two" />
+              <div className="portfolio-hero-arc arc-three" />
+              <div className="portfolio-hero-line line-diagonal" />
+              <div className="portfolio-hero-line line-vertical" />
+              <div className="portfolio-hero-line line-horizontal" />
+              <div className="portfolio-hero-grid-dots dots-top" />
+              <div className="portfolio-hero-grid-dots dots-side" />
+              <span className="portfolio-hero-point point-a" />
+              <span className="portfolio-hero-point point-b" />
+              <span className="portfolio-hero-point point-c" />
+            </motion.div>
           </div>
+
           <button
             type="button"
-            className="portfolio-section-jump"
-            aria-label={content.stack.jumpToAbout}
+            className="portfolio-scroll-indicator"
+            aria-label={content.hero.scroll}
             onClick={() => {
-              scrollToSection('about')
+              scrollToSection('projects')
             }}
           >
+            <span>{content.hero.scroll}</span>
             <ChevronDown aria-hidden="true" />
           </button>
         </section>
 
-        <section id="about" className="portfolio-section portfolio-section-alt">
-          <div className="portfolio-about-layout">
-            <div className="portfolio-about-photo-card" aria-hidden="true">
-              <div className="portfolio-about-photo-frame">
-                <div className="portfolio-about-photo-placeholder">
-                  <span className="portfolio-project-label">{content.about.photoPlaceholder}</span>
-                  <p className="portfolio-about-photo-text">{content.about.photoText}</p>
+        <section id="projects" className="portfolio-section">
+          <div className="portfolio-container">
+            <motion.div className="portfolio-section-head" {...revealProps}>
+              <div>
+                <span className="portfolio-section-label">{content.projects.label}</span>
+                <h2 className="portfolio-section-title">{content.projects.title}</h2>
+                <p className="portfolio-section-text">{content.projects.description}</p>
+              </div>
+              <a className="portfolio-button portfolio-button-secondary" href={githubUrl} target="_blank" rel="noreferrer">
+                {content.projects.viewAll}
+                <ArrowRight aria-hidden="true" />
+              </a>
+            </motion.div>
+
+            <div className="portfolio-project-grid">
+              {projectItems.map((project, index) => (
+                <motion.article
+                  key={project.id}
+                  className="portfolio-project-card"
+                  initial={shouldReduceMotion ? undefined : { opacity: 0, y: 18 }}
+                  whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    duration: 0.45,
+                    delay: shouldReduceMotion ? 0 : index * 0.06,
+                  }}
+                >
+                  <div className="portfolio-project-media">
+                    <img src={project.image} alt={`Aperçu du projet ${project.title}`} />
+                  </div>
+                  <div className="portfolio-project-body">
+                    <h3>{project.title}</h3>
+                    <p>{project.summary}</p>
+                    <div className="portfolio-badges">
+                      {project.technologies.map((technology) => (
+                        <span key={technology} className="portfolio-badge">
+                          {technology}
+                        </span>
+                      ))}
+                    </div>
+                    <a className="portfolio-inline-link" href={githubUrl} target="_blank" rel="noreferrer">
+                      {content.projects.cardCta}
+                      <ChevronRight aria-hidden="true" />
+                    </a>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="stack" className="portfolio-section">
+          <div className="portfolio-container portfolio-two-column">
+            <motion.div className="portfolio-section-copy" {...revealProps}>
+              <span className="portfolio-section-label">{content.stack.label}</span>
+              <h2 className="portfolio-section-title">{content.stack.title}</h2>
+              <p className="portfolio-section-text">{content.stack.lead}</p>
+              <div className="portfolio-overview-card">
+                <span className="portfolio-overview-title">{content.stack.overviewTitle}</span>
+                <div className="portfolio-overview-grid">
+                  {content.stack.overview.map((item) => (
+                    <div key={item.label} className="portfolio-overview-item">
+                      <strong>{item.value}</strong>
+                      <span>{item.label}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="portfolio-heading portfolio-about-copy">
-              <p className="portfolio-kicker">{content.about.kicker}</p>
-              <h2 className="portfolio-section-title">{content.about.title}</h2>
-              <p className="portfolio-section-lead">{content.about.lead}</p>
+            <motion.div className="portfolio-orbit-shell" {...revealProps}>
+              <Suspense fallback={<div className="portfolio-orbit-fallback" aria-hidden="true" />}>
+                <LazyOrbitingSkills defaultVariant="all" />
+              </Suspense>
+            </motion.div>
+          </div>
+        </section>
 
-              <div className="portfolio-about-card">
-                {content.about.items.map((item, index) => (
-                  <motion.article
-                    key={item.title}
-                    className="portfolio-about-block"
-                    initial={{ opacity: 0, y: 28 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.35 }}
-                    transition={{ duration: 0.55, delay: index * 0.08, ease: 'easeOut' }}
-                  >
-                    <h3 className="portfolio-about-title">{item.title}</h3>
-                    <p className="portfolio-about-text">{item.text}</p>
-                  </motion.article>
-                ))}
-              </div>
+        <section id="journey" className="portfolio-section">
+          <div className="portfolio-container portfolio-two-column">
+            <motion.div className="portfolio-section-copy" {...revealProps}>
+              <span className="portfolio-section-label">{content.journey.label}</span>
+              <h2 className="portfolio-section-title">{content.journey.title}</h2>
+            </motion.div>
+
+            <div className="portfolio-timeline">
+              {timeline.map((item, index) => (
+                <motion.article
+                  key={`${item.period}-${index}`}
+                  className="portfolio-timeline-item"
+                  initial={shouldReduceMotion ? undefined : { opacity: 0, x: 20 }}
+                  whileInView={shouldReduceMotion ? undefined : { opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{
+                    duration: 0.45,
+                    delay: shouldReduceMotion ? 0 : index * 0.08,
+                  }}
+                >
+                  <div className="portfolio-timeline-marker" aria-hidden="true" />
+                  <div className="portfolio-timeline-content">
+                    <span className="portfolio-timeline-period">{item.period}</span>
+                    <h3>{item.title}</h3>
+                    {item.organization ? <p className="portfolio-timeline-organization">{item.organization}</p> : null}
+                    <p className="portfolio-timeline-description">{item.description}</p>
+                    <div className="portfolio-badges">
+                      {item.temporary ? (
+                        <span className="portfolio-badge is-warning">{content.journey.placeholderBadge}</span>
+                      ) : null}
+                      {item.technologies.map((technology) => (
+                        <span key={technology} className="portfolio-badge">
+                          {technology}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.article>
+              ))}
             </div>
           </div>
         </section>
 
-        <section id="contact" className="portfolio-section portfolio-section-alt portfolio-contact-section">
-          <div className="portfolio-heading">
-            <p className="portfolio-kicker">{content.contact.kicker}</p>
-            <h2 className="portfolio-contact-title">{content.contact.title}</h2>
-            <p className="portfolio-contact-text">{content.contact.text}</p>
-            <GradientMenu items={contactMenuItems} className="mt-8" />
+        <section id="about" className="portfolio-section">
+          <div className="portfolio-container portfolio-about-grid">
+            <motion.div className="portfolio-portrait-card" {...revealProps}>
+              <div className="portfolio-portrait-accent" aria-hidden="true" />
+              <div className="portfolio-portrait-placeholder">
+                <span>{content.about.portraitTitle}</span>
+                <p>{content.about.portraitText}</p>
+              </div>
+            </motion.div>
+
+            <motion.div className="portfolio-section-copy" {...revealProps}>
+              <span className="portfolio-section-label">{content.about.eyebrow}</span>
+              <h2 className="portfolio-section-title">
+                {content.about.titlePrefix} <span className="portfolio-title-accent">{content.about.titleAccent}</span>
+              </h2>
+              <p className="portfolio-section-text">{content.about.lead}</p>
+              <div className="portfolio-feature-grid">
+                {content.about.cards.map((item, index) => {
+                  const icons = [Sparkles, ShieldCheck, Globe]
+                  const Icon = icons[index] ?? Sparkles
+                  return (
+                    <article key={item.title} className="portfolio-feature-card">
+                      <span className="portfolio-feature-icon">
+                        <Icon aria-hidden="true" />
+                      </span>
+                      <div>
+                        <h3>{item.title}</h3>
+                        <p>{item.text}</p>
+                      </div>
+                    </article>
+                  )
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section id="contact" className="portfolio-section">
+          <div className="portfolio-container portfolio-contact-grid">
+            <motion.div className="portfolio-section-copy" {...revealProps}>
+              <span className="portfolio-section-label">{content.contact.label}</span>
+              <h2 className="portfolio-section-title">
+                {content.contact.titleLineOne}
+                <br />
+                <span className="portfolio-title-accent">{content.contact.titleLineTwo}</span>
+              </h2>
+              <p className="portfolio-section-text">{content.contact.lead}</p>
+            </motion.div>
+
+            <motion.div className="portfolio-contact-actions" {...revealProps}>
+              <button type="button" className="portfolio-contact-card" onClick={() => setIsMailModalOpen(true)}>
+                <Mail aria-hidden="true" />
+                <div>
+                  <strong>{content.contact.email}</strong>
+                  <span>{content.contact.emailHint}</span>
+                </div>
+              </button>
+              <a className="portfolio-contact-card" href={githubUrl} target="_blank" rel="noreferrer">
+                <FaGithub aria-hidden="true" />
+                <div>
+                  <strong>{content.contact.github}</strong>
+                  <span>{content.contact.githubHint}</span>
+                </div>
+              </a>
+              <a className="portfolio-contact-card" href={linkedinUrl} target="_blank" rel="noreferrer">
+                <FaLinkedinIn aria-hidden="true" />
+                <div>
+                  <strong>{content.contact.linkedin}</strong>
+                  <span>{content.contact.linkedinHint}</span>
+                </div>
+              </a>
+            </motion.div>
           </div>
         </section>
       </main>
 
       <footer className="portfolio-footer">
-        <div className="portfolio-footer-inner">
-          <div className="portfolio-footer-meta">
-            <p className="portfolio-footer-brand">William Mahi</p>
-            <p className="portfolio-footer-copy">{content.footer.copy}</p>
+        <div className="portfolio-container portfolio-footer-inner">
+          <div className="portfolio-footer-branding">
+            <span className="portfolio-brand footer-brand">WM</span>
+            <div>
+              <strong>William Mahi</strong>
+              <span>{content.footer.role}</span>
+            </div>
           </div>
           <div className="portfolio-footer-links" aria-label={content.footer.legalLabel}>
-            <span className="portfolio-footer-link">{content.footer.legal}</span>
-            <span className="portfolio-footer-link">{content.footer.privacy}</span>
-            <span className="portfolio-footer-link">{content.footer.terms}</span>
+            <span>{content.footer.legal}</span>
+            <span>{content.footer.privacy}</span>
+            <span>{content.footer.terms}</span>
           </div>
           <p className="portfolio-footer-note">
             © {new Date().getFullYear()} William Mahi. {content.footer.rights}
@@ -855,6 +667,4 @@ function PortfolioPage() {
   )
 }
 
-export default function App() {
-  return <PortfolioPage />
-}
+export default App
