@@ -14,14 +14,17 @@ export function ThemeSwitch({
   lightThemeLabel = 'Activer le thème clair',
   darkThemeLabel = 'Activer le thème sombre',
 }: ThemeSwitchProps) {
-  const [theme, setTheme] = React.useState<'light' | 'dark'>('dark')
+  const [theme, setTheme] = React.useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') {
+      return 'dark'
+    }
+
+    return (localStorage.getItem('theme') as 'light' | 'dark' | null) ?? 'dark'
+  })
 
   React.useEffect(() => {
-    const savedTheme = (localStorage.getItem('theme') as 'light' | 'dark' | null) ?? 'dark'
-
-    setTheme(savedTheme)
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark')
-  }, [])
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+  }, [theme])
 
   const toggleTheme = React.useCallback(() => {
     const newTheme = theme === 'light' ? 'dark' : 'light'

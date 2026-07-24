@@ -1,0 +1,262 @@
+.orbiting-skills {
+  width: 100%;
+}
+
+.orbiting-skills__canvas {
+  position: relative;
+  width: min(100%, 46rem);
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+
+.orbiting-skills__center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: clamp(6.2rem, 15vw, 7.8rem);
+  height: clamp(6.2rem, 15vw, 7.8rem);
+  border: 1px solid rgba(50, 103, 255, 0.24);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 42%, transparent);
+  transform: translate(-50%, -50%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 0 0 1px rgba(6, 12, 22, 0.14);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.orbiting-skills__center::before {
+  content: '';
+  position: absolute;
+  inset: 0.6rem;
+  border: 1px solid rgba(50, 103, 255, 0.14);
+  border-radius: 999px;
+}
+
+.orbiting-skills__center span {
+  position: relative;
+  z-index: 1;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 1.65vw, 0.88rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.orbiting-skills__orbit-layer,
+.orbiting-skills__orbit-rotation {
+  position: absolute;
+  inset: 0;
+}
+
+.orbiting-skills__orbit-layer {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.orbiting-skills__ring-guide {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border: 1.5px solid rgba(50, 103, 255, 0.18);
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.orbiting-skills__orbit-rotation {
+  animation-name: orbiting-skills-spin;
+  animation-duration: var(--spin-duration);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: var(--spin-direction);
+  animation-play-state: running;
+  transform-origin: center;
+  pointer-events: none;
+}
+
+.orbiting-skills__item-positioner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.orbiting-skills__item-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--skill-size);
+  height: var(--skill-size);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  pointer-events: auto;
+}
+
+.orbiting-skills__item-button--lg {
+  --skill-size: clamp(2.7rem, 4vw, 3.15rem);
+  --label-offset: calc(var(--skill-size) + 0.52rem);
+}
+
+.orbiting-skills__item-button--md {
+  --skill-size: clamp(2.45rem, 4vw, 2.95rem);
+  --label-offset: calc(var(--skill-size) + 0.46rem);
+}
+
+.orbiting-skills__item-button--sm {
+  --skill-size: clamp(2.28rem, 3.5vw, 2.7rem);
+  --label-offset: calc(var(--skill-size) + 0.42rem);
+}
+
+.orbiting-skills__counter-rotation {
+  position: relative;
+  display: inline-flex;
+  width: var(--skill-size);
+  height: var(--skill-size);
+  align-items: center;
+  justify-content: center;
+  animation-name: orbiting-skills-spin;
+  animation-duration: var(--spin-duration);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: var(--spin-direction);
+  animation-play-state: running;
+  transform-origin: center;
+  transition:
+    transform 200ms ease,
+    filter 200ms ease,
+    opacity 200ms ease;
+}
+
+.orbiting-skills__item-button:hover .orbiting-skills__counter-rotation,
+.orbiting-skills__item-button:focus-visible .orbiting-skills__counter-rotation {
+  transform: scale(1.06);
+  filter: brightness(1.08);
+}
+
+.orbiting-skills__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--skill-size);
+  height: var(--skill-size);
+  border: 1px solid var(--skill-border);
+  border-radius: 999px;
+  background: var(--skill-bg);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 10px 20px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.orbiting-skills__logo-image,
+.orbiting-skills__logo-svg {
+  width: 52%;
+  height: 52%;
+  object-fit: contain;
+}
+
+.orbiting-skills__label {
+  position: absolute;
+  left: 50%;
+  top: var(--label-offset);
+  max-width: var(--label-width, 5.8rem);
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface-strong) 92%, transparent);
+  color: var(--fg);
+  font-size: clamp(0.64rem, 1.28vw, 0.73rem);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: -0.01em;
+  transform: translate(-50%, 0.35rem);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 20;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.orbiting-skills__item-button:hover .orbiting-skills__label,
+.orbiting-skills__item-button:focus-visible .orbiting-skills__label {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.orbiting-skills__item-button:hover .orbiting-skills__logo,
+.orbiting-skills__item-button:focus-visible .orbiting-skills__logo {
+  transform: scale(1.06);
+}
+
+.orbiting-skills__canvas:hover .orbiting-skills__orbit-rotation,
+.orbiting-skills__canvas:hover .orbiting-skills__counter-rotation,
+.orbiting-skills__canvas:focus-within .orbiting-skills__orbit-rotation,
+.orbiting-skills__canvas:focus-within .orbiting-skills__counter-rotation {
+  animation-play-state: paused;
+}
+
+@keyframes orbiting-skills-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1024px) {
+  .orbiting-skills__canvas {
+    width: min(100%, 38rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .orbiting-skills__canvas {
+    width: min(100%, 31rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .orbiting-skills__canvas {
+    width: min(100%, 22.5rem);
+  }
+
+  .orbiting-skills__label {
+    max-width: 4.35rem;
+    font-size: 0.6rem;
+    line-height: 1.15;
+  }
+
+  .orbiting-skills__center {
+    width: 5.4rem;
+    height: 5.4rem;
+  }
+
+  .orbiting-skills__item-button--lg {
+    --skill-size: 2.28rem;
+  }
+
+  .orbiting-skills__item-button--md,
+  .orbiting-skills__item-button--sm {
+    --skill-size: 2.16rem;
+  }
+}
