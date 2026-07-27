@@ -1,38 +1,29 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import {
-  ArrowRight,
-  ChevronDown,
-  ChevronRight,
-  Copy,
-  Globe,
-  Mail,
-  Menu,
-  ShieldCheck,
-  Sparkles,
-  X,
-} from 'lucide-react'
+import { ArrowDown, ArrowRight, ChevronDown, ChevronRight, Globe, Menu, ShieldCheck, Sparkles, X } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
-import { FaGithub, FaLinkedinIn } from 'react-icons/fa6'
 import { JourneyTimeline } from '@/components/journey-timeline'
+import { SocialLinks } from '@/components/social-links'
 import { ThemeSwitch } from '@/components/ui/theme-switch'
 import {
-  contactEmail,
   copy,
   githubUrl,
   languageOptions,
-  linkedinUrl,
   projects,
   type Language,
 } from '@/data/portfolio-content'
 import './App.css'
 
-const LazyHeroDotField = lazy(() => import('@/components/ui/hero-dot-field'))
 const LazyOrbitingSkills = lazy(() => import('@/components/ui/orbiting-skills'))
 
 const sectionIds = ['projects', 'stack', 'journey', 'about', 'contact'] as const
 type SectionId = (typeof sectionIds)[number]
 
 function App() {
+  const [hoveredStackSkill, setHoveredStackSkill] = useState<{
+    label: string
+    category: string
+    purpose: string
+  } | null>(null)
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof window === 'undefined') {
       return 'fr'
@@ -43,16 +34,16 @@ function App() {
   })
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false)
-  const [isMailModalOpen, setIsMailModalOpen] = useState(false)
-  const [isEmailCopied, setIsEmailCopied] = useState(false)
   const [activeSection, setActiveSection] = useState<SectionId>('projects')
   const languageMenuRef = useRef<HTMLDivElement | null>(null)
-  const modalRef = useRef<HTMLDivElement | null>(null)
-  const firstModalButtonRef = useRef<HTMLButtonElement | null>(null)
   const shouldReduceMotion = useReducedMotion()
   const content = copy[language]
   const projectItems = projects[language]
   const nextSectionAriaLabel = language === 'fr' ? 'Aller à la section suivante' : 'Go to the next section'
+  const contactEyebrow = language === 'fr' ? '• CONTACT' : '• CONTACT'
+  const contactTitle = language === 'fr' ? 'Vous avez un projet en tête ?' : 'Do you have a project in mind?'
+  const contactAvailability = language === 'fr' ? 'DISPONIBLE' : 'AVAILABLE'
+  const contactPrimaryCta = language === 'fr' ? 'DISCUTONS-EN !' : `LET'S TALK!`
 
   const activeLanguage = useMemo(
     () => languageOptions.find((option) => option.value === language) ?? languageOptions[0],
@@ -124,67 +115,6 @@ function App() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!isMailModalOpen) {
-      return
-    }
-
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    firstModalButtonRef.current?.focus()
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsMailModalOpen(false)
-        return
-      }
-
-      if (event.key !== 'Tab' || !modalRef.current) {
-        return
-      }
-
-      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-        'button, a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])',
-      )
-
-      if (focusableElements.length === 0) {
-        return
-      }
-
-      const firstElement = focusableElements[0]
-      const lastElement = focusableElements[focusableElements.length - 1]
-
-      if (event.shiftKey && document.activeElement === firstElement) {
-        event.preventDefault()
-        lastElement.focus()
-      } else if (!event.shiftKey && document.activeElement === lastElement) {
-        event.preventDefault()
-        firstElement.focus()
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isMailModalOpen])
-
-  useEffect(() => {
-    if (!isEmailCopied) {
-      return
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      setIsEmailCopied(false)
-    }, 1800)
-
-    return () => {
-      window.clearTimeout(timeoutId)
-    }
-  }, [isEmailCopied])
-
   const scrollToSection = (
     sectionId: SectionId | 'top' | 'content',
     block: ScrollLogicalPosition = 'start',
@@ -216,15 +146,6 @@ function App() {
     </button>
   )
 
-  const copyEmailToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(contactEmail)
-      setIsEmailCopied(true)
-    } catch {
-      setIsEmailCopied(false)
-    }
-  }
-
   const revealProps = shouldReduceMotion
     ? {}
     : {
@@ -236,58 +157,6 @@ function App() {
 
   return (
     <div className="portfolio-shell">
-      {isMailModalOpen ? (
-        <div
-          className="portfolio-modal-backdrop"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="mail-modal-title"
-          onClick={() => {
-            setIsMailModalOpen(false)
-          }}
-        >
-          <div
-            ref={modalRef}
-            className="portfolio-modal"
-            onClick={(event) => {
-              event.stopPropagation()
-            }}
-          >
-            <div className="portfolio-modal-header">
-              <h2 id="mail-modal-title" className="portfolio-modal-title">
-                {contactEmail}
-              </h2>
-              <button
-                type="button"
-                className="portfolio-icon-button"
-                aria-label={content.actions.close}
-                onClick={() => {
-                  setIsMailModalOpen(false)
-                }}
-              >
-                <X aria-hidden="true" />
-              </button>
-            </div>
-            <p className="portfolio-modal-text">{content.contact.lead}</p>
-            <div className="portfolio-modal-actions">
-              <button
-                ref={firstModalButtonRef}
-                type="button"
-                className="portfolio-button portfolio-button-primary"
-                onClick={copyEmailToClipboard}
-              >
-                <Copy aria-hidden="true" />
-                {isEmailCopied ? content.actions.copiedEmail : content.actions.copyEmail}
-              </button>
-              <a className="portfolio-button portfolio-button-secondary" href={`mailto:${contactEmail}`}>
-                <Mail aria-hidden="true" />
-                {content.actions.openMail}
-              </a>
-            </div>
-          </div>
-        </div>
-      ) : null}
-
       <a href="#content" className="skip-link">
         {content.nav.skipToContent}
       </a>
@@ -425,23 +294,10 @@ function App() {
                   {content.hero.primaryCta}
                   <ArrowRight aria-hidden="true" />
                 </button>
-                <button
-                  type="button"
-                  className="portfolio-button portfolio-button-secondary"
-                  onClick={() => {
-                    setIsMailModalOpen(true)
-                  }}
-                >
-                  {content.hero.secondaryCta}
-                </button>
+                <SocialLinks language={language} variant="hero" />
               </div>
             </motion.div>
 
-            <motion.div className="portfolio-hero-visual" {...revealProps}>
-              <Suspense fallback={null}>
-                <LazyHeroDotField />
-              </Suspense>
-            </motion.div>
           </div>
 
           <button
@@ -510,22 +366,42 @@ function App() {
               <span className="portfolio-section-label">{content.stack.label}</span>
               <h2 className="portfolio-section-title">{content.stack.title}</h2>
               <p className="portfolio-section-text">{content.stack.lead}</p>
-              <div className="portfolio-overview-card">
-                <span className="portfolio-overview-title">{content.stack.overviewTitle}</span>
-                <div className="portfolio-overview-grid">
-                  {content.stack.overview.map((item) => (
-                    <div key={item.label} className="portfolio-overview-item">
-                      <strong>{item.value}</strong>
-                      <span>{item.label}</span>
-                    </div>
-                  ))}
+              <div className="portfolio-terminal-card" aria-label="Linux terminal preview">
+                <div className="portfolio-terminal-toolbar" aria-hidden="true">
+                  <span className="portfolio-terminal-dot is-red" />
+                  <span className="portfolio-terminal-dot is-amber" />
+                  <span className="portfolio-terminal-dot is-green" />
+                  <span className="portfolio-terminal-title">william@portfolio:~</span>
+                </div>
+                <div className="portfolio-terminal-body">
+                  {hoveredStackSkill ? (
+                    <>
+                      <p>
+                        <span className="portfolio-terminal-prompt">$</span> cat name.txt
+                      </p>
+                      <p className="portfolio-terminal-output">{hoveredStackSkill.label}</p>
+                      <p>
+                        <span className="portfolio-terminal-prompt">$</span> cat purpose.txt
+                      </p>
+                      <p className="portfolio-terminal-output">{hoveredStackSkill.purpose}</p>
+                      <p>
+                        <span className="portfolio-terminal-prompt">$</span> cat category.txt
+                      </p>
+                      <p className="portfolio-terminal-output is-success">
+                        {hoveredStackSkill.category}
+                      </p>
+                    </>
+                  ) : null}
                 </div>
               </div>
             </motion.div>
 
             <motion.div className="portfolio-orbit-shell" {...revealProps}>
               <Suspense fallback={<div className="portfolio-orbit-fallback" aria-hidden="true" />}>
-                <LazyOrbitingSkills defaultVariant="all" />
+                <LazyOrbitingSkills
+                  defaultVariant="all"
+                  onSkillHoverChange={setHoveredStackSkill}
+                />
               </Suspense>
             </motion.div>
           </div>
@@ -582,40 +458,36 @@ function App() {
           {renderSectionJumpButton('about', 'contact')}
         </section>
 
-        <section id="contact" className="portfolio-section">
-          <div className="portfolio-container portfolio-contact-grid">
-            <motion.div className="portfolio-section-copy" {...revealProps}>
-              <span className="portfolio-section-label">{content.contact.label}</span>
-              <h2 className="portfolio-section-title">
-                {content.contact.titleLineOne}
-                <br />
-                <span className="portfolio-title-accent">{content.contact.titleLineTwo}</span>
-              </h2>
-              <p className="portfolio-section-text">{content.contact.lead}</p>
-            </motion.div>
+        <section id="contact" className="portfolio-section portfolio-contact-section">
+          <div className="portfolio-container">
+            <motion.div className="portfolio-contact-card-shell" {...revealProps}>
+              <div className="portfolio-contact-card-panel">
+                <div className="portfolio-contact-header">
+                  <span className="portfolio-contact-eyebrow">{contactEyebrow}</span>
+                  <h2 className="portfolio-contact-title">{contactTitle}</h2>
+                </div>
 
-            <motion.div className="portfolio-contact-actions" {...revealProps}>
-              <button type="button" className="portfolio-contact-card" onClick={() => setIsMailModalOpen(true)}>
-                <Mail aria-hidden="true" />
-                <div>
-                  <strong>{content.contact.email}</strong>
-                  <span>{content.contact.emailHint}</span>
+                <div className="portfolio-contact-cta-row">
+                  <div className="portfolio-contact-status" aria-label={contactAvailability}>
+                    <span className="portfolio-contact-status-dot" aria-hidden="true">
+                      <span className="portfolio-contact-status-dot-ping" />
+                      <span className="portfolio-contact-status-dot-core" />
+                    </span>
+                    <span>{contactAvailability}</span>
+                  </div>
+
+                  <a className="portfolio-contact-primary-cta" href="mailto:william.mahipro@gmail.com">
+                    {contactPrimaryCta}
+                    <ArrowDown aria-hidden="true" />
+                  </a>
                 </div>
-              </button>
-              <a className="portfolio-contact-card" href={githubUrl} target="_blank" rel="noreferrer">
-                <FaGithub aria-hidden="true" />
-                <div>
-                  <strong>{content.contact.github}</strong>
-                  <span>{content.contact.githubHint}</span>
+
+                <p className="portfolio-contact-description">{content.contact.lead}</p>
+
+                <div className="portfolio-contact-footer">
+                  <SocialLinks language={language} variant="contact" />
                 </div>
-              </a>
-              <a className="portfolio-contact-card" href={linkedinUrl} target="_blank" rel="noreferrer">
-                <FaLinkedinIn aria-hidden="true" />
-                <div>
-                  <strong>{content.contact.linkedin}</strong>
-                  <span>{content.contact.linkedinHint}</span>
-                </div>
-              </a>
+              </div>
             </motion.div>
           </div>
         </section>

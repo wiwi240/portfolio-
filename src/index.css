@@ -1,20 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f4f7fb;
-  --bg-elevated: #eef3f8;
-  --surface: rgba(255, 255, 255, 0.94);
-  --surface-strong: #ffffff;
-  --fg: #07101d;
-  --border: rgba(7, 16, 29, 0.11);
-  --accent: #3267ff;
-  --accent-light: #5a82ff;
-  --accent-strong: #234fd5;
-  --accent-secondary: #071a40;
-  --accent-muted: rgba(50, 103, 255, 0.12);
-  --muted: #4f5c6d;
-  --muted-fg: #6e7a89;
-  --muted-subtle: rgba(79, 92, 109, 0.12);
+  --bg: #050914;
+  --bg-elevated: #0b1323;
+  --surface: #111827;
+  --surface-strong: #1a2335;
+  --fg: #f8fafc;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-cyan: rgba(0, 245, 255, 0.42);
+  --accent: #3b82f6;
+  --accent-light: #3b82f6;
+  --accent-strong: #2563eb;
+  --accent-secondary: #2563eb;
+  --accent-cyan: #00f5ff;
+  --accent-cyan-light: #7df9ff;
+  --accent-muted: rgba(59, 130, 246, 0.14);
+  --grid-line: rgba(15, 23, 42, 0.82);
+  --copper: #d97706;
+  --copper-light: #f59e0b;
+  --muted: #a8b3c7;
+  --muted-fg: rgba(168, 179, 199, 0.76);
+  --muted-subtle: rgba(59, 130, 246, 0.14);
   --radius: 14px;
   --radius-sm: 10px;
   --font: 'Satoshi', 'Segoe UI', sans-serif;
@@ -36,20 +42,26 @@
 }
 
 html.dark {
-  --bg: color-mix(in srgb, #2e5090 34%, #07101c);
-  --bg-elevated: color-mix(in srgb, #2e5090 22%, #070c14);
-  --surface: rgba(9, 15, 24, 0.9);
-  --surface-strong: #0d1522;
-  --fg: #f5f7fa;
+  --bg: #050914;
+  --bg-elevated: #0b1323;
+  --surface: #111827;
+  --surface-strong: #1a2335;
+  --fg: #f8fafc;
   --border: rgba(255, 255, 255, 0.08);
-  --accent: #3267ff;
-  --accent-light: #5a82ff;
-  --accent-strong: #234fd5;
-  --accent-secondary: #071a40;
-  --accent-muted: rgba(50, 103, 255, 0.14);
-  --muted: #8e99a8;
-  --muted-fg: #6e7886;
-  --muted-subtle: rgba(142, 153, 168, 0.16);
+  --border-cyan: rgba(0, 245, 255, 0.42);
+  --accent: #3b82f6;
+  --accent-light: #3b82f6;
+  --accent-strong: #2563eb;
+  --accent-secondary: #2563eb;
+  --accent-cyan: #00f5ff;
+  --accent-cyan-light: #7df9ff;
+  --accent-muted: rgba(59, 130, 246, 0.14);
+  --grid-line: rgba(15, 23, 42, 0.82);
+  --copper: #d97706;
+  --copper-light: #f59e0b;
+  --muted: #a8b3c7;
+  --muted-fg: rgba(168, 179, 199, 0.76);
+  --muted-subtle: rgba(59, 130, 246, 0.14);
   --text-color-primary: var(--fg);
   color-scheme: dark;
 }
@@ -74,11 +86,11 @@ body {
   min-height: 100%;
   min-width: 320px;
   overflow-x: clip;
-  background: linear-gradient(135deg, #eef3f8 0%, #f4f7fb 48%, #eaf0f7 100%);
+  background: linear-gradient(135deg, #050914 0%, #0b1323 48%, #050914 100%);
 }
 
 html.dark body {
-  background: color-mix(in srgb, #2e5090 34%, #07101c);
+  background: linear-gradient(135deg, #050914 0%, #0b1323 48%, #050914 100%);
 }
 
 body,
@@ -123,6 +135,6 @@ textarea {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--accent-cyan);
   outline-offset: 2px;
 }

@@ -36,7 +36,7 @@ const iconMap = {
 export function JourneyTimeline({ language, label, title, intro }: JourneyTimelineProps) {
   const shouldReduceMotion = useReducedMotion()
   const sectionRef = useRef<HTMLDivElement | null>(null)
-  const itemRefs = useRef<Array<HTMLLIElement | null>>([])
+  const itemRefs = useRef<Array<HTMLElement | null>>([])
   const [progress, setProgress] = useState(shouldReduceMotion ? 1 : 0)
   const [isCompactLayout, setIsCompactLayout] = useState(false)
   const [activeIndexes, setActiveIndexes] = useState<number[]>(shouldReduceMotion ? journeyTimelineContent[language].map((_, index) => index) : [])
@@ -150,66 +150,68 @@ export function JourneyTimeline({ language, label, title, intro }: JourneyTimeli
         <ol className="portfolio-journey-list">
           {items.map((item, index) => {
             const Icon = iconMap[item.icon]
-            const isActive = activeIndexes.includes(index)
             const direction = isCompactLayout ? 'right' : index % 2 === 0 ? 'left' : 'right'
-            const shouldShowDate = index === 0 || items[index - 1]?.date !== item.date
-
-            return (
-              <li
+            const isActive = activeIndexes.includes(index)
+            const eventCard = (
+              <motion.article
                 key={`${item.dateTime}-${item.title}`}
                 ref={(node) => {
                   itemRefs.current[index] = node
                 }}
+                className={`portfolio-journey-card ${isActive ? 'is-active' : ''}`}
+                tabIndex={0}
+                initial={shouldReduceMotion ? false : { opacity: 0.32, x: 0, y: 20 }}
+                animate={
+                  shouldReduceMotion || isActive
+                    ? { opacity: 1, x: 0, y: 0 }
+                    : { opacity: 0.86, x: 0, y: 20 }
+                }
+                transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <span className="portfolio-journey-icon" aria-hidden="true">
+                  <Icon />
+                </span>
+                <div className="portfolio-journey-card-copy">
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                  <div className="portfolio-badges portfolio-journey-badges">
+                    {item.tags.map((tag, tagIndex) => (
+                      <motion.span
+                        key={tag}
+                        className="portfolio-badge"
+                        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.4,
+                          delay: shouldReduceMotion ? 0 : 0.08 + tagIndex * 0.04,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                      >
+                        {tag}
+                      </motion.span>
+                    ))}
+                  </div>
+                </div>
+              </motion.article>
+            )
+
+            return (
+              <li
+                key={`${item.dateTime}-${item.title}`}
                 className={`portfolio-journey-item ${direction} ${isActive ? 'is-active' : ''}`}
               >
+                <div className="portfolio-journey-side portfolio-journey-side--left">
+                  {direction === 'left' ? eventCard : null}
+                </div>
                 <div className="portfolio-journey-rail">
-                  {shouldShowDate ? (
-                    <time className="portfolio-journey-date" dateTime={item.dateTime}>
-                      {item.date}
-                    </time>
-                  ) : (
-                    <span className="portfolio-journey-date portfolio-journey-date--empty" aria-hidden="true" />
-                  )}
+                  <time className="portfolio-journey-date-card" dateTime={item.dateTime}>
+                    {item.date}
+                  </time>
                   <span className="portfolio-journey-marker" aria-hidden="true" />
                 </div>
-
-                <motion.article
-                  className="portfolio-journey-card"
-                  initial={shouldReduceMotion ? false : { opacity: 0.32, x: direction === 'left' ? -26 : 26, y: 20 }}
-                  animate={
-                    shouldReduceMotion
-                      ? { opacity: 1, x: 0, y: 0 }
-                      : isActive
-                        ? { opacity: 1, x: 0, y: 0 }
-                        : { opacity: 0.32, x: direction === 'left' ? -26 : 26, y: 20 }
-                  }
-                  transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <span className="portfolio-journey-icon" aria-hidden="true">
-                    <Icon />
-                  </span>
-                  <div className="portfolio-journey-card-copy">
-                    <h3>{item.title}</h3>
-                    <p>{item.description}</p>
-                    <div className="portfolio-badges portfolio-journey-badges">
-                      {item.tags.map((tag, tagIndex) => (
-                        <motion.span
-                          key={tag}
-                          className="portfolio-badge"
-                          initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
-                          animate={shouldReduceMotion || isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-                          transition={{
-                            duration: 0.4,
-                            delay: shouldReduceMotion ? 0 : 0.08 + tagIndex * 0.04,
-                            ease: [0.22, 1, 0.36, 1],
-                          }}
-                        >
-                          {tag}
-                        </motion.span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.article>
+                <div className="portfolio-journey-side portfolio-journey-side--right">
+                  {direction === 'right' ? eventCard : null}
+                </div>
               </li>
             )
           })}
