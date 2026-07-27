@@ -36,8 +36,8 @@
 }
 
 html.dark {
-  --bg: #03070d;
-  --bg-elevated: #070c14;
+  --bg: color-mix(in srgb, #2e5090 34%, #07101c);
+  --bg-elevated: color-mix(in srgb, #2e5090 22%, #070c14);
   --surface: rgba(9, 15, 24, 0.9);
   --surface-strong: #0d1522;
   --fg: #f5f7fa;
@@ -78,19 +78,7 @@ body {
 }
 
 html.dark body {
-  background:
-    radial-gradient(
-      circle at 78% 34%,
-      rgba(58, 97, 210, 0.12) 0%,
-      rgba(58, 97, 210, 0.045) 28%,
-      transparent 52%
-    ),
-    radial-gradient(
-      circle at 18% 78%,
-      rgba(26, 55, 118, 0.09) 0%,
-      transparent 42%
-    ),
-    linear-gradient(135deg, #07101c 0%, #050914 48%, #08111f 100%);
+  background: color-mix(in srgb, #2e5090 34%, #07101c);
 }
 
 body,

@@ -9,15 +9,6 @@ export type ProjectItem = {
   technologies: string[]
 }
 
-export type TimelineItem = {
-  period: string
-  title: string
-  organization?: string
-  description: string
-  technologies: string[]
-  temporary?: boolean
-}
-
 type Copy = {
   meta: {
     title: string
@@ -60,7 +51,7 @@ type Copy = {
   journey: {
     label: string
     title: string
-    placeholderBadge: string
+    intro: string
   }
   about: {
     label: string
@@ -166,8 +157,9 @@ export const copy: Record<Language, Copy> = {
     },
     journey: {
       label: 'Parcours',
-      title: 'Mon parcours et mes expériences',
-      placeholderBadge: 'Donnée temporaire',
+      title: 'Mon parcours',
+      intro:
+        'De ma reconversion à la conception d’applications modernes, chaque étape a construit les compétences que j’utilise aujourd’hui.',
     },
     about: {
       label: 'À propos',
@@ -277,8 +269,9 @@ export const copy: Record<Language, Copy> = {
     },
     journey: {
       label: 'Journey',
-      title: 'My journey and experience',
-      placeholderBadge: 'Temporary data',
+      title: 'My journey',
+      intro:
+        'From my career transition to building modern applications, each step shaped the skills I rely on today.',
     },
     about: {
       label: 'About',
@@ -408,67 +401,6 @@ export const projects: Record<Language, ProjectItem[]> = {
         'A personal portfolio built to present my approach, my projects, and the way I structure readable interfaces.',
       image: '/projects/portfolio.png',
       technologies: ['React', 'TypeScript', 'Tailwind CSS'],
-    },
-  ],
-}
-
-export const timelineItems: Record<Language, TimelineItem[]> = {
-  fr: [
-    {
-      period: 'À compléter',
-      title: 'Expérience 01 à valider',
-      organization: 'Donnée temporaire',
-      description:
-        'Aucune expérience structurée n’est encore stockée dans le dépôt. Cette entrée sert uniquement à poser la structure de la timeline.',
-      technologies: ['À valider'],
-      temporary: true,
-    },
-    {
-      period: 'À compléter',
-      title: 'Expérience 02 à valider',
-      organization: 'Donnée temporaire',
-      description:
-        'Remplacer ce contenu par une expérience réelle avec période, contexte, description et technologies associées.',
-      technologies: ['À valider'],
-      temporary: true,
-    },
-    {
-      period: 'À compléter',
-      title: 'Expérience 03 à valider',
-      organization: 'Donnée temporaire',
-      description:
-        'Bloc prévu pour une autre étape de parcours. La structure est en place pour éviter d’inventer des informations.',
-      technologies: ['À valider'],
-      temporary: true,
-    },
-  ],
-  en: [
-    {
-      period: 'To complete',
-      title: 'Experience 01 to validate',
-      organization: 'Temporary data',
-      description:
-        'No structured experience data is currently stored in the repository. This entry only exists to establish the timeline structure.',
-      technologies: ['To validate'],
-      temporary: true,
-    },
-    {
-      period: 'To complete',
-      title: 'Experience 02 to validate',
-      organization: 'Temporary data',
-      description:
-        'Replace this content with a real experience including period, context, description, and associated technologies.',
-      technologies: ['To validate'],
-      temporary: true,
-    },
-    {
-      period: 'To complete',
-      title: 'Experience 03 to validate',
-      organization: 'Temporary data',
-      description:
-        'Reserved slot for another career step. The structure is intentionally present without inventing information.',
-      technologies: ['To validate'],
-      temporary: true,
     },
   ],
 }
