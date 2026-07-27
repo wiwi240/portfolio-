@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6'
-
+import { JourneyTimeline } from '@/components/journey-timeline'
 import { ThemeSwitch } from '@/components/ui/theme-switch'
 import {
   contactEmail,
@@ -22,11 +22,11 @@ import {
   languageOptions,
   linkedinUrl,
   projects,
-  timelineItems,
   type Language,
 } from '@/data/portfolio-content'
 import './App.css'
 
+const LazyHeroDotField = lazy(() => import('@/components/ui/hero-dot-field'))
 const LazyOrbitingSkills = lazy(() => import('@/components/ui/orbiting-skills'))
 
 const sectionIds = ['projects', 'stack', 'journey', 'about', 'contact'] as const
@@ -52,7 +52,7 @@ function App() {
   const shouldReduceMotion = useReducedMotion()
   const content = copy[language]
   const projectItems = projects[language]
-  const timeline = timelineItems[language]
+  const nextSectionAriaLabel = language === 'fr' ? 'Aller à la section suivante' : 'Go to the next section'
 
   const activeLanguage = useMemo(
     () => languageOptions.find((option) => option.value === language) ?? languageOptions[0],
@@ -185,7 +185,10 @@ function App() {
     }
   }, [isEmailCopied])
 
-  const scrollToSection = (sectionId: SectionId | 'top' | 'content') => {
+  const scrollToSection = (
+    sectionId: SectionId | 'top' | 'content',
+    block: ScrollLogicalPosition = 'start',
+  ) => {
     const target = document.getElementById(sectionId)
     if (!target) {
       return
@@ -193,10 +196,25 @@ function App() {
 
     target.scrollIntoView({
       behavior: shouldReduceMotion ? 'auto' : 'smooth',
-      block: 'start',
+      block,
     })
     setIsMenuOpen(false)
   }
+
+  const renderSectionJumpButton = (sourceSection: SectionId, targetSection: SectionId) => (
+    <button
+      type="button"
+      className={`portfolio-scroll-indicator portfolio-scroll-indicator--section${
+        activeSection === sourceSection ? ' is-visible' : ''
+      }`}
+      aria-label={nextSectionAriaLabel}
+      onClick={() => {
+        scrollToSection(targetSection, 'center')
+      }}
+    >
+      <ChevronDown aria-hidden="true" />
+    </button>
+  )
 
   const copyEmailToClipboard = async () => {
     try {
@@ -420,17 +438,9 @@ function App() {
             </motion.div>
 
             <motion.div className="portfolio-hero-visual" {...revealProps}>
-              <div className="portfolio-hero-arc arc-one" />
-              <div className="portfolio-hero-arc arc-two" />
-              <div className="portfolio-hero-arc arc-three" />
-              <div className="portfolio-hero-line line-diagonal" />
-              <div className="portfolio-hero-line line-vertical" />
-              <div className="portfolio-hero-line line-horizontal" />
-              <div className="portfolio-hero-grid-dots dots-top" />
-              <div className="portfolio-hero-grid-dots dots-side" />
-              <span className="portfolio-hero-point point-a" />
-              <span className="portfolio-hero-point point-b" />
-              <span className="portfolio-hero-point point-c" />
+              <Suspense fallback={null}>
+                <LazyHeroDotField />
+              </Suspense>
             </motion.div>
           </div>
 
@@ -439,10 +449,9 @@ function App() {
             className="portfolio-scroll-indicator"
             aria-label={content.hero.scroll}
             onClick={() => {
-              scrollToSection('projects')
+              scrollToSection('projects', 'center')
             }}
           >
-            <span>{content.hero.scroll}</span>
             <ChevronDown aria-hidden="true" />
           </button>
         </section>
@@ -455,10 +464,6 @@ function App() {
                 <h2 className="portfolio-section-title">{content.projects.title}</h2>
                 <p className="portfolio-section-text">{content.projects.description}</p>
               </div>
-              <a className="portfolio-button portfolio-button-secondary" href={githubUrl} target="_blank" rel="noreferrer">
-                {content.projects.viewAll}
-                <ArrowRight aria-hidden="true" />
-              </a>
             </motion.div>
 
             <div className="portfolio-project-grid">
@@ -496,6 +501,7 @@ function App() {
               ))}
             </div>
           </div>
+          {renderSectionJumpButton('projects', 'stack')}
         </section>
 
         <section id="stack" className="portfolio-section">
@@ -523,49 +529,19 @@ function App() {
               </Suspense>
             </motion.div>
           </div>
+          {renderSectionJumpButton('stack', 'journey')}
         </section>
 
         <section id="journey" className="portfolio-section">
-          <div className="portfolio-container portfolio-two-column">
-            <motion.div className="portfolio-section-copy" {...revealProps}>
-              <span className="portfolio-section-label">{content.journey.label}</span>
-              <h2 className="portfolio-section-title">{content.journey.title}</h2>
-            </motion.div>
-
-            <div className="portfolio-timeline">
-              {timeline.map((item, index) => (
-                <motion.article
-                  key={`${item.period}-${index}`}
-                  className="portfolio-timeline-item"
-                  initial={shouldReduceMotion ? undefined : { opacity: 0, x: 20 }}
-                  whileInView={shouldReduceMotion ? undefined : { opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{
-                    duration: 0.45,
-                    delay: shouldReduceMotion ? 0 : index * 0.08,
-                  }}
-                >
-                  <div className="portfolio-timeline-marker" aria-hidden="true" />
-                  <div className="portfolio-timeline-content">
-                    <span className="portfolio-timeline-period">{item.period}</span>
-                    <h3>{item.title}</h3>
-                    {item.organization ? <p className="portfolio-timeline-organization">{item.organization}</p> : null}
-                    <p className="portfolio-timeline-description">{item.description}</p>
-                    <div className="portfolio-badges">
-                      {item.temporary ? (
-                        <span className="portfolio-badge is-warning">{content.journey.placeholderBadge}</span>
-                      ) : null}
-                      {item.technologies.map((technology) => (
-                        <span key={technology} className="portfolio-badge">
-                          {technology}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.article>
-              ))}
-            </div>
+          <div className="portfolio-container">
+            <JourneyTimeline
+              language={language}
+              label={content.journey.label}
+              title={content.journey.title}
+              intro={content.journey.intro}
+            />
           </div>
+          {renderSectionJumpButton('journey', 'about')}
         </section>
 
         <section id="about" className="portfolio-section">
@@ -603,6 +579,7 @@ function App() {
               </div>
             </motion.div>
           </div>
+          {renderSectionJumpButton('about', 'contact')}
         </section>
 
         <section id="contact" className="portfolio-section">
