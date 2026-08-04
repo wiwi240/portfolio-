@@ -61,16 +61,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 48px;
-  height: 48px;
+  min-width: 60px;
+  height: 60px;
+  padding: 0;
   border: 1px solid transparent;
   background: transparent;
   color: var(--fg);
-  font-family: var(--font-display);
-  font-size: 1.7rem;
-  font-weight: 700;
-  letter-spacing: -0.06em;
   cursor: pointer;
+}
+
+.portfolio-brand-image {
+  display: block;
+  width: auto;
+  height: 60px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 14px rgba(0, 245, 255, 0.18));
 }
 
 .portfolio-nav-links {
@@ -1393,6 +1398,10 @@
 
 .footer-brand {
   cursor: default;
+}
+
+.footer-brand .portfolio-brand-image {
+  height: 52px;
 }
 
 .portfolio-footer-branding strong {

@@ -170,7 +170,11 @@ function App() {
               scrollToSection('top')
             }}
           >
-            WM
+            <img
+              src="/logo-portfolio.png"
+              alt="William Mahi"
+              className="portfolio-brand-image"
+            />
           </button>
 
           <nav className="portfolio-nav-links" aria-label={content.nav.sectionsLabel}>
@@ -496,7 +500,13 @@ function App() {
       <footer className="portfolio-footer">
         <div className="portfolio-container portfolio-footer-inner">
           <div className="portfolio-footer-branding">
-            <span className="portfolio-brand footer-brand">WM</span>
+            <span className="portfolio-brand footer-brand" aria-hidden="true">
+              <img
+                src="/logo-portfolio.png"
+                alt=""
+                className="portfolio-brand-image"
+              />
+            </span>
             <div>
               <strong>William Mahi</strong>
               <span>{content.footer.role}</span>
