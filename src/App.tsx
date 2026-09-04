@@ -55,14 +55,35 @@ function App() {
     document.documentElement.lang = language
     document.title = content.meta.title
 
-    let descriptionTag = document.querySelector('meta[name="description"]')
-    if (!descriptionTag) {
-      descriptionTag = document.createElement('meta')
-      descriptionTag.setAttribute('name', 'description')
-      document.head.appendChild(descriptionTag)
+    const setMetaContent = (
+      selector: string,
+      attribute: 'name' | 'property',
+      identifier: string,
+      value: string,
+    ) => {
+      let tag = document.querySelector<HTMLMetaElement>(selector)
+      if (!tag) {
+        tag = document.createElement('meta')
+        tag.setAttribute(attribute, identifier)
+        document.head.appendChild(tag)
+      }
+      tag.setAttribute('content', value)
     }
 
-    descriptionTag.setAttribute('content', content.meta.description)
+    setMetaContent('meta[name="description"]', 'name', 'description', content.meta.description)
+    setMetaContent('meta[property="og:title"]', 'property', 'og:title', content.meta.title)
+    setMetaContent('meta[property="og:description"]', 'property', 'og:description', content.meta.description)
+    setMetaContent('meta[name="twitter:title"]', 'name', 'twitter:title', content.meta.title)
+    setMetaContent('meta[name="twitter:description"]', 'name', 'twitter:description', content.meta.description)
+
+    const canonicalUrl = `${window.location.origin}${window.location.pathname}`
+    let canonicalTag = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+    if (!canonicalTag) {
+      canonicalTag = document.createElement('link')
+      canonicalTag.setAttribute('rel', 'canonical')
+      document.head.appendChild(canonicalTag)
+    }
+    canonicalTag.setAttribute('href', canonicalUrl)
   }, [content.meta.description, content.meta.title, language])
 
   useEffect(() => {
