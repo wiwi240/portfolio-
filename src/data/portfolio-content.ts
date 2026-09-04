@@ -127,7 +127,7 @@ export const copy: Record<Language, Copy> = {
     },
     hero: {
       label: 'Développeur fullstack',
-      titleLines: ['Code.', 'Design.', 'Impact.'],
+      titleLines: ['Code.', 'Design.', 'Build.'],
       lead:
         'Je conçois et développe des interfaces lisibles, des bases solides et des expériences web pensées pour durer.',
       primaryCta: 'Voir mes projets',
@@ -239,7 +239,7 @@ export const copy: Record<Language, Copy> = {
     },
     hero: {
       label: 'Full-stack developer',
-      titleLines: ['Code.', 'Design.', 'Impact.'],
+      titleLines: ['Code.', 'Design.', 'Build.'],
       lead:
         'I design and build readable interfaces, durable foundations, and web experiences meant to stay maintainable over time.',
       primaryCta: 'View my projects',
