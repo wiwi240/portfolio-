@@ -59,8 +59,7 @@ type Copy = {
     titlePrefix: string
     titleAccent: string
     lead: string
-    portraitTitle: string
-    portraitText: string
+    portraitAlt: string
     cards: Array<{ title: string; text: string }>
   }
   contact: {
@@ -168,8 +167,7 @@ export const copy: Record<Language, Copy> = {
       titleAccent: 'qualité.',
       lead:
         'Je cherche à construire des projets que l’on comprend vite, que l’on reprend facilement et qui restent propres quand ils évoluent. Même exigence du front au back: interface nette, logique explicite, structure maintenable.',
-      portraitTitle: 'Portrait à ajouter',
-      portraitText: 'Aucun portrait réel n’est présent dans les assets du projet pour le moment.',
+      portraitAlt: 'Mon portrait',
       cards: [
         {
           title: 'Focus',
@@ -280,8 +278,7 @@ export const copy: Record<Language, Copy> = {
       titleAccent: 'quality.',
       lead:
         'I aim to build projects that are easy to understand, easy to pick up again, and still clean when they evolve. The same standard applies from front to back: sharp interface, explicit logic, maintainable structure.',
-      portraitTitle: 'Portrait to add',
-      portraitText: 'No real portrait asset is currently available in the project.',
+      portraitAlt: 'My portrait',
       cards: [
         {
           title: 'Focus',

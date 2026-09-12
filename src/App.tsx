@@ -449,10 +449,15 @@ function App() {
           <div className="portfolio-container portfolio-about-grid">
             <motion.div className="portfolio-portrait-card" {...revealProps}>
               <div className="portfolio-portrait-accent" aria-hidden="true" />
-              <div className="portfolio-portrait-placeholder">
-                <span>{content.about.portraitTitle}</span>
-                <p>{content.about.portraitText}</p>
-              </div>
+              <img
+                className="portfolio-portrait-image"
+                src="/format%20github.png"
+                alt={content.about.portraitAlt}
+                width={1254}
+                height={1254}
+                loading="lazy"
+                decoding="async"
+              />
             </motion.div>
 
             <motion.div className="portfolio-section-copy" {...revealProps}>
