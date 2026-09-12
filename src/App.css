@@ -355,6 +355,65 @@
   justify-content: center;
 }
 
+.portfolio-social-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.portfolio-email-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  max-width: 100%;
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--accent-cyan);
+  border-radius: 0.75rem;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+.portfolio-email-panel[hidden] {
+  display: none;
+}
+
+.portfolio-email-address {
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.portfolio-email-copy {
+  min-height: 44px;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid currentColor;
+  border-radius: 0.5rem;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.portfolio-email-copy:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 3px;
+}
+
+.portfolio-email-feedback {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.portfolio-email-feedback:empty {
+  display: none;
+}
+
 .portfolio-social-links {
   display: inline-flex;
   align-items: center;
@@ -385,6 +444,7 @@
 }
 
 .portfolio-social-link {
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
