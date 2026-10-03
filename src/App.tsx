@@ -76,14 +76,6 @@ function App() {
     setMetaContent('meta[name="twitter:title"]', 'name', 'twitter:title', content.meta.title)
     setMetaContent('meta[name="twitter:description"]', 'name', 'twitter:description', content.meta.description)
 
-    const canonicalUrl = `${window.location.origin}${window.location.pathname}`
-    let canonicalTag = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
-    if (!canonicalTag) {
-      canonicalTag = document.createElement('link')
-      canonicalTag.setAttribute('rel', 'canonical')
-      document.head.appendChild(canonicalTag)
-    }
-    canonicalTag.setAttribute('href', canonicalUrl)
   }, [content.meta.description, content.meta.title, language])
 
   useEffect(() => {
