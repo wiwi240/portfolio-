@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Page introuvable — William Mahi</title>
+    <style>
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #eaf7ff; color: #0b1323; font-family: system-ui, sans-serif; }
+      main { width: min(560px, calc(100% - 2rem)); padding: 3rem; border: 1px solid #cfe6f5; border-radius: 20px; background: #fff; }
+      strong { color: #0866e8; letter-spacing: .2em; }
+      h1 { margin: 1rem 0; font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1.1; }
+      p { color: #536278; line-height: 1.6; }
+      a { display: inline-block; margin-top: 1rem; padding: .8rem 1.2rem; border-radius: 9px; background: #0866e8; color: white; font-weight: 700; text-decoration: none; }
+      a:focus-visible { outline: 3px solid #00bdeb; outline-offset: 3px; }
+    </style>
+  </head>
+  <body><main><strong>WM / 404</strong><h1 id="title">Page introuvable.</h1><p id="description">Cette adresse ne correspond à aucune page du portfolio.</p><a id="home" href="/">Retour à l’accueil</a></main>
+    <script>
+      if (location.pathname.startsWith('/en/')) {
+        document.documentElement.lang = 'en';
+        document.title = 'Page not found — William Mahi';
+        document.getElementById('title').textContent = 'Page not found.';
+        document.getElementById('description').textContent = 'This address does not match any page in the portfolio.';
+        document.getElementById('home').textContent = 'Back to home';
+        document.getElementById('home').href = '/en/';
+      }
+    </script>
+  </body>
+</html>

@@ -16,10 +16,10 @@ export function ThemeSwitch({
 }: ThemeSwitchProps) {
   const [theme, setTheme] = React.useState<'light' | 'dark'>(() => {
     if (typeof window === 'undefined') {
-      return 'dark'
+      return 'light'
     }
 
-    return (localStorage.getItem('theme') as 'light' | 'dark' | null) ?? 'dark'
+    return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
   })
 
   React.useEffect(() => {

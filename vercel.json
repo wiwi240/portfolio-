@@ -1,5 +1,17 @@
 {
   "installCommand": "pnpm install --no-frozen-lockfile",
   "buildCommand": "pnpm run build",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/projets", "destination": "/index.html" },
+    { "source": "/expertises", "destination": "/index.html" },
+    { "source": "/a-propos", "destination": "/index.html" },
+    { "source": "/contact", "destination": "/index.html" },
+    { "source": "/en", "destination": "/index.html" },
+    { "source": "/en/", "destination": "/index.html" },
+    { "source": "/en/projects", "destination": "/index.html" },
+    { "source": "/en/expertise", "destination": "/index.html" },
+    { "source": "/en/about", "destination": "/index.html" },
+    { "source": "/en/contact", "destination": "/index.html" }
+  ]
 }

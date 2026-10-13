@@ -1,547 +1,91 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowDown, ArrowRight, ChevronDown, ChevronRight, Globe, Menu, ShieldCheck, Sparkles, X } from 'lucide-react'
-import { motion, useReducedMotion } from 'motion/react'
+import { lazy, Suspense, useEffect, useState } from 'react'
+import { ArrowRight, Menu, X } from 'lucide-react'
 import { JourneyTimeline } from '@/components/journey-timeline'
 import { SocialLinks } from '@/components/social-links'
 import { ThemeSwitch } from '@/components/ui/theme-switch'
-import {
-  copy,
-  githubUrl,
-  languageOptions,
-  projects,
-  type Language,
-} from '@/data/portfolio-content'
+import { copy, projects, contactEmail, type Language, type ProjectItem } from '@/data/portfolio-content'
+import { metadata, paths, resolveRoute, siteOrigin, type PageId } from '@/site'
 import './App.css'
+import './redesign.css'
 
-const LazyOrbitingSkills = lazy(() => import('@/components/ui/orbiting-skills'))
+type MainPage = Exclude<PageId, 'notFound'>
+const navPages: MainPage[] = ['home', 'projects', 'expertise', 'about', 'contact']
+const OrbitingSkills = lazy(() => import('@/components/ui/orbiting-skills'))
+const ui = {
+  fr: {
+    home: 'Accueil', projects: 'Projets', expertise: 'Expertises', about: 'À propos', contact: 'Contact',
+    nav: 'Navigation principale', open: 'Ouvrir le menu', close: 'Fermer le menu', skip: 'Aller au contenu',
+    role: 'Développeur Full-Stack', availability: 'Freelance et ouvert aux opportunités professionnelles',
+    discover: 'Découvrir mes projets', contactMe: 'Me contacter', expertiseCta: 'Voir mes expertises',
+    intro: 'Je conçois des interfaces et des applications web utiles, lisibles et maintenables.',
+    servicesTitle: 'Ce que je peux construire', servicesIntro: 'Du site web à l’application métier, je relie expérience utilisateur et structure technique.',
+    services: ['Sites web', 'Applications web', 'Logiciels métier', 'Refonte et maintenance'],
+    featured: 'Projets à découvrir', allProjects: 'Tous les projets',
+    projectsIntro: 'Une sélection de réalisations existantes, présentées avec leurs captures réelles.',
+    expertiseIntro: 'Des compétences techniques au service de projets concrets.',
+    aboutIntro: 'Mon approche : comprendre le besoin, soigner l’interface et construire une base durable.',
+    contactIntro: 'Parlons de votre projet, d’une mission freelance, d’un recrutement ou d’une question.',
+    emailMe: 'Écrire un email', contactWays: 'Retrouvez-moi aussi sur', notFound: 'Cette page est introuvable.', backHome: 'Retour à l’accueil', rights: 'Tous droits réservés.',
+  },
+  en: {
+    home: 'Home', projects: 'Projects', expertise: 'Expertise', about: 'About', contact: 'Contact',
+    nav: 'Main navigation', open: 'Open menu', close: 'Close menu', skip: 'Skip to content',
+    role: 'Full-Stack Developer', availability: 'Freelance and open to professional opportunities',
+    discover: 'Explore my projects', contactMe: 'Contact me', expertiseCta: 'Explore my expertise',
+    intro: 'I build useful, readable and maintainable web interfaces and applications.',
+    servicesTitle: 'What I can build', servicesIntro: 'From websites to business applications, I connect user experience with sound technical foundations.',
+    services: ['Websites', 'Web applications', 'Business software', 'Redesign and maintenance'],
+    featured: 'Featured projects', allProjects: 'All projects',
+    projectsIntro: 'A selection of existing work, presented with real screenshots.',
+    expertiseIntro: 'Technical skills applied to practical projects.',
+    aboutIntro: 'My approach: understand the need, refine the interface and build a durable foundation.',
+    contactIntro: 'Let’s discuss your project, freelance work, a recruitment opportunity or a question.',
+    emailMe: 'Send an email', contactWays: 'Find me on', notFound: 'This page could not be found.', backHome: 'Back to home', rights: 'All rights reserved.',
+  },
+} as const
 
-const sectionIds = ['projects', 'stack', 'journey', 'about', 'contact'] as const
-type SectionId = (typeof sectionIds)[number]
-
-function App() {
-  const [hoveredStackSkill, setHoveredStackSkill] = useState<{
-    label: string
-    category: string
-    purpose: string
-  } | null>(null)
-  const [language, setLanguage] = useState<Language>(() => {
-    if (typeof window === 'undefined') {
-      return 'fr'
-    }
-
-    const savedLanguage = localStorage.getItem('language')
-    return savedLanguage === 'en' ? 'en' : 'fr'
-  })
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState<SectionId>('projects')
-  const languageMenuRef = useRef<HTMLDivElement | null>(null)
-  const shouldReduceMotion = useReducedMotion()
-  const content = copy[language]
-  const projectItems = projects[language]
-  const nextSectionAriaLabel = language === 'fr' ? 'Aller à la section suivante' : 'Go to the next section'
-  const contactEyebrow = language === 'fr' ? '• CONTACT' : '• CONTACT'
-  const contactTitle = language === 'fr' ? 'Vous avez un projet en tête ?' : 'Do you have a project in mind?'
-  const contactAvailability = language === 'fr' ? 'DISPONIBLE' : 'AVAILABLE'
-  const contactPrimaryCta = language === 'fr' ? 'DISCUTONS-EN !' : `LET'S TALK!`
-
-  const activeLanguage = useMemo(
-    () => languageOptions.find((option) => option.value === language) ?? languageOptions[0],
-    [language],
-  )
-
-  useEffect(() => {
-    localStorage.setItem('language', language)
-    document.documentElement.lang = language
-    document.title = content.meta.title
-
-    const setMetaContent = (
-      selector: string,
-      attribute: 'name' | 'property',
-      identifier: string,
-      value: string,
-    ) => {
-      let tag = document.querySelector<HTMLMetaElement>(selector)
-      if (!tag) {
-        tag = document.createElement('meta')
-        tag.setAttribute(attribute, identifier)
-        document.head.appendChild(tag)
-      }
-      tag.setAttribute('content', value)
-    }
-
-    setMetaContent('meta[name="description"]', 'name', 'description', content.meta.description)
-    setMetaContent('meta[property="og:title"]', 'property', 'og:title', content.meta.title)
-    setMetaContent('meta[property="og:description"]', 'property', 'og:description', content.meta.description)
-    setMetaContent('meta[name="twitter:title"]', 'name', 'twitter:title', content.meta.title)
-    setMetaContent('meta[name="twitter:description"]', 'name', 'twitter:description', content.meta.description)
-
-  }, [content.meta.description, content.meta.title, language])
-
-  useEffect(() => {
-    const handlePointerDown = (event: MouseEvent) => {
-      if (!languageMenuRef.current?.contains(event.target as Node)) {
-        setIsLanguageMenuOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handlePointerDown)
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown)
-    }
-  }, [])
-
-  useEffect(() => {
-    const sections = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter((section): section is HTMLElement => section instanceof HTMLElement)
-
-    if (sections.length === 0) {
-      return
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-
-        if (!visibleEntry) {
-          return
-        }
-
-        const id = visibleEntry.target.id as SectionId
-        if (sectionIds.includes(id)) {
-          setActiveSection(id)
-        }
-      },
-      {
-        rootMargin: '-25% 0px -45% 0px',
-        threshold: [0.2, 0.35, 0.5, 0.75],
-      },
-    )
-
-    sections.forEach((section) => observer.observe(section))
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
-
-  const scrollToSection = (
-    sectionId: SectionId | 'top' | 'content',
-    block: ScrollLogicalPosition = 'start',
-  ) => {
-    const target = document.getElementById(sectionId)
-    if (!target) {
-      return
-    }
-
-    target.scrollIntoView({
-      behavior: shouldReduceMotion ? 'auto' : 'smooth',
-      block,
-    })
-    setIsMenuOpen(false)
-  }
-
-  const renderSectionJumpButton = (sourceSection: SectionId, targetSection: SectionId) => (
-    <button
-      type="button"
-      className={`portfolio-scroll-indicator portfolio-scroll-indicator--section${
-        activeSection === sourceSection ? ' is-visible' : ''
-      }`}
-      aria-label={nextSectionAriaLabel}
-      onClick={() => {
-        scrollToSection(targetSection, 'center')
-      }}
-    >
-      <ChevronDown aria-hidden="true" />
-    </button>
-  )
-
-  const revealProps = shouldReduceMotion
-    ? {}
-    : {
-        initial: { opacity: 0, y: 24 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, amount: 0.2 },
-        transition: { duration: 0.55 },
-      }
-
-  return (
-    <div className="portfolio-shell">
-      <a href="#content" className="skip-link">
-        {content.nav.skipToContent}
-      </a>
-
-      <header className="portfolio-nav">
-        <div className="portfolio-container portfolio-nav-inner">
-          <button
-            type="button"
-            className="portfolio-brand"
-            onClick={() => {
-              scrollToSection('top')
-            }}
-          >
-            <img
-              src="/logo-portfolio.png"
-              alt="William Mahi"
-              className="portfolio-brand-image"
-            />
-          </button>
-
-          <nav className="portfolio-nav-links" aria-label={content.nav.sectionsLabel}>
-            {sectionIds.map((sectionId) => {
-              const label = content.nav[sectionId === 'journey' ? 'journey' : sectionId]
-              return (
-                <button
-                  key={sectionId}
-                  type="button"
-                  className={`portfolio-nav-link${activeSection === sectionId ? ' is-active' : ''}`}
-                  onClick={() => {
-                    scrollToSection(sectionId)
-                  }}
-                >
-                  {label}
-                </button>
-              )
-            })}
-          </nav>
-
-          <div className="portfolio-nav-controls">
-            <div className="portfolio-language-menu" ref={languageMenuRef}>
-              <button
-                type="button"
-                className={`portfolio-language-trigger${isLanguageMenuOpen ? ' is-open' : ''}`}
-                aria-label={content.language.label}
-                aria-expanded={isLanguageMenuOpen}
-                aria-haspopup="menu"
-                onClick={() => {
-                  setIsLanguageMenuOpen((currentValue) => !currentValue)
-                }}
-              >
-                <span>{activeLanguage.shortLabel}</span>
-                <ChevronDown aria-hidden="true" />
-              </button>
-
-              {isLanguageMenuOpen ? (
-                <div className="portfolio-language-dropdown" role="menu" aria-label={content.language.label}>
-                  {languageOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      type="button"
-                      role="menuitemradio"
-                      aria-checked={language === option.value}
-                      className={`portfolio-language-item${language === option.value ? ' is-active' : ''}`}
-                      onClick={() => {
-                        setLanguage(option.value)
-                        setIsLanguageMenuOpen(false)
-                      }}
-                    >
-                      <span>{option.shortLabel}</span>
-                      <span>{option.longLabel}</span>
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-
-            <ThemeSwitch
-              className="portfolio-theme-switch"
-              lightThemeLabel={content.theme.light}
-              darkThemeLabel={content.theme.dark}
-            />
-
-            <button
-              type="button"
-              className="portfolio-mobile-toggle"
-              aria-label={isMenuOpen ? content.nav.closeMenu : content.nav.menu}
-              aria-expanded={isMenuOpen}
-              onClick={() => {
-                setIsMenuOpen((currentValue) => !currentValue)
-              }}
-            >
-              {isMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-            </button>
-          </div>
-        </div>
-
-        {isMenuOpen ? (
-          <div className="portfolio-mobile-panel">
-            <nav className="portfolio-mobile-links" aria-label={content.nav.sectionsLabel}>
-              {sectionIds.map((sectionId) => {
-                const label = content.nav[sectionId === 'journey' ? 'journey' : sectionId]
-                return (
-                  <button
-                    key={sectionId}
-                    type="button"
-                    className="portfolio-mobile-link"
-                    onClick={() => {
-                      scrollToSection(sectionId)
-                    }}
-                  >
-                    {label}
-                  </button>
-                )
-              })}
-            </nav>
-          </div>
-        ) : null}
-      </header>
-
-      <main id="content">
-        <section id="top" className="portfolio-hero">
-          <div className="portfolio-container portfolio-hero-grid">
-            <motion.div className="portfolio-hero-copy" {...revealProps}>
-              <span className="portfolio-section-label">{content.hero.label}</span>
-              <h1 className="portfolio-hero-title">
-                <span>{content.hero.titleLines[0]}</span>
-                <span>{content.hero.titleLines[1]}</span>
-                <span className="is-accent">{content.hero.titleLines[2]}</span>
-              </h1>
-              <p className="portfolio-hero-lead">{content.hero.lead}</p>
-              <div className="portfolio-hero-actions">
-                <button
-                  type="button"
-                  className="portfolio-button portfolio-button-primary"
-                  onClick={() => {
-                    scrollToSection('projects')
-                  }}
-                >
-                  {content.hero.primaryCta}
-                  <ArrowRight aria-hidden="true" />
-                </button>
-                <SocialLinks language={language} variant="hero" />
-              </div>
-            </motion.div>
-
-          </div>
-
-          <button
-            type="button"
-            className="portfolio-scroll-indicator"
-            aria-label={content.hero.scroll}
-            onClick={() => {
-              scrollToSection('projects', 'center')
-            }}
-          >
-            <ChevronDown aria-hidden="true" />
-          </button>
-        </section>
-
-        <section id="projects" className="portfolio-section">
-          <div className="portfolio-container">
-            <motion.div className="portfolio-section-head" {...revealProps}>
-              <div>
-                <span className="portfolio-section-label">{content.projects.label}</span>
-                <h2 className="portfolio-section-title">{content.projects.title}</h2>
-                <p className="portfolio-section-text">{content.projects.description}</p>
-              </div>
-            </motion.div>
-
-            <div className="portfolio-project-grid">
-              {projectItems.map((project, index) => (
-                <motion.article
-                  key={project.id}
-                  className="portfolio-project-card"
-                  initial={shouldReduceMotion ? undefined : { opacity: 0, y: 18 }}
-                  whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{
-                    duration: 0.45,
-                    delay: shouldReduceMotion ? 0 : index * 0.06,
-                  }}
-                >
-                  <div className="portfolio-project-media">
-                    <img src={project.image} alt={`Aperçu du projet ${project.title}`} />
-                  </div>
-                  <div className="portfolio-project-body">
-                    <h3>{project.title}</h3>
-                    <p>{project.summary}</p>
-                    <div className="portfolio-badges">
-                      {project.technologies.map((technology) => (
-                        <span key={technology} className="portfolio-badge">
-                          {technology}
-                        </span>
-                      ))}
-                    </div>
-                    <a className="portfolio-inline-link" href={githubUrl} target="_blank" rel="noreferrer">
-                      {content.projects.cardCta}
-                      <ChevronRight aria-hidden="true" />
-                    </a>
-                  </div>
-                </motion.article>
-              ))}
-            </div>
-          </div>
-          {renderSectionJumpButton('projects', 'stack')}
-        </section>
-
-        <section id="stack" className="portfolio-section">
-          <div className="portfolio-container portfolio-two-column">
-            <motion.div className="portfolio-section-copy" {...revealProps}>
-              <span className="portfolio-section-label">{content.stack.label}</span>
-              <h2 className="portfolio-section-title">{content.stack.title}</h2>
-              <p className="portfolio-section-text">{content.stack.lead}</p>
-              <div className="portfolio-terminal-card" aria-label="Linux terminal preview">
-                <div className="portfolio-terminal-toolbar" aria-hidden="true">
-                  <span className="portfolio-terminal-dot is-red" />
-                  <span className="portfolio-terminal-dot is-amber" />
-                  <span className="portfolio-terminal-dot is-green" />
-                  <span className="portfolio-terminal-title">william@portfolio:~</span>
-                </div>
-                <div className="portfolio-terminal-body">
-                  {hoveredStackSkill ? (
-                    <>
-                      <p>
-                        <span className="portfolio-terminal-prompt">$</span> cat name.txt
-                      </p>
-                      <p className="portfolio-terminal-output">{hoveredStackSkill.label}</p>
-                      <p>
-                        <span className="portfolio-terminal-prompt">$</span> cat purpose.txt
-                      </p>
-                      <p className="portfolio-terminal-output">{hoveredStackSkill.purpose}</p>
-                      <p>
-                        <span className="portfolio-terminal-prompt">$</span> cat category.txt
-                      </p>
-                      <p className="portfolio-terminal-output is-success">
-                        {hoveredStackSkill.category}
-                      </p>
-                    </>
-                  ) : null}
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div className="portfolio-orbit-shell" {...revealProps}>
-              <Suspense fallback={<div className="portfolio-orbit-fallback" aria-hidden="true" />}>
-                <LazyOrbitingSkills
-                  defaultVariant="all"
-                  onSkillHoverChange={setHoveredStackSkill}
-                />
-              </Suspense>
-            </motion.div>
-          </div>
-          {renderSectionJumpButton('stack', 'journey')}
-        </section>
-
-        <section id="journey" className="portfolio-section">
-          <div className="portfolio-container">
-            <JourneyTimeline
-              language={language}
-              label={content.journey.label}
-              title={content.journey.title}
-              intro={content.journey.intro}
-            />
-          </div>
-          {renderSectionJumpButton('journey', 'about')}
-        </section>
-
-        <section id="about" className="portfolio-section">
-          <div className="portfolio-container portfolio-about-grid">
-            <motion.div className="portfolio-portrait-card" {...revealProps}>
-              <div className="portfolio-portrait-accent" aria-hidden="true" />
-              <img
-                className="portfolio-portrait-image"
-                src="/format%20github.png"
-                alt={content.about.portraitAlt}
-                width={1254}
-                height={1254}
-                loading="lazy"
-                decoding="async"
-              />
-            </motion.div>
-
-            <motion.div className="portfolio-section-copy" {...revealProps}>
-              <span className="portfolio-section-label">{content.about.eyebrow}</span>
-              <h2 className="portfolio-section-title">
-                {content.about.titlePrefix} <span className="portfolio-title-accent">{content.about.titleAccent}</span>
-              </h2>
-              <p className="portfolio-section-text">{content.about.lead}</p>
-              <div className="portfolio-feature-grid">
-                {content.about.cards.map((item, index) => {
-                  const icons = [Sparkles, ShieldCheck, Globe]
-                  const Icon = icons[index] ?? Sparkles
-                  return (
-                    <article key={item.title} className="portfolio-feature-card">
-                      <span className="portfolio-feature-icon">
-                        <Icon aria-hidden="true" />
-                      </span>
-                      <div>
-                        <h3>{item.title}</h3>
-                        <p>{item.text}</p>
-                      </div>
-                    </article>
-                  )
-                })}
-              </div>
-            </motion.div>
-          </div>
-          {renderSectionJumpButton('about', 'contact')}
-        </section>
-
-        <section id="contact" className="portfolio-section portfolio-contact-section">
-          <div className="portfolio-container">
-            <motion.div className="portfolio-contact-card-shell" {...revealProps}>
-              <div className="portfolio-contact-card-panel">
-                <div className="portfolio-contact-header">
-                  <span className="portfolio-contact-eyebrow">{contactEyebrow}</span>
-                  <h2 className="portfolio-contact-title">{contactTitle}</h2>
-                </div>
-
-                <div className="portfolio-contact-cta-row">
-                  <div className="portfolio-contact-status" aria-label={contactAvailability}>
-                    <span className="portfolio-contact-status-dot" aria-hidden="true">
-                      <span className="portfolio-contact-status-dot-ping" />
-                      <span className="portfolio-contact-status-dot-core" />
-                    </span>
-                    <span>{contactAvailability}</span>
-                  </div>
-
-                  <a className="portfolio-contact-primary-cta" href="mailto:william.mahipro@gmail.com">
-                    {contactPrimaryCta}
-                    <ArrowDown aria-hidden="true" />
-                  </a>
-                </div>
-
-                <p className="portfolio-contact-description">{content.contact.lead}</p>
-
-                <div className="portfolio-contact-footer">
-                  <SocialLinks language={language} variant="contact" />
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="portfolio-footer">
-        <div className="portfolio-container portfolio-footer-inner">
-          <div className="portfolio-footer-branding">
-            <span className="portfolio-brand footer-brand" aria-hidden="true">
-              <img
-                src="/logo-portfolio.png"
-                alt=""
-                className="portfolio-brand-image"
-              />
-            </span>
-            <div>
-              <strong>William Mahi</strong>
-              <span>{content.footer.role}</span>
-            </div>
-          </div>
-          <div className="portfolio-footer-links" aria-label={content.footer.legalLabel}>
-            <span>{content.footer.legal}</span>
-            <span>{content.footer.privacy}</span>
-            <span>{content.footer.terms}</span>
-          </div>
-          <p className="portfolio-footer-note">
-            © {new Date().getFullYear()} William Mahi. {content.footer.rights}
-          </p>
-        </div>
-      </footer>
-    </div>
-  )
+function Wave({ strong = false }: { strong?: boolean }) {
+  return <svg className={'wave' + (strong ? ' wave-strong' : '')} viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path className="wave-back" d="M0 65C230 136 344 111 541 58C762 0 920 21 1090 67C1239 108 1343 89 1440 56V160H0Z" /><path className="wave-front" d="M0 100C210 58 345 101 516 123C713 148 838 65 1036 63C1219 61 1331 119 1440 100V160H0Z" /></svg>
 }
 
-export default App
+function ProjectCard({ project, language }: { project: ProjectItem; language: Language }) {
+  const technologies = project.technologies.filter((item) => !['Stack à préciser', 'Stack to confirm'].includes(item))
+  return <article className="project-card"><div className="project-image"><img src={project.image} alt={language === 'fr' ? 'Capture du projet ' + project.title : 'Screenshot of ' + project.title} loading="lazy" decoding="async" /></div><div className="project-body"><h3>{project.title}</h3><p>{project.summary}</p>{technologies.length > 0 && <div className="portfolio-badges">{technologies.map((item) => <span className="portfolio-badge" key={item}>{item}</span>)}</div>}{project.href && <a className="text-link" href={project.href} target="_blank" rel="noopener noreferrer">{language === 'fr' ? 'Voir le projet' : 'View project'} <ArrowRight aria-hidden="true" /></a>}</div></article>
+}
+
+function PageHeader({ eyebrow, title, intro }: { eyebrow: string; title: string; intro: string }) {
+  return <div className="page-header container"><span className="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{intro}</p></div>
+}
+
+export default function App({ pathname }: { pathname?: string }) {
+  const currentPath = pathname ?? (typeof window === 'undefined' ? '/' : window.location.pathname)
+  const { language, page } = resolveRoute(currentPath)
+  const t = ui[language]
+  const c = copy[language]
+  const p = paths[language]
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [selectedSkill, setSelectedSkill] = useState<{ label: string; category: string; purpose: string } | null>(null)
+  const otherLanguage: Language = language === 'fr' ? 'en' : 'fr'
+  const otherPath = page === 'notFound' ? paths[otherLanguage].home : paths[otherLanguage][page]
+
+  useEffect(() => {
+    document.documentElement.lang = language
+    document.title = metadata[language][page].title
+    document.querySelector('meta[name="description"]')?.setAttribute('content', metadata[language][page].description)
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', siteOrigin + (page === 'notFound' ? currentPath : p[page]))
+  }, [language, page, currentPath, p])
+
+  return <div className="site-shell">
+    <a className="skip-link" href="#content">{t.skip}</a>
+    <header className="site-header"><div className="container header-inner"><a className="brand" href={p.home} aria-label={language === 'fr' ? 'William Mahi, accueil' : 'William Mahi, home'}><img src="/logo-portfolio.png" alt="WM" width="65" height="65" /></a><nav className="desktop-nav" aria-label={t.nav}>{navPages.map((id) => <a href={p[id]} key={id} aria-current={page === id ? 'page' : undefined}>{t[id]}</a>)}</nav><div className="header-controls"><a className="language-link" href={otherPath} lang={otherLanguage} hrefLang={otherLanguage} aria-label={language === 'fr' ? 'Read this page in English' : 'Lire cette page en français'}>{otherLanguage.toUpperCase()}</a><ThemeSwitch className="theme-switch" lightThemeLabel={c.theme.light} darkThemeLabel={c.theme.dark} /><button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="mobile-navigation" aria-label={menuOpen ? t.close : t.open} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}</button></div></div>{menuOpen && <nav id="mobile-navigation" className="mobile-nav" aria-label={t.nav}>{navPages.map((id) => <a href={p[id]} key={id} aria-current={page === id ? 'page' : undefined}>{t[id]}</a>)}</nav>}</header>
+    <main id="content">
+      {page === 'home' && <><section className="hero"><div className="container hero-inner"><div className="hero-copy"><span className="eyebrow">{t.role}</span><h1>Code. <span>Design.</span> <em>Build.</em></h1><p className="hero-intro">{t.intro}</p><p className="hero-availability">{t.availability}</p><div className="hero-actions"><a className="button button-primary" href={p.projects}>{t.discover}<ArrowRight aria-hidden="true" /></a><a className="button button-outline" href={p.contact}>{t.contactMe}</a></div><a className="hero-expertise-link" href={p.expertise}>{t.expertiseCta}<ArrowRight aria-hidden="true" /></a></div><div className="hero-art" aria-hidden="true"><span className="hero-art-ring ring-one" /><span className="hero-art-ring ring-two" /><span className="hero-art-ring ring-three" /><span className="hero-art-core">WM</span></div></div><Wave strong /></section><section className="section section-soft"><div className="container"><div className="section-heading"><span className="eyebrow">{t.expertise}</span><h2>{t.servicesTitle}</h2><p>{t.servicesIntro}</p></div><div className="services-grid">{t.services.map((service, index) => <article className="service-card" key={service}><span className="service-index">0{index + 1}</span><h3>{service}</h3><ArrowRight aria-hidden="true" /></article>)}</div></div></section><section className="section"><div className="container"><div className="section-heading heading-row"><div><span className="eyebrow">{t.projects}</span><h2>{t.featured}</h2></div><a className="text-link" href={p.projects}>{t.allProjects}<ArrowRight aria-hidden="true" /></a></div><div className="project-grid featured-grid">{projects[language].slice(0, 2).map((project) => <ProjectCard key={project.id} project={project} language={language} />)}</div></div></section><div className="home-contact"><div className="container home-contact-inner"><div><span className="eyebrow">{t.contact}</span><h2>{c.contact.titleLineOne} <span>{c.contact.titleLineTwo}</span></h2></div><a className="button button-light" href={p.contact}>{t.contactMe}<ArrowRight aria-hidden="true" /></a></div><Wave /></div></>}
+      {page === 'projects' && <><PageHeader eyebrow={t.projects} title={c.projects.title} intro={t.projectsIntro} /><section className="section page-section"><div className="container project-grid">{projects[language].map((project) => <ProjectCard key={project.id} project={project} language={language} />)}</div></section><Wave /></>}
+      {page === 'expertise' && <><PageHeader eyebrow={t.role} title={t.expertise} intro={c.stack.title} /><section className="section expertise-section"><div className="container expertise-layout"><div className="expertise-copy"><h2>{c.stack.label}</h2><p>{c.stack.lead}</p><div className="skill-detail" aria-live="polite">{selectedSkill ? <><span className="eyebrow">{selectedSkill.category}</span><h3>{selectedSkill.label}</h3>{language === 'fr' && <p>{selectedSkill.purpose}</p>}</> : <p>{language === 'fr' ? 'Survolez une compétence ou parcourez la roue au clavier pour en savoir plus.' : 'Hover over a skill or explore the wheel with your keyboard to learn more.'}</p>}</div></div><div className="orbit-frame"><Suspense fallback={<div className="orbit-loading" aria-hidden="true" />}><OrbitingSkills defaultVariant="all" onSkillHoverChange={setSelectedSkill} /></Suspense></div></div></section><section className="section section-soft"><div className="container"><div className="section-heading"><span className="eyebrow">{t.expertise}</span><h2>{t.servicesTitle}</h2></div><div className="services-grid">{t.services.map((service, index) => <article className="service-card" key={service}><span className="service-index">0{index + 1}</span><h3>{service}</h3></article>)}</div></div></section></>}
+      {page === 'about' && <><PageHeader eyebrow={t.role} title={t.about} intro={t.aboutIntro} /><section className="section about-section"><div className="container about-layout"><div className="portrait-frame"><img src="/format%20github.png" alt={c.about.portraitAlt} width="1254" height="1254" decoding="async" /></div><div className="about-copy"><span className="eyebrow">{t.role}</span><h2>{c.about.titlePrefix + ' ' + c.about.titleAccent}</h2><p>{c.about.lead}</p><div className="about-values">{c.about.cards.map((item) => <article key={item.title}><h3>{item.title}</h3><p>{item.text}</p></article>)}</div></div></div></section><section className="section timeline-section"><div className="container"><JourneyTimeline language={language} label={c.journey.label} title={c.journey.title} intro={c.journey.intro} /></div></section></>}
+      {page === 'contact' && <><PageHeader eyebrow={t.contact} title={c.contact.titleLineOne + ' ' + c.contact.titleLineTwo} intro={t.contactIntro} /><section className="section contact-section"><div className="container contact-layout"><div className="contact-primary"><span className="eyebrow">Email</span><h2>{t.contactMe}</h2><p>{c.contact.lead}</p><a className="button button-primary" href={'mailto:' + contactEmail}>{t.emailMe}<ArrowRight aria-hidden="true" /></a><a className="contact-address" href={'mailto:' + contactEmail}>{contactEmail}</a></div><div className="contact-secondary"><span className="eyebrow">{t.contactWays}</span><SocialLinks language={language} variant="contact" /></div></div></section><Wave strong /></>}
+      {page === 'notFound' && <section className="not-found container"><span className="eyebrow">404</span><h1>{t.notFound}</h1><a className="button button-primary" href={p.home}>{t.backHome}<ArrowRight aria-hidden="true" /></a></section>}
+    </main>
+    <footer className="site-footer"><div className="container footer-inner"><a className="footer-brand" href={p.home}><img src="/logo-portfolio.png" alt="WM" width="54" height="54" /><span><strong>William Mahi</strong><small>{t.role}</small></span></a><nav aria-label={t.nav}>{navPages.filter((id) => id !== 'home').map((id) => <a key={id} href={p[id]}>{t[id]}</a>)}</nav><span className="footer-copy">© {new Date().getFullYear()} William Mahi. {t.rights}</span></div></footer>
+  </div>
+}
