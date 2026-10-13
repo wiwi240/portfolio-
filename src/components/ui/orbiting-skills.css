@@ -260,3 +260,26 @@
     --skill-size: 2.16rem;
   }
 }
+
+/* WM theme colors; orbital geometry and animations remain unchanged. */
+.orbiting-skills__center {
+  border-color: var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.orbiting-skills__center::before,
+.orbiting-skills__ring-guide {
+  border-color: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+
+.orbiting-skills__label {
+  border-color: var(--border);
+  color: var(--fg);
+  background: var(--surface);
+}
+
+html:not(.dark) .orbiting-skills__logo-image[src*="/github/FFFFFF"],
+html:not(.dark) .orbiting-skills__logo-image[src*="/nextdotjs/FFFFFF"] {
+  filter: brightness(0);
+}

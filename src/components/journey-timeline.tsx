@@ -58,8 +58,6 @@ export function JourneyTimeline({ language, label, title, intro }: JourneyTimeli
 
   useEffect(() => {
     if (shouldReduceMotion) {
-      setProgress(1)
-      setActiveIndexes(items.map((_, index) => index))
       return
     }
 
@@ -144,14 +142,14 @@ export function JourneyTimeline({ language, label, title, intro }: JourneyTimeli
         <p className="portfolio-section-text portfolio-journey-intro">{intro}</p>
       </motion.div>
 
-      <div className="portfolio-journey-timeline" style={{ ['--journey-progress' as string]: `${progress}` }}>
+      <div className="portfolio-journey-timeline" style={{ ['--journey-progress' as string]: `${shouldReduceMotion ? 1 : progress}` }}>
         <div className="portfolio-journey-line" aria-hidden="true" />
 
         <ol className="portfolio-journey-list">
           {items.map((item, index) => {
             const Icon = iconMap[item.icon]
             const direction = isCompactLayout ? 'right' : index % 2 === 0 ? 'left' : 'right'
-            const isActive = activeIndexes.includes(index)
+            const isActive = Boolean(shouldReduceMotion) || activeIndexes.includes(index)
             const eventCard = (
               <motion.article
                 key={`${item.dateTime}-${item.title}`}
