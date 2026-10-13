@@ -3,7 +3,7 @@ import { ArrowRight, Menu, X } from 'lucide-react'
 import { JourneyTimeline } from '@/components/journey-timeline'
 import { SocialLinks } from '@/components/social-links'
 import { ThemeSwitch } from '@/components/ui/theme-switch'
-import { copy, projects, contactEmail, type Language, type ProjectItem } from '@/data/portfolio-content'
+import { copy, projects, contactEmail, githubUrl, type Language, type ProjectItem } from '@/data/portfolio-content'
 import { metadata, paths, resolveRoute, siteOrigin, type PageId } from '@/site'
 import './App.css'
 import './redesign.css'
@@ -50,7 +50,7 @@ function Wave({ strong = false }: { strong?: boolean }) {
 
 function ProjectCard({ project, language }: { project: ProjectItem; language: Language }) {
   const technologies = project.technologies.filter((item) => !['Stack à préciser', 'Stack to confirm'].includes(item))
-  return <article className="project-card"><div className="project-image"><img src={project.image} alt={language === 'fr' ? 'Capture du projet ' + project.title : 'Screenshot of ' + project.title} loading="lazy" decoding="async" /></div><div className="project-body"><h3>{project.title}</h3><p>{project.summary}</p>{technologies.length > 0 && <div className="portfolio-badges">{technologies.map((item) => <span className="portfolio-badge" key={item}>{item}</span>)}</div>}{project.href && <a className="text-link" href={project.href} target="_blank" rel="noopener noreferrer">{language === 'fr' ? 'Voir le projet' : 'View project'} <ArrowRight aria-hidden="true" /></a>}</div></article>
+  return <article className="project-card"><div className="project-image"><img src={project.image} alt={language === 'fr' ? 'Capture du projet ' + project.title : 'Screenshot of ' + project.title} loading="lazy" decoding="async" /></div><div className="project-body"><h3>{project.title}</h3><p>{project.summary}</p>{technologies.length > 0 && <div className="portfolio-badges">{technologies.map((item) => <span className="portfolio-badge" key={item}>{item}</span>)}</div>}<a className="text-link" href={project.href ?? githubUrl} target="_blank" rel="noopener noreferrer">{project.href ? (language === 'fr' ? 'Voir le projet' : 'View project') : (language === 'fr' ? 'Profil GitHub' : 'GitHub profile')} <ArrowRight aria-hidden="true" /></a></div></article>
 }
 
 function PageHeader({ eyebrow, title, intro }: { eyebrow: string; title: string; intro: string }) {
