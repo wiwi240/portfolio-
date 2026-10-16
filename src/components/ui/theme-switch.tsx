@@ -9,29 +9,36 @@ type ThemeSwitchProps = {
   darkThemeLabel?: string
 }
 
+function getTheme(): 'light' | 'dark' {
+  return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
+}
+
+function subscribeTheme(onChange: () => void) {
+  window.addEventListener('theme-change', onChange)
+  window.addEventListener('storage', onChange)
+  return () => {
+    window.removeEventListener('theme-change', onChange)
+    window.removeEventListener('storage', onChange)
+  }
+}
+
 export function ThemeSwitch({
   className = '',
   lightThemeLabel = 'Activer le thème clair',
   darkThemeLabel = 'Activer le thème sombre',
 }: ThemeSwitchProps) {
-  const [theme, setTheme] = React.useState<'light' | 'dark'>(() => {
-    if (typeof window === 'undefined') {
-      return 'light'
-    }
-
-    return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
-  })
+  const theme = React.useSyncExternalStore(subscribeTheme, getTheme, () => 'light')
 
   React.useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
   }, [theme])
 
   const toggleTheme = React.useCallback(() => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
+    const newTheme = getTheme() === 'light' ? 'dark' : 'light'
     localStorage.setItem('theme', newTheme)
     document.documentElement.classList.toggle('dark', newTheme === 'dark')
-  }, [theme])
+    window.dispatchEvent(new Event('theme-change'))
+  }, [])
 
   return (
     <button

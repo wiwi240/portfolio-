@@ -1,0 +1,22 @@
+home-desktop {"width":1440,"scrollWidth":1440,"title":"Code.\nDesign.\nBuild.","logo":true,"lang":"fr","dark":false,"sections":7,"links":["/projets","/contact","/contact","/contact","/contact","/contact","/expertises","/expertises","/expertises","/projets","/projets","/projets","/projets","/projets","/projets","/projets","/a-propos","/contact","/contact","mailto:william.mahipro@gmail.com"],"failedImages":[]}
+home-desktop faq-open true
+home-desktop theme-toggled true
+home-mobile {"width":390,"scrollWidth":390,"title":"Code.\nDesign.\nBuild.","logo":true,"lang":"fr","dark":false,"sections":7,"links":["/projets","/contact","/contact","/contact","/contact","/contact","/expertises","/expertises","/expertises","/projets","/projets","/projets","/projets","/projets","/projets","/projets","/a-propos","/contact","/contact","mailto:william.mahipro@gmail.com"],"failedImages":[]}
+home-mobile faq-open true
+home-mobile menu-open true nav-visible true
+home-mobile theme-toggled true
+home-small {"width":320,"scrollWidth":320,"title":"Code.\nDesign.\nBuild.","logo":true,"lang":"fr","dark":false,"sections":7,"links":["/projets","/contact","/contact","/contact","/contact","/contact","/expertises","/expertises","/expertises","/projets","/projets","/projets","/projets","/projets","/projets","/projets","/a-propos","/contact","/contact","mailto:william.mahipro@gmail.com"],"failedImages":[]}
+home-small faq-open true
+home-small menu-open true nav-visible true
+home-small theme-toggled true
+home-dark {"width":1440,"scrollWidth":1440,"title":"Code.\nDesign.\nBuild.","logo":true,"lang":"fr","dark":true,"sections":7,"links":["/projets","/contact","/contact","/contact","/contact","/contact","/expertises","/expertises","/expertises","/projets","/projets","/projets","/projets","/projets","/projets","/projets","/a-propos","/contact","/contact","mailto:william.mahipro@gmail.com"],"failedImages":[]}
+home-dark faq-open true
+home-dark theme-toggled true
+home-mobile-dark {"width":390,"scrollWidth":390,"title":"Code.\nDesign.\nBuild.","logo":true,"lang":"fr","dark":true,"sections":7,"links":["/projets","/contact","/contact","/contact","/contact","/contact","/expertises","/expertises","/expertises","/projets","/projets","/projets","/projets","/projets","/projets","/projets","/a-propos","/contact","/contact","mailto:william.mahipro@gmail.com"],"failedImages":[]}
+home-mobile-dark faq-open true
+home-mobile-dark menu-open true nav-visible true
+home-mobile-dark theme-toggled true
+home-en {"width":390,"scrollWidth":390,"title":"Code.\nDesign.\nBuild.","logo":true,"lang":"en","dark":false,"sections":7,"links":["/en/projects","/en/contact","/en/contact","/en/contact","/en/contact","/en/contact","/en/expertise","/en/expertise","/en/expertise","/en/projects","/en/projects","/en/projects","/en/projects","/en/projects","/en/projects","/en/projects","/en/about","/en/contact","/en/contact","mailto:william.mahipro@gmail.com"],"failedImages":[]}
+home-en faq-open true
+home-en menu-open true nav-visible true
+home-en theme-toggled true
