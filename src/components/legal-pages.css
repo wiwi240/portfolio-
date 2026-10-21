@@ -1,0 +1,23 @@
+.legal-page { padding:clamp(3.5rem,7vw,6rem) 0; background:var(--surface); }
+.legal-page-inner { max-width:1040px; }
+.legal-page-heading { max-width:780px; margin:0 0 2.5rem; }
+.legal-page-heading h1 { margin:.7rem 0 .9rem; color:var(--fg); font-size:clamp(2.5rem,5vw,4.4rem); line-height:1.05; letter-spacing:-.055em; text-wrap:balance; }
+.legal-page-heading p { margin:0; color:var(--muted); font-size:1.07rem; line-height:1.6; }
+.legal-page-pending { margin:0 0 2.5rem; padding:1.25rem 1.5rem; border-left:3px solid var(--accent); background:var(--bg-elevated); color:var(--fg); }
+.legal-page-pending strong { display:block; margin-bottom:.55rem; font-size:.95rem; }
+.legal-page-pending ul { display:grid; gap:.35rem; margin:0; padding-left:1.2rem; color:var(--muted); font-size:.9rem; line-height:1.5; }
+.legal-page-sections { border-top:1px solid var(--border); }
+.legal-page-sections>section { display:grid; grid-template-columns:minmax(180px,.42fr) minmax(0,1fr); column-gap:2rem; padding:1.7rem 0; border-bottom:1px solid var(--border); scroll-margin-top:6rem; }
+.legal-page-sections h2 { grid-row:1 / span 4; margin:0; color:var(--fg); font-size:clamp(1.15rem,2vw,1.4rem); line-height:1.3; }
+.legal-page-sections p { grid-column:2; margin:0 0 .75rem; color:var(--muted); line-height:1.7; }
+.legal-page-sections p:last-child { margin-bottom:0; }
+.legal-page-actions { grid-column:2; display:flex; flex-wrap:wrap; gap:.7rem 1.3rem; margin-top:.35rem; }
+.legal-page-actions a,.legal-page-contact { color:var(--accent); font-weight:700; text-decoration:underline; text-underline-offset:3px; }
+.legal-page-actions a:focus-visible,.legal-page-contact:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.legal-page-contact { display:inline-block; margin-top:2rem; overflow-wrap:anywhere; }
+@media(max-width:680px) {
+  .legal-page { padding:3.5rem 0; }
+  .legal-page-pending { padding:1rem 1.1rem; }
+  .legal-page-sections>section { display:block; padding:1.5rem 0; }
+  .legal-page-sections h2 { margin-bottom:.6rem; }
+}

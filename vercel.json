@@ -7,11 +7,21 @@
     { "source": "/expertises", "destination": "/index.html" },
     { "source": "/a-propos", "destination": "/index.html" },
     { "source": "/contact", "destination": "/index.html" },
+    { "source": "/faq", "destination": "/index.html" },
+    { "source": "/mentions-legales", "destination": "/index.html" },
+    { "source": "/cgu", "destination": "/index.html" },
+    { "source": "/politique-de-confidentialite", "destination": "/index.html" },
+    { "source": "/cookies", "destination": "/index.html" },
     { "source": "/en", "destination": "/index.html" },
     { "source": "/en/", "destination": "/index.html" },
     { "source": "/en/projects", "destination": "/index.html" },
     { "source": "/en/expertise", "destination": "/index.html" },
     { "source": "/en/about", "destination": "/index.html" },
-    { "source": "/en/contact", "destination": "/index.html" }
+    { "source": "/en/contact", "destination": "/index.html" },
+    { "source": "/en/faq", "destination": "/index.html" },
+    { "source": "/en/legal-notice", "destination": "/index.html" },
+    { "source": "/en/terms-of-use", "destination": "/index.html" },
+    { "source": "/en/privacy-policy", "destination": "/index.html" },
+    { "source": "/en/cookies", "destination": "/index.html" }
   ]
 }
