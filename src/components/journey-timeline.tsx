@@ -157,7 +157,6 @@ export function JourneyTimeline({ language, label, title, intro }: JourneyTimeli
                   itemRefs.current[index] = node
                 }}
                 className={`portfolio-journey-card ${isActive ? 'is-active' : ''}`}
-                tabIndex={0}
                 initial={shouldReduceMotion ? false : { opacity: 0.32, x: 0, y: 20 }}
                 animate={
                   shouldReduceMotion || isActive
@@ -173,20 +172,10 @@ export function JourneyTimeline({ language, label, title, intro }: JourneyTimeli
                   <h3>{item.title}</h3>
                   <p>{item.description}</p>
                   <div className="portfolio-badges portfolio-journey-badges">
-                    {item.tags.map((tag, tagIndex) => (
-                      <motion.span
-                        key={tag}
-                        className="portfolio-badge"
-                        initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.4,
-                          delay: shouldReduceMotion ? 0 : 0.08 + tagIndex * 0.04,
-                          ease: [0.22, 1, 0.36, 1],
-                        }}
-                      >
+                    {item.tags.map((tag) => (
+                      <span key={tag} className="portfolio-badge">
                         {tag}
-                      </motion.span>
+                      </span>
                     ))}
                   </div>
                 </div>

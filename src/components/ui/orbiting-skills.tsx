@@ -44,11 +44,14 @@ type SkillCategory =
 
 type OrbitingSkillsVariant = 'languages' | 'frameworks' | 'all'
 
+type SkillLanguage = 'fr' | 'en'
+
+type SkillDetail = { label: string; category: string; purpose: string }
+
 type OrbitingSkillsProps = {
   defaultVariant?: OrbitingSkillsVariant | null
-  onSkillHoverChange?: ((
-    skill: { label: string; category: SkillCategory; purpose: string } | null,
-  ) => void) | null
+  language?: SkillLanguage
+  onSkillHoverChange?: ((skill: SkillDetail | null) => void) | null
 }
 
 type SkillDefinition = {
@@ -56,7 +59,17 @@ type SkillDefinition = {
   label: string
   category: SkillCategory
   iconType: IconType
-  purpose: string
+  purpose: Record<SkillLanguage, string>
+}
+
+const categoryLabels: Record<SkillLanguage, Record<SkillCategory, string>> = {
+  fr: { Language: 'Langage', Framework: 'Framework', Styling: 'Style', Backend: 'Back-end', Tool: 'Outil', Platform: 'Plateforme' },
+  en: { Language: 'Language', Framework: 'Framework', Styling: 'Styling', Backend: 'Back end', Tool: 'Tool', Platform: 'Platform' },
+}
+
+const orbitText: Record<SkillLanguage, { center: string; canvas: string }> = {
+  fr: { center: 'Stack technique', canvas: 'Orbite des compétences' },
+  en: { center: 'Tech stack', canvas: 'Skill orbit' },
 }
 
 type OrbitConfig = {
@@ -84,9 +97,8 @@ type OrbitItemProps = {
   durationSeconds: number
   direction: OrbitConfig['direction']
   reducedMotion: boolean
-  onHoverChange?: ((
-    skill: { label: string; category: SkillCategory; purpose: string } | null,
-  ) => void) | null
+  language: SkillLanguage
+  onHoverChange?: ((skill: SkillDetail | null) => void) | null
 }
 
 const badgeMap: Record<
@@ -252,21 +264,21 @@ const orbitConfigs: OrbitConfig[] = [
         label: 'React',
         category: 'Framework',
         iconType: 'react',
-        purpose: 'Construction d interfaces utilisateur en composants reutilisables.',
+        purpose: { fr: 'Construction d’interfaces utilisateur en composants réutilisables.', en: 'Building user interfaces from reusable components.' },
       },
       {
         id: 'nextjs',
         label: 'Next.js',
         category: 'Framework',
         iconType: 'nextjs',
-        purpose: 'Framework React pour routing, rendu serveur et applications web completes.',
+        purpose: { fr: 'Framework React pour le routage, le rendu serveur et des applications web complètes.', en: 'React framework for routing, server rendering and full web applications.' },
       },
       {
         id: 'typescript',
         label: 'TypeScript',
         category: 'Language',
         iconType: 'typescript',
-        purpose: 'Typage statique pour securiser et structurer le JavaScript.',
+        purpose: { fr: 'Typage statique pour sécuriser et structurer le JavaScript.', en: 'Static typing to make JavaScript safer and better structured.' },
       },
     ],
   },
@@ -284,35 +296,35 @@ const orbitConfigs: OrbitConfig[] = [
         label: 'JavaScript',
         category: 'Language',
         iconType: 'javascript',
-        purpose: 'Langage principal pour la logique web cote client et serveur.',
+        purpose: { fr: 'Langage principal pour la logique web côté client et serveur.', en: 'Core language for web logic on both client and server.' },
       },
       {
         id: 'tailwind',
         label: 'Tailwind',
         category: 'Styling',
         iconType: 'tailwind',
-        purpose: 'Style utilitaire rapide pour construire des interfaces coherentes.',
+        purpose: { fr: 'Style utilitaire rapide pour construire des interfaces cohérentes.', en: 'Fast utility-first styling for consistent interfaces.' },
       },
       {
         id: 'prisma',
         label: 'Prisma',
         category: 'Backend',
         iconType: 'prisma',
-        purpose: 'ORM type-safe pour modeliser et interroger la base de donnees.',
+        purpose: { fr: 'ORM typé pour modéliser et interroger la base de données.', en: 'Type-safe ORM to model and query the database.' },
       },
       {
         id: 'graphql',
         label: 'GraphQL',
         category: 'Backend',
         iconType: 'graphql',
-        purpose: 'API de requetes flexible pour exposer et consommer des donnees.',
+        purpose: { fr: 'API de requêtes flexible pour exposer et consommer des données.', en: 'Flexible query API to expose and consume data.' },
       },
       {
         id: 'docker',
         label: 'Docker',
         category: 'Tool',
         iconType: 'docker',
-        purpose: 'Conteneurisation pour des environnements coherents entre dev et prod.',
+        purpose: { fr: 'Conteneurisation pour des environnements identiques entre développement et production.', en: 'Containers for matching development and production environments.' },
       },
     ],
   },
@@ -330,42 +342,42 @@ const orbitConfigs: OrbitConfig[] = [
         label: 'HTML',
         category: 'Language',
         iconType: 'html',
-        purpose: 'Structure semantique du contenu des pages web.',
+        purpose: { fr: 'Structure sémantique du contenu des pages web.', en: 'Semantic structure for web page content.' },
       },
       {
         id: 'css',
         label: 'CSS',
         category: 'Language',
         iconType: 'css',
-        purpose: 'Mise en forme visuelle, layout et responsive design.',
+        purpose: { fr: 'Mise en forme visuelle, mise en page et adaptation aux écrans.', en: 'Visual styling, layout and responsive design.' },
       },
       {
         id: 'bootstrap',
         label: 'Bootstrap',
         category: 'Styling',
         iconType: 'bootstrap',
-        purpose: 'Bibliotheque CSS de composants et grille responsive predefinie.',
+        purpose: { fr: 'Bibliothèque CSS de composants et grille responsive prédéfinie.', en: 'CSS component library with a predefined responsive grid.' },
       },
       {
         id: 'python',
         label: 'Python',
         category: 'Language',
         iconType: 'python',
-        purpose: 'Scripts, automatisation et logique back-end polyvalente.',
+        purpose: { fr: 'Scripts, automatisation et logique back-end polyvalente.', en: 'Scripts, automation and versatile back-end logic.' },
       },
       {
         id: 'ruby',
         label: 'Ruby',
         category: 'Language',
         iconType: 'ruby',
-        purpose: 'Langage expressif souvent utilise pour le back-end avec Rails.',
+        purpose: { fr: 'Langage expressif souvent utilisé pour le back-end avec Rails.', en: 'Expressive language often used on the back end with Rails.' },
       },
       {
         id: 'rails',
         label: 'Rails',
         category: 'Backend',
         iconType: 'rails',
-        purpose: 'Framework back-end Ruby pour construire rapidement des applications web.',
+        purpose: { fr: 'Framework back-end Ruby pour construire rapidement des applications web.', en: 'Ruby back-end framework for building web applications quickly.' },
       },
     ],
   },
@@ -383,35 +395,35 @@ const orbitConfigs: OrbitConfig[] = [
         label: 'VS Code',
         category: 'Tool',
         iconType: 'vscode',
-        purpose: 'Editeur de code pour developpement, debug et extensions.',
+        purpose: { fr: 'Éditeur de code pour le développement, le débogage et les extensions.', en: 'Code editor for development, debugging and extensions.' },
       },
       {
         id: 'git',
         label: 'Git',
         category: 'Tool',
         iconType: 'git',
-        purpose: 'Versionnement du code et gestion de l historique du projet.',
+        purpose: { fr: 'Versionnement du code et gestion de l’historique du projet.', en: 'Code versioning and project history management.' },
       },
       {
         id: 'github',
         label: 'GitHub',
         category: 'Platform',
         iconType: 'github',
-        purpose: 'Hebergement du code, revues et collaboration autour du projet.',
+        purpose: { fr: 'Hébergement du code, revues et collaboration autour du projet.', en: 'Code hosting, reviews and project collaboration.' },
       },
       {
         id: 'pnpm',
         label: 'pnpm',
         category: 'Tool',
         iconType: 'pnpm',
-        purpose: 'Gestionnaire de paquets Node rapide et econome en espace disque.',
+        purpose: { fr: 'Gestionnaire de paquets Node rapide et économe en espace disque.', en: 'Fast, disk-efficient Node package manager.' },
       },
       {
         id: 'turborepo',
         label: 'Turborepo',
         category: 'Tool',
         iconType: 'turborepo',
-        purpose: 'Orchestration de monorepo avec cache et pipelines de build.',
+        purpose: { fr: 'Orchestration de monorepo avec cache et pipelines de build.', en: 'Monorepo orchestration with caching and build pipelines.' },
       },
     ],
   },
@@ -488,8 +500,11 @@ const OrbitItem = memo(
     durationSeconds,
     direction,
     reducedMotion,
+    language,
     onHoverChange,
   }: OrbitItemProps) => {
+    const category = categoryLabels[language][skill.category]
+    const detail = { label: skill.label, category, purpose: skill.purpose[language] }
     const itemStyle = {
       transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
       '--label-width': labelWidth,
@@ -507,14 +522,10 @@ const OrbitItem = memo(
         <button
           type="button"
           className={`orbiting-skills__item-button orbiting-skills__item-button--${itemSize}`}
-          aria-label={`${skill.label}, ${skill.category}`}
-          onMouseEnter={() =>
-            onHoverChange?.({ label: skill.label, category: skill.category, purpose: skill.purpose })
-          }
+          aria-label={`${skill.label}, ${category}`}
+          onMouseEnter={() => onHoverChange?.(detail)}
           onMouseLeave={() => onHoverChange?.(null)}
-          onFocus={() =>
-            onHoverChange?.({ label: skill.label, category: skill.category, purpose: skill.purpose })
-          }
+          onFocus={() => onHoverChange?.(detail)}
           onBlur={() => onHoverChange?.(null)}
         >
           <span className="orbiting-skills__counter-rotation" style={counterStyle}>
@@ -530,6 +541,7 @@ OrbitItem.displayName = 'OrbitItem'
 
 export default function OrbitingSkills({
   defaultVariant = null,
+  language = 'fr',
   onSkillHoverChange = null,
 }: OrbitingSkillsProps) {
   const reducedMotion = useReducedMotion()
@@ -551,9 +563,9 @@ export default function OrbitingSkills({
 
   return (
     <div className="orbiting-skills">
-      <div ref={ref} className="orbiting-skills__canvas" aria-label="Skill orbit visualization">
+      <div ref={ref} className="orbiting-skills__canvas" aria-label={orbitText[language].canvas}>
         <div className="orbiting-skills__center">
-          <span>CORE EXPERTISE</span>
+          <span>{orbitText[language].center}</span>
         </div>
 
         {visibleOrbits.map((orbit) => {
@@ -592,6 +604,7 @@ export default function OrbitingSkills({
                       durationSeconds={orbit.durationSeconds}
                       direction={orbit.direction}
                       reducedMotion={Boolean(reducedMotion)}
+                      language={language}
                       onHoverChange={onSkillHoverChange}
                     />
                   )

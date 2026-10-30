@@ -339,6 +339,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       summary:
         'Outil pédagogique pensé pour accompagner le raisonnement par étapes avec une interface de guidage et une logique de contexte réutilisable.',
       image: '/projects/rubber-duck.png',
+      href: 'https://github.com/wiwi240/rubberduck_ai',
       technologies: ['Stack à préciser'],
     },
     {
@@ -363,6 +364,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       summary:
         'Portfolio personnel développé pour présenter mon approche, mes projets et ma manière de construire des interfaces lisibles.',
       image: '/projects/portfolio.png',
+      href: 'https://github.com/wiwi240/portfolio-',
       technologies: ['React', 'TypeScript', 'Tailwind CSS'],
     },
   ],
@@ -373,6 +375,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       summary:
         'A pedagogical tool designed to support step-by-step reasoning with guided interactions and reusable context logic.',
       image: '/projects/rubber-duck.png',
+      href: 'https://github.com/wiwi240/rubberduck_ai',
       technologies: ['Stack to confirm'],
     },
     {
@@ -397,6 +400,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       summary:
         'A personal portfolio built to present my approach, my projects, and the way I structure readable interfaces.',
       image: '/projects/portfolio.png',
+      href: 'https://github.com/wiwi240/portfolio-',
       technologies: ['React', 'TypeScript', 'Tailwind CSS'],
     },
   ],

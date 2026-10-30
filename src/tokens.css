@@ -1,0 +1,97 @@
+/* Design tokens: the single source of truth for colour, shape, motion and layout.
+   Components read these; they never define their own palette (the project preview
+   in project-style-preview.css is the one exception, it mimics a client's site). */
+:root {
+  /* Surfaces and text */
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --tint: #eaf7ff;
+  --fg: #0b1323;
+  --muted: #536278;
+
+  /* Lines. --border is decorative; --border-strong outlines form fields (3:1 or better). */
+  --border: #dceaf4;
+  --border-strong: #7489a0;
+
+  /* Accent. --accent colours text and icons; --accent-fill is the button background. */
+  --accent: #0866e8;
+  --accent-hover: #0757c5;
+  --accent-fill: #0866e8;
+  --accent-fill-hover: #0757c5;
+  --on-accent: #ffffff;
+  --accent-cyan: #00bdeb; /* decorative only: 2.2:1 on white, never text */
+  --focus: var(--accent);
+
+  /* Status */
+  --danger: #b42318;
+  --danger-tint: #fdecea;
+  --success: #067647;
+  --success-tint: #e6f6ee;
+
+  /* Shape */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-sm: 0 4px 14px rgb(11 43 85 / 0.06);
+  --shadow: 0 16px 40px rgb(11 43 85 / 0.1);
+
+  /* Motion */
+  --dur-fast: 150ms;
+  --dur: 250ms;
+  --dur-slow: 400ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Layout */
+  --container: 1200px;
+  --gutter: 1.5rem;
+
+  /* Type */
+  --font: 'Satoshi', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Cabinet Grotesk', 'Satoshi', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Aliases kept for older rules */
+  --bg-elevated: var(--tint);
+  --surface-strong: var(--tint);
+  --transition: var(--dur) var(--ease);
+  --text-color-primary: var(--fg);
+
+  color-scheme: light;
+}
+
+html.dark {
+  --bg: #0b1323;
+  --surface: #14243a;
+  --tint: #152c42;
+  --fg: #f4faff;
+  --muted: #b0c1d5;
+  --border: #29415e;
+  --border-strong: #5f7d9b;
+  --accent: #66a7ff;
+  --accent-hover: #8ebcff;
+  --accent-cyan: #40d9f4;
+  --danger: #ff8f7a;
+  --danger-tint: #3a1c18;
+  --success: #6fd3a5;
+  --success-tint: #112f24;
+  --shadow-sm: 0 4px 14px rgb(0 0 0 / 0.22);
+  --shadow: 0 16px 40px rgb(0 0 0 / 0.34);
+  color-scheme: dark;
+}
+
+@media (max-width: 680px) {
+  :root {
+    --gutter: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0.01ms;
+    --dur: 0.01ms;
+    --dur-slow: 0.01ms;
+  }
+}

@@ -1,13 +1,13 @@
 import type { Language } from './data/portfolio-content'
 
-export type PageId = 'home' | 'projects' | 'expertise' | 'about' | 'contact' | 'faq' | 'legal' | 'terms' | 'privacy' | 'cookies' | 'notFound'
+export type PageId = 'home' | 'projects' | 'expertise' | 'about' | 'contact' | 'configurator' | 'faq' | 'legal' | 'terms' | 'privacy' | 'cookies' | 'notFound'
 
 export const paths: Record<Language, Record<Exclude<PageId, 'notFound'>, string>> = {
   fr: {
-    home: '/', projects: '/projets', expertise: '/expertises', about: '/a-propos', contact: '/contact', faq: '/faq', legal: '/mentions-legales', terms: '/cgu', privacy: '/politique-de-confidentialite', cookies: '/cookies',
+    home: '/', projects: '/projets', expertise: '/expertises', about: '/a-propos', contact: '/contact', configurator: '/configurateur', faq: '/faq', legal: '/mentions-legales', terms: '/cgu', privacy: '/politique-de-confidentialite', cookies: '/cookies',
   },
   en: {
-    home: '/en/', projects: '/en/projects', expertise: '/en/expertise', about: '/en/about', contact: '/en/contact', faq: '/en/faq', legal: '/en/legal-notice', terms: '/en/terms-of-use', privacy: '/en/privacy-policy', cookies: '/en/cookies',
+    home: '/en/', projects: '/en/projects', expertise: '/en/expertise', about: '/en/about', contact: '/en/contact', configurator: '/en/project-configurator', faq: '/en/faq', legal: '/en/legal-notice', terms: '/en/terms-of-use', privacy: '/en/privacy-policy', cookies: '/en/cookies',
   },
 }
 
@@ -33,6 +33,7 @@ export const metadata: Record<Language, Record<PageId, { title: string; descript
     expertise: { title: 'Expertises — William Mahi', description: 'Compétences Full-Stack et prestations de William Mahi : sites web, applications, logiciels métier, refonte et maintenance.' },
     about: { title: 'À propos — William Mahi', description: 'Découvrez le parcours, l’approche du développement et les expériences de William Mahi, développeur Full-Stack.' },
     contact: { title: 'Contact — William Mahi', description: 'Contactez William Mahi pour un projet web, une mission freelance, une opportunité de recrutement ou une question.' },
+    configurator: { title: 'Configurateur de projet — William Mahi', description: 'Décrivez votre projet web, explorez les fonctionnalités et transmettez une demande structurée.' },
     faq: { title: 'FAQ — William Mahi', description: 'Réponses aux questions fréquentes sur le démarrage, le périmètre et le suivi d’un projet web.' },
     legal: { title: 'Mentions légales — William Mahi', description: 'Informations d’édition et d’hébergement du portfolio de William Mahi, avec éléments restant à compléter.' },
     terms: { title: 'CGU — William Mahi', description: 'Conditions d’utilisation du portfolio de William Mahi.' },
@@ -46,6 +47,7 @@ export const metadata: Record<Language, Record<PageId, { title: string; descript
     expertise: { title: 'Expertise — William Mahi', description: 'William Mahi’s Full-Stack skills and services: websites, web apps, business software, redesign and maintenance.' },
     about: { title: 'About — William Mahi', description: 'Learn about William Mahi’s background, development approach and experience as a Full-Stack developer.' },
     contact: { title: 'Contact — William Mahi', description: 'Contact William Mahi about a web project, freelance work, a recruitment opportunity or a question.' },
+    configurator: { title: 'Project configurator — William Mahi', description: 'Describe your web project, explore possible features and send a structured request.' },
     faq: { title: 'FAQ — William Mahi', description: 'Answers to common questions about starting, scoping and following up on a web project.' },
     legal: { title: 'Legal notice — William Mahi', description: 'Publisher and hosting information for William Mahi’s portfolio, including details still to be completed.' },
     terms: { title: 'Terms of use — William Mahi', description: 'Terms of use for William Mahi’s portfolio website.' },

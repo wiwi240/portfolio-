@@ -784,3 +784,35 @@ test('POST /api/contact rate limiting uses the first x-forwarded-for value', asy
     await stopTestServer(server)
   }
 })
+
+test('POST /api/contact stores a structured project and builds its readable summary on the server', async () => {
+  const { server, baseUrl } = await startTestServer()
+  const project = {
+    path: 'create', activity: 'Atelier de luminaires', projectName: 'Atelier Sillage', namePending: false, audience: [], goal: '', existing: '', existingDetails: '', aspiration: '',
+    choices: { catalog: 'wanted', cart: 'discuss' }, answers: {}, priorityNow: ['catalog'], priorityLater: [], fakeCart: ['Lampe Aube'],
+    selfEdit: ['products'], languages: 'Français', materials: ['photos'], dataToMove: '', access: 'public', importantDate: '', dateReason: '', constraints: '',
+  }
+  try {
+    const { response, body } = await requestJson(baseUrl, '/api/contact', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://allowed.example' },
+      body: JSON.stringify({ kind: 'project', name: 'Marie Martin', email: 'marie@example.com', company: 'Atelier Sillage', message: 'Parlons-en.', project }),
+    })
+    assert.equal(response.status, 201)
+    assert.match(body.item.message, /BESOINS SOUHAITÉS\n• Catalogue de produits ou de prestations/)
+    assert.match(body.item.message, /POSSIBILITÉS À DISCUTER\n• Panier/)
+    assert.equal(body.item.project_data.choices.catalog, 'wanted')
+    assert.equal('fakeCart' in body.item.project_data, false)
+    assert.doesNotMatch(body.item.message, /Compte personnel/)
+  } finally { await stopTestServer(server) }
+})
+
+test('POST /api/contact rejects a malformed project without a success response', async () => {
+  const { server, baseUrl } = await startTestServer()
+  try {
+    const { response } = await requestJson(baseUrl, '/api/contact', {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://allowed.example' },
+      body: JSON.stringify({ kind: 'project', name: 'Marie Martin', email: 'marie@example.com', project: { path: 'create', choices: { catalog: 'wanted' } } }),
+    })
+    assert.equal(response.status, 400)
+  } finally { await stopTestServer(server) }
+})

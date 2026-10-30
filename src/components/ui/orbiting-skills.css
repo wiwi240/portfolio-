@@ -19,7 +19,7 @@
   width: clamp(6.2rem, 15vw, 7.8rem);
   height: clamp(6.2rem, 15vw, 7.8rem);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: color-mix(in srgb, #111827 72%, transparent);
   transform: translate(-50%, -50%);
   box-shadow:
@@ -34,7 +34,7 @@
   position: absolute;
   inset: 0.6rem;
   border: 1px solid rgba(51, 65, 85, 0.42);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 
 .orbiting-skills__center span {
@@ -46,6 +46,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-align: center;
+  text-transform: uppercase;
   line-height: 1.2;
 }
 
@@ -65,7 +66,7 @@
   left: 50%;
   top: 50%;
   border: 1.5px solid rgba(51, 65, 85, 0.5);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -151,7 +152,7 @@
   width: var(--skill-size);
   height: var(--skill-size);
   border: 1px solid var(--skill-border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--skill-bg);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.02),
@@ -174,7 +175,7 @@
   max-width: var(--label-width, 5.8rem);
   padding: 0.45rem 0.65rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: color-mix(in srgb, #111827 92%, transparent);
   color: var(--fg);
   font-size: clamp(0.64rem, 1.28vw, 0.73rem);

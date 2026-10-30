@@ -1,6 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const { Pool } = require('pg')
+const { validateProject, buildProjectSummary } = require('./project-request')
 
 dotenv.config()
 
@@ -51,6 +52,7 @@ app.use((req, res, next) => {
 
 let pool = null
 let databaseReady = false
+let databaseInitPromise = null
 const fallbackMessages = []
 let nextMessageId = 1
 const contactRateLimitStore = new Map()
@@ -157,7 +159,11 @@ async function checkContactRateLimit(req) {
 function validateContactPayload(payload) {
   const name = normalizeText(payload?.name)
   const email = normalizeText(payload?.email).toLowerCase()
-  const message = normalizeText(payload?.message)
+  const isProject = payload?.kind === 'project'
+  const project = isProject ? validateProject(payload?.project) : null
+  const message = isProject && project
+    ? buildProjectSummary(project, payload?.company, payload?.message)
+    : normalizeText(payload?.message)
   const errors = []
 
   if (name.length < 2) {
@@ -172,14 +178,16 @@ function validateContactPayload(payload) {
     errors.push('Le message doit contenir au moins 10 caracteres.')
   }
 
-  if (message.length > 2000) {
-    errors.push('Le message ne doit pas depasser 2000 caracteres.')
+  if (message.length > (isProject ? 30000 : 2000)) {
+    errors.push(`Le message ne doit pas depasser ${isProject ? 30000 : 2000} caracteres.`)
   }
+
+  if (isProject && !project) errors.push('Les informations du projet sont invalides ou incompletes.')
 
   return {
     isValid: errors.length === 0,
     errors,
-    data: { name, email, message },
+    data: { name, email, message, projectData: project },
   }
 }
 
@@ -207,6 +215,8 @@ async function initDatabase() {
     )
   `)
 
+  await pool.query('ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS project_data JSONB')
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS contact_rate_limits (
       client_ip TEXT PRIMARY KEY,
@@ -223,15 +233,29 @@ async function initDatabase() {
   databaseReady = true
 }
 
+async function ensureDatabase() {
+  if (databaseReady) return
+  if (!databaseInitPromise) {
+    databaseInitPromise = initDatabase().catch(async (error) => {
+      databaseReady = false
+      if (pool) await pool.end().catch(() => {})
+      pool = null
+      databaseInitPromise = null
+      throw error
+    })
+  }
+  await databaseInitPromise
+}
+
 async function storeMessage(data) {
   if (databaseReady && pool) {
     const result = await pool.query(
       `
-        INSERT INTO contact_messages (name, email, message)
-        VALUES ($1, $2, $3)
+        INSERT INTO contact_messages (name, email, message, project_data)
+        VALUES ($1, $2, $3, $4)
         RETURNING id, name, email, message, created_at
       `,
-      [data.name, data.email, data.message],
+      [data.name, data.email, data.message, data.projectData ? JSON.stringify(data.projectData) : null],
     )
 
     return {
@@ -249,6 +273,7 @@ async function storeMessage(data) {
     name: data.name,
     email: data.email,
     message: data.message,
+    project_data: data.projectData,
     created_at: new Date().toISOString(),
   }
 
@@ -343,7 +368,7 @@ app.use((error, _req, res, _next) => {
 
 async function startServer() {
   try {
-    await initDatabase()
+    await ensureDatabase()
   } catch (error) {
     databaseReady = false
     pool = null
@@ -366,6 +391,7 @@ module.exports = {
   checkContactRateLimit,
   checkContactRateLimitMemory,
   getClientIp,
+  ensureDatabase,
   startServer,
   validateContactPayload,
   normalizeText,

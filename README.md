@@ -66,6 +66,8 @@ Le back expose principalement :
 - `GET /api/health`
 - `POST /api/contact`
 
+Le configurateur utilise `POST /api/contact` avec `kind: "project"`. L’API valide les réponses structurées, construit elle-même une synthèse lisible, puis enregistre la synthèse dans `contact_messages.message` et les réponses dans `contact_messages.project_data`. Les demandes se récupèrent depuis cette table. Aucun email de notification n’est configuré par le dépôt.
+
 ### 3. Adaptation Vercel
 
 Le dossier `api/` sert de point d'entrée pour Vercel et redirige vers l'application Express existante.
@@ -84,8 +86,9 @@ En local, si la base n'est pas configurée :
 
 En production :
 
-- l'intention du code est claire : la base doit être disponible ;
-- sans base, le mode mémoire n'est pas une solution acceptable de long terme.
+- les fonctions API initialisent la base avant de traiter une demande ;
+- sans `DATABASE_URL` ou si la base est indisponible, l’API répond avec une erreur et n’annonce pas de réception ;
+- les demandes ne sont jamais stockées uniquement en mémoire.
 
 C'est une bonne décision produit. Un portfolio peut tolérer un fallback mémoire en développement, mais pas en production si le formulaire de contact a une vraie valeur.
 

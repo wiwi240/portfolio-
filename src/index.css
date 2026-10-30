@@ -1,69 +1,16 @@
 @import "tailwindcss";
+@import "./tokens.css";
 
 :root {
-  --bg: #050914;
-  --bg-elevated: #0b1323;
-  --surface: #111827;
-  --surface-strong: #1a2335;
-  --fg: #f8fafc;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-cyan: rgba(0, 245, 255, 0.42);
-  --accent: #3b82f6;
-  --accent-light: #3b82f6;
-  --accent-strong: #2563eb;
-  --accent-secondary: #2563eb;
-  --accent-cyan: #00f5ff;
-  --accent-cyan-light: #7df9ff;
-  --accent-muted: rgba(59, 130, 246, 0.14);
-  --grid-line: rgba(15, 23, 42, 0.82);
-  --copper: #d97706;
-  --copper-light: #f59e0b;
-  --muted: #a8b3c7;
-  --muted-fg: rgba(168, 179, 199, 0.76);
-  --muted-subtle: rgba(59, 130, 246, 0.14);
-  --radius: 14px;
-  --radius-sm: 10px;
-  --font: 'Satoshi', 'Segoe UI', sans-serif;
-  --font-display: 'Cabinet Grotesk', 'Satoshi', 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  --text-color-primary: var(--fg);
-
   font-family: var(--font);
   line-height: 1.6;
   font-weight: 400;
   color: var(--fg);
   background: var(--bg);
-  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-html.dark {
-  --bg: #050914;
-  --bg-elevated: #0b1323;
-  --surface: #111827;
-  --surface-strong: #1a2335;
-  --fg: #f8fafc;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-cyan: rgba(0, 245, 255, 0.42);
-  --accent: #3b82f6;
-  --accent-light: #3b82f6;
-  --accent-strong: #2563eb;
-  --accent-secondary: #2563eb;
-  --accent-cyan: #00f5ff;
-  --accent-cyan-light: #7df9ff;
-  --accent-muted: rgba(59, 130, 246, 0.14);
-  --grid-line: rgba(15, 23, 42, 0.82);
-  --copper: #d97706;
-  --copper-light: #f59e0b;
-  --muted: #a8b3c7;
-  --muted-fg: rgba(168, 179, 199, 0.76);
-  --muted-subtle: rgba(59, 130, 246, 0.14);
-  --text-color-primary: var(--fg);
-  color-scheme: dark;
 }
 
 html {
@@ -86,11 +33,7 @@ body {
   min-height: 100%;
   min-width: 320px;
   overflow-x: clip;
-  background: linear-gradient(135deg, #050914 0%, #0b1323 48%, #050914 100%);
-}
-
-html.dark body {
-  background: linear-gradient(135deg, #050914 0%, #0b1323 48%, #050914 100%);
+  background: var(--bg);
 }
 
 body,
@@ -124,7 +67,7 @@ textarea {
 }
 
 ::selection {
-  background: var(--accent-muted);
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
   color: var(--fg);
 }
 
@@ -134,7 +77,8 @@ textarea {
   overflow-x: clip;
 }
 
+/* One focus ring everywhere: --accent has 5:1 or better on every surface. */
 :focus-visible {
-  outline: 2px solid var(--accent-cyan);
-  outline-offset: 2px;
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
 }
