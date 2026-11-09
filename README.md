@@ -69,7 +69,7 @@ Le back expose principalement :
 - `GET /api/health`
 - `POST /api/contact`
 
-Le configurateur utilise `POST /api/contact` avec `kind: "project"`. L’API valide les réponses structurées, construit elle-même une synthèse lisible, puis enregistre la synthèse dans `contact_messages.message` et les réponses dans `contact_messages.project_data`. Les demandes se récupèrent depuis cette table. Aucun email de notification n’est configuré par le dépôt.
+Le guide de projet de l’accueil (voir `docs/guide-projet.md`) utilise `POST /api/contact` avec `kind: "project"`. L’API valide les réponses structurées, construit elle-même une synthèse lisible, puis enregistre la synthèse dans `contact_messages.message` et les réponses dans `contact_messages.project_data`. Les demandes se récupèrent depuis cette table. Aucun email de notification n’est configuré par le dépôt.
 
 ### 3. Adaptation Vercel
 
@@ -125,7 +125,7 @@ Ce n'est pas une sécurité "complète", mais pour un MVP de portfolio c'est un 
 - `api/` : points d'entrée serveur pour Vercel
 - `public/` : assets publics
 - `maquette/` : éléments de maquette / exploration visuelle
-- `docs/` : offres, design system et notes de travail
+- `docs/` : offres (`offres-parcours.md`), guide de projet (`guide-projet.md`), design system et notes de travail
 - `verification/` : captures de contrôle visuel
 
 ## Lancement en local
@@ -164,6 +164,8 @@ Point de rigueur : si tu ajoutes un jour un fichier d'exemple d'environnement, i
 ## Tests
 
 Le backend contient `backend/src/index.test.js` et `backend/src/project-request.test.js` (60 tests), plus `api/index.test.mjs` pour la fonction Vercel. Lancer avec `node --test --test-force-exit` depuis `backend/`, car une connexion à la base reste ouverte après les tests.
+
+`src/data/project-configurator.test.mjs` est obsolète (il importe `changePath`, supprimé) et ne s'exécute plus.
 
 Leur rôle actuel est pertinent :
 
