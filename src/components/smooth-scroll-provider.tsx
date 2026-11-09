@@ -36,8 +36,12 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
     () => ({
       scrollTo: (top, options) => {
         const lenis = lenisRef.current
-        if (lenis) lenis.scrollTo(top, { immediate: options?.immediate })
-        else nativeScrollTo(top, options)
+        if (lenis) {
+          // Lenis caches the scroll limit; a panel unlocked a moment ago has made the page longer, and the old limit
+          // would clamp the target short.
+          lenis.resize()
+          lenis.scrollTo(top, { immediate: options?.immediate })
+        } else nativeScrollTo(top, options)
       },
     }),
     [],

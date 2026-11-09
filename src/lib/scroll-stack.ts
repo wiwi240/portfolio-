@@ -64,7 +64,11 @@ export function useHorizontalProgress(ref: RefObject<HTMLElement | null>) {
     update()
     window.addEventListener('scroll', schedule, { passive: true })
     window.addEventListener('resize', schedule)
+    // Unlocking a panel lengthens the scene without any scroll: without this the slide would jump to the new progress.
+    const observer = new ResizeObserver(schedule)
+    observer.observe(scene)
     return () => {
+      observer.disconnect()
       window.removeEventListener('scroll', schedule)
       window.removeEventListener('resize', schedule)
       if (frame) cancelAnimationFrame(frame)
@@ -81,7 +85,18 @@ export function useScrollToScene() {
       markProgrammaticScroll()
       // Focus moves to the target first: a focused element left in a covered scene would pull the page back up.
       if (options?.focusId) document.getElementById(options.focusId)?.focus({ preventScroll: true })
-      scrollTo(options?.panel === undefined ? sceneFlowTop(scene) : horizontalPanelTop(scene, options.panel), options)
+      const panel = options?.panel
+      scrollTo(panel === undefined ? sceneFlowTop(scene) : horizontalPanelTop(scene, panel), options)
+      // The scene may still be changing height when the target is computed (a panel was just unlocked), which leaves the
+      // slide a few dozen pixels off. Once the smooth scroll is over, snap to the settled position, unless the visitor
+      // has already scrolled somewhere else.
+      if (panel !== undefined) {
+        window.setTimeout(() => {
+          const settled = horizontalPanelTop(scene, panel)
+          const gap = Math.abs(settled - window.scrollY)
+          if (gap > 2 && gap < 200) scrollTo(settled, { immediate: true })
+        }, 1400)
+      }
     },
     [scrollTo],
   )
