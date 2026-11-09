@@ -280,3 +280,37 @@
 .guide-mockup-activity small {
   color: var(--muted);
 }
+
+/* Category columns: several categories side by side on one slide. */
+.guide-panel:has(.guide-columns) {
+  max-width: 1180px;
+}
+.guide-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+.guide-column {
+  min-width: 0;
+}
+.home-page .guide-column h3 {
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+.guide-items.guide-items-compact {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.guide-items-compact label {
+  align-items: center;
+  padding: 9px 12px;
+}
+.guide-items-compact .guide-item-copy strong {
+  font-size: 0.9rem;
+  font-weight: 700;
+}

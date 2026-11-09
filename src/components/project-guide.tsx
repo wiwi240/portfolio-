@@ -31,6 +31,27 @@ export function GuidePanel({ language, panel, index, total, selected, onToggle, 
     if (index === 0 && focusSignal > 0) headingRef.current?.focus({ preventScroll: true })
   }, [index, focusSignal])
 
+  const renderItems = (items: GuidePanelData['items'], compact: boolean) =>
+    items.map((item) => {
+      const checked = selected.includes(item.id)
+      const Icon = guideIcon(item.id)
+      return (
+        <label key={item.id} className={checked ? 'is-selected' : undefined} title={compact ? item.description[language] : undefined}>
+          <input type="checkbox" checked={checked} onChange={() => onToggle(item.id)} />
+          <span className="guide-item-icon" aria-hidden="true">
+            <Icon size={compact ? 18 : 22} strokeWidth={1.8} />
+          </span>
+          <span className="guide-item-copy">
+            <strong>{item.title[language]}</strong>
+            {!compact && <small>{item.description[language]}</small>}
+          </span>
+          <span className="guide-item-check" aria-hidden="true">
+            <Check size={14} strokeWidth={3} />
+          </span>
+        </label>
+      )
+    })
+
   return (
     <section className="stack-scene-inner guide-panel" aria-labelledby={titleId}>
       <span className="eyebrow">
@@ -43,27 +64,20 @@ export function GuidePanel({ language, panel, index, total, selected, onToggle, 
         {panel.title[language]}
       </h2>
       <p className="guide-hint">{t.hint}</p>
-      <div className="guide-items" role="group" aria-labelledby={titleId}>
-        {panel.items.map((item) => {
-          const checked = selected.includes(item.id)
-          const Icon = guideIcon(item.id)
-          return (
-            <label key={item.id} className={checked ? 'is-selected' : undefined}>
-              <input type="checkbox" checked={checked} onChange={() => onToggle(item.id)} />
-              <span className="guide-item-icon" aria-hidden="true">
-                <Icon size={22} strokeWidth={1.8} />
-              </span>
-              <span className="guide-item-copy">
-                <strong>{item.title[language]}</strong>
-                <small>{item.description[language]}</small>
-              </span>
-              <span className="guide-item-check" aria-hidden="true">
-                <Check size={14} strokeWidth={3} />
-              </span>
-            </label>
-          )
-        })}
-      </div>
+      {panel.columns ? (
+        <div className="guide-columns">
+          {panel.columns.map((column) => (
+            <div key={column.id} className="guide-column" role="group" aria-labelledby={`guide-col-${column.id}`}>
+              <h3 id={`guide-col-${column.id}`}>{column.title[language]}</h3>
+              <div className="guide-items guide-items-compact">{renderItems(column.items, true)}</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="guide-items" role="group" aria-labelledby={titleId}>
+          {renderItems(panel.items, false)}
+        </div>
+      )}
       <div className="guide-nav">
         <button type="button" className="button button-outline" onClick={onBack}>
           <ArrowLeft aria-hidden="true" />

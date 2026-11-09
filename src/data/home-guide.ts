@@ -11,7 +11,9 @@ import {
 // The home page guides the visitor through the configurator's own categories, one slide each.
 // Titles, descriptions and ids all come from project-configurator.ts; only the order per path is chosen here.
 export type GuideItem = { id: string; title: Localized; description: Localized }
-export type GuidePanelData = { id: string; title: Localized; items: GuideItem[] }
+export type GuideColumn = { id: string; title: Localized; items: GuideItem[] }
+// A slide with `columns` shows one column per category; `items` always lists every item of the slide.
+export type GuidePanelData = GuideColumn & { columns?: GuideColumn[] }
 
 const ask = (fr: string, en: string): Localized => ({ fr, en })
 
@@ -23,22 +25,25 @@ export const entryTitles: Partial<Record<PathId, Localized>> = {
   support: ask('Maintenance & suivi', 'Maintenance & support'),
 }
 
-// Every need of a group is offered, split into slides of at most PAGE_SIZE so each slide stays readable.
-const PAGE_SIZE = 6
 const groupTitles: Record<string, Localized> = {
   ...Object.fromEntries(compactCategories.map((group) => [group.id, group.title])),
   content: ask('Gérer mon site', 'Manage my site'),
 }
 
-const category = (id: string): GuidePanelData[] => {
+const category = (id: string): GuideColumn => {
   const title = groupTitles[id]
   if (!title) throw new Error(`Unknown category: ${id}`)
   const items = needs.filter((need) => need.group === id).map((need) => ({ id: need.id, title: need.title, description: need.description }))
-  const pages: GuidePanelData[] = []
-  for (let start = 0; start < items.length; start += PAGE_SIZE)
-    pages.push({ id: start === 0 ? id : `${id}-${start / PAGE_SIZE + 1}`, title, items: items.slice(start, start + PAGE_SIZE) })
-  return pages
+  return { id, title, items }
 }
+
+// One slide whose columns are the given categories, side by side.
+const slide = (id: string, title: Localized, ids: string[]): GuidePanelData => {
+  const columns = ids.map(category)
+  return { id, title, items: columns.flatMap((column) => column.items), columns }
+}
+
+const featuresTitle = ask('Quelles fonctionnalités vous seraient utiles ?', 'Which features would be useful?')
 
 const choices = (id: string, title: Localized, list: ReadonlyArray<readonly [string, string, string]>): GuidePanelData => ({
   id,
@@ -49,11 +54,11 @@ const choices = (id: string, title: Localized, list: ReadonlyArray<readonly [str
 export function guidePanels(path: PathId | null): GuidePanelData[] {
   switch (path) {
     case 'create':
-      return ['present', 'requests', 'sell', 'clients', 'content'].flatMap(category)
+      return [slide('features-1', featuresTitle, ['present', 'requests', 'sell']), slide('features-2', featuresTitle, ['clients', 'content'])]
     case 'tool':
-      return ['organize', 'clients', 'requests', 'content'].flatMap(category)
+      return [slide('features-1', featuresTitle, ['organize', 'clients']), slide('features-2', featuresTitle, ['requests', 'content'])]
     case 'improve':
-      return [choices('improve', ask('Que souhaitez-vous améliorer ?', 'What would you like to improve?'), improvementOptions), ...['present', 'requests', 'sell', 'content'].flatMap(category)]
+      return [choices('improve', ask('Que souhaitez-vous améliorer ?', 'What would you like to improve?'), improvementOptions), slide('features-1', featuresTitle, ['present', 'requests', 'sell']), slide('features-2', featuresTitle, ['content'])]
     case 'support':
       return [choices('support', ask('Quel suivi souhaitez-vous ?', 'What kind of support do you need?'), supportOptions)]
     default:

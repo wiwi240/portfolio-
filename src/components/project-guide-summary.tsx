@@ -25,6 +25,7 @@ export function GuideSummary({ language, path, panels, selected, activity, onAct
   const requestKey = `${path}:${selected.join(',')}`
   const sent = sentKey === requestKey
   const groups = panels
+    .flatMap((panel) => panel.columns ?? [panel])
     .map((panel) => ({ panel, items: panel.items.filter((item) => selected.includes(item.id)) }))
     .filter((group) => group.items.length > 0)
   const set = (key: 'activity' | keyof typeof fields) => (value: string) => {
