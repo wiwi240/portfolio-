@@ -7,7 +7,6 @@ html.dark body::before { opacity: .8; background-image: url('./assets/background
 /* overflow: clip keeps the sticky header working (overflow: hidden would turn the shell into a scroll container) */
 .site-shell { position: relative; z-index: 1; min-height: 100vh; overflow: clip; color: var(--fg); background-color: transparent; }
 .container { width: min(var(--container), calc(100% - 2 * var(--gutter))); margin-inline: auto; }
-.configurator-shell { --container: 1360px; }
 .skip-link { z-index: 100; }
 
 /* Header: one floating bar on every page, aligned with the content container */

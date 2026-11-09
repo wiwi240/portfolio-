@@ -11,7 +11,6 @@ export const paths: Record<Language, Record<Exclude<PageId, 'notFound'>, string>
   },
 }
 
-export const publicRoutes = Object.values(paths).flatMap((pages) => Object.values(pages))
 export const siteOrigin = 'https://www.williammahi.dev'
 
 export function resolveRoute(pathname: string): { language: Language; page: PageId } {

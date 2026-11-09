@@ -97,11 +97,6 @@ type Copy = {
   }
 }
 
-export const languageOptions = [
-  { value: 'fr', shortLabel: 'FR', longLabel: 'Français' },
-  { value: 'en', shortLabel: 'EN', longLabel: 'English' },
-] as const
-
 export const contactEmail = 'william.mahipro@gmail.com'
 export const githubUrl = 'https://github.com/wiwi240'
 export const linkedinUrl = 'https://www.linkedin.com/in/william-mahi-9727243a3/'

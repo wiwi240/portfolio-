@@ -138,16 +138,6 @@ export const compactCategories = [
   { id: 'all', title: t('Découvrir toutes les possibilités', 'Explore every feature'), ids: [] },
 ] as const
 
-export function suggestedNeedIds(draft: ProjectDraft): string[] {
-  const activity = draft.activity.toLocaleLowerCase('fr')
-  if (draft.path === 'tool') return ['customerManagement', 'planning', 'team', 'tasks']
-  if (/restaurant|café|cafe|bistrot|traiteur|cuisine|food/.test(activity))
-    return ['menu', 'appointments', 'enquiries', 'events']
-  if (/artisan|atelier|luminaire|céramique|ceramique|menuis|plomb|électric|electric/.test(activity))
-    return ['portfolio', 'quote', 'testimonials', 'enquiries']
-  if (draft.path === 'improve') return ['presentActivity', 'portfolio', 'enquiries', 'planning']
-  return ['presentActivity', 'enquiries', 'portfolio', 'appointments']
-}
 const studio = '/configurator-assets/create-studio.webp'
 const detail = '/service-assets/lampe-aube-detail.webp'
 const workspace = '/configurator-assets/improve-workspace.webp'
@@ -748,41 +738,6 @@ export const needs: Need[] = [
   ),
 ]
 
-export const previewExamples: Record<string, Localized> = {
-  presentActivity: t(
-    'L’atelier, ses créations et les informations pratiques.',
-    'The studio, its creations and practical information.',
-  ),
-  portfolio: t('Galerie des luminaires réalisés par l’atelier.', 'Gallery of lighting made by the studio.'),
-  articles: t('Carnet : les matières de la lampe Aube.', 'Journal: materials behind the Aube lamp.'),
-  enquiries: t('Une demande adressée à Atelier Sillage.', 'An enquiry sent to Atelier Sillage.'),
-  catalog: t('Fiche de la lampe Aube et ses variantes.', 'Aube lamp details and variants.'),
-  commerce: t('Commande de la lampe Aube à traiter.', 'An Aube lamp order to handle.'),
-  booking: t('Visite de l’atelier sur un créneau disponible.', 'A studio visit at an available time.'),
-  clientArea: t('Espace de suivi du dossier Lampe Aube.', 'A personal area for the Aube lamp case.'),
-  documents: t('Document du dossier Lampe Aube à consulter.', 'A document from the Aube lamp case to view.'),
-  messages: t('Échange au sujet du dossier Lampe Aube.', 'Conversation about the Aube lamp case.'),
-  tracking: t('Dossier Lampe Aube : en préparation.', 'Aube lamp case: in preparation.'),
-  team: t('Tâches et rôles de l’équipe de l’atelier.', 'Tasks and roles for the studio team.'),
-  automation: t(
-    'Une action déclenchée après une étape du dossier.',
-    'An action triggered after a case step.',
-  ),
-  connection: t(
-    'Échange de données entre les outils de l’atelier, à vérifier.',
-    'Data exchange between studio tools, subject to review.',
-  ),
-  metrics: t('Rapport construit depuis les données de l’atelier.', 'A report built from the studio’s data.'),
-  otherNeed: t(
-    'Un module à définir à partir de votre description.',
-    'A module to define from your description.',
-  ),
-  advice: t(
-    'Une piste à préciser ensemble avant la conception.',
-    'A direction to clarify together before design.',
-  ),
-}
-
 export const improvementOptions = [
   ['appearance', 'Apparence et présentation', 'Appearance and presentation'],
   ['navigation', 'Navigation et facilité d’utilisation', 'Navigation and ease of use'],
@@ -894,24 +849,7 @@ export const pathChoiceDetails: Record<string, { description: Localized; image: 
     image: '/service-assets/hosting-servers.png',
   },
 }
-export const pathQuestionLabels: Record<string, Localized> = {
-  current: t('Existant actuel', 'Current product'),
-  affected: t('Pages ou usages concernés', 'Pages or uses affected'),
-  difficulty: t('Difficultés observées', 'Difficulties noticed'),
-  preserve: t('À conserver', 'What to keep'),
-  changes: t('Changements souhaités', 'Desired changes'),
-  knownConstraints: t('Contraintes connues', 'Known constraints'),
-  expected: t('Résultat attendu', 'Expected result'),
-  observed: t('Résultat observé', 'Observed result'),
-  steps: t('Étapes pour reproduire', 'Steps to reproduce'),
-  errorMessage: t('Message d’erreur', 'Error message'),
-  device: t('Page, appareil et navigateur', 'Page, device and browser'),
-  importantFunctions: t('Fonctions importantes', 'Important functions'),
-  interventions: t('Interventions souhaitées', 'Requested interventions'),
-  hostingInfo: t('Domaine et hébergement', 'Domain and hosting'),
-  keepData: t('Données à conserver', 'Data to preserve'),
-}
-export function pathQuestionsFor(draft: ProjectDraft): { main: string[]; extra: string[] } {
+function pathQuestionsFor(draft: ProjectDraft): { main: string[]; extra: string[] } {
   if (draft.path === 'improve')
     return improvementOptions.some(([id]) => draft.choices[id])
       ? { main: ['current', 'affected', 'difficulty'], extra: ['preserve', 'changes', 'knownConstraints'] }
@@ -961,27 +899,16 @@ export function initialDraft(path: PathId = 'unsure'): ProjectDraft {
     message: '',
   }
 }
-export function selectedNeedIds(draft: ProjectDraft) {
+function selectedNeedIds(draft: ProjectDraft) {
   return needs.filter((item) => draft.choices[item.id]).map((item) => item.id)
 }
-export function selectedChoiceIds(draft: ProjectDraft): string[] {
-  const pathChoices =
-    draft.path === 'improve' ? improvementOptions : draft.path === 'support' ? supportOptions : []
-  return [
-    ...pathChoices.filter((item) => draft.choices[item[0]]).map((item) => item[0]),
-    ...selectedNeedIds(draft),
-  ]
-}
-export function hasPrivateDocuments(draft: ProjectDraft): boolean {
+function hasPrivateDocuments(draft: ProjectDraft): boolean {
   return Boolean(draft.choices.documents && draft.answers.documentPrivacy !== 'public')
 }
-export function getActiveQuestions(draft: ProjectDraft, need: Need): Question[] {
+function getActiveQuestions(draft: ProjectDraft, need: Need): Question[] {
   return need.questions.filter((question) => question.id !== 'documentAccess' || hasPrivateDocuments(draft))
 }
-export function needsClientAreaReview(draft: ProjectDraft): boolean {
-  return Boolean(draft.choices.clientArea && (hasPrivateDocuments(draft) || draft.choices.messages))
-}
-export function removalConsequences(draft: ProjectDraft, id: string): string[] {
+function removalConsequences(draft: ProjectDraft, id: string): string[] {
   if (id === 'newFeatures' && draft.path === 'improve') return selectedNeedIds(draft)
   if (id === 'catalog')
     return ['productDetails', 'cart', 'delivery', 'promotions', 'orderTracking'].filter(
@@ -1022,10 +949,4 @@ export function toProjectPayload(draft: ProjectDraft) {
   void _company
   void _message
   return { ...project, answers }
-}
-export function changePath(draft: ProjectDraft, path: PathId, discardSpecific: boolean): ProjectDraft {
-  if (path === draft.path) return draft
-  return discardSpecific
-    ? { ...draft, path, choices: {}, answers: {}, priorityNow: [], priorityLater: [] }
-    : { ...draft, path }
 }
