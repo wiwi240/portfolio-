@@ -24,6 +24,8 @@ const icons: Record<string, LucideIcon> = {
   roles: Shield, statuses: Tags, team: UsersRound, metrics: ChartColumn, automation: Workflow, connection: Plug, stock: Boxes,
   // content
   editTexts: Pencil, editImages: ImagePlus, manageOffers: Gift, publishNews: Megaphone, multilingual: Languages, administrators: UserCog,
+  // needs (page 1 of the guide)
+  'need-show': Image, 'need-contact': CalendarCheck, 'need-news': Newspaper, 'need-sell': ShoppingCart, 'need-clientspace': CircleUser, 'need-organize': FolderKanban, 'need-editing': Pencil,
   // improve
   appearance: Palette, navigation: Compass, mobile: Smartphone, newFeatures: Sparkles, speed: Zap, accessibility: Accessibility,
   seo: Search, technology: Server, review: ClipboardCheck, diagnosis: Stethoscope,
