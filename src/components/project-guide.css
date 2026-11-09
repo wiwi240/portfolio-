@@ -361,3 +361,57 @@
     height: 36px;
   }
 }
+
+/* One question per slide: three answer buttons, details revealed on yes. */
+.guide-answers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+.guide-answers button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 26px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.guide-answers button:hover {
+  border-color: var(--accent);
+}
+.guide-answers button.is-selected {
+  border-color: var(--accent);
+  background: var(--tint);
+  box-shadow: 0 0 0 1px var(--accent);
+  color: var(--accent);
+}
+.guide-answers button:focus-visible,
+.guide-skip:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.guide-question-detail {
+  min-height: 24px;
+}
+.guide-question .guide-items {
+  margin-top: 14px;
+}
+.guide-skip {
+  align-self: center;
+  padding: 8px 4px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}

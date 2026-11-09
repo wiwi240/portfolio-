@@ -8,25 +8,25 @@ Le visiteur est souvent un client peu à l'aise avec le web. Le guide lui évite
 
 ## Parcours
 
-1. **Choix du parcours** (`project-entry.tsx`) : sites web, logiciels métier, refonte et amélioration, maintenance et suivi. Un bouton « Je ne sais pas encore » mène à un parcours sans fonctionnalités à cocher.
-2. **Page 1, « Qu'est-ce que vous voulez pouvoir faire ? »** (`project-guide-needs.tsx`) : des cartes en langage courant, par exemple « Montrer ce que je fais » ou « Vendre en ligne ». Un bouton « Je ne sais pas, conseillez-moi » saute directement à la maquette.
-3. **Page 2, « Voici ce que nous pouvons faire pour vous »** (`project-guide.tsx`) : une colonne par catégorie ouverte par les besoins cochés, avec les fonctionnalités en mots simples et une phrase d'explication visible. Rien n'est coché par défaut.
-4. **Maquette**, puis **récapitulatif et formulaire** (`project-guide-summary.tsx`) : activité, nom, email, message facultatif. Envoi vers `POST /api/contact` avec `kind: "project"` (voir `src/data/project-submit.ts`).
+1. **Choix du parcours** (`project-entry.tsx`) : sites web, logiciels métier, refonte et amélioration, maintenance et suivi. Un bouton « Je ne sais pas encore » mène à un parcours sans question.
+2. **Une question par catégorie** (`project-guide-question.tsx`) : question en langage courant (« Voulez-vous vendre en ligne ? ») avec trois réponses : Oui, Non, Je ne sais pas.
+   - `Oui` affiche en dessous les fonctionnalités de la catégorie, à cocher. Rien n'est coché par défaut.
+   - `Non` et `Je ne sais pas` passent à la question suivante après un court délai, et retirent ce qui était coché dans cette catégorie.
+   - Un lien « Passer et envoyer ma demande » saute directement au formulaire à chaque question.
+3. **Maquette** (`project-guide-mockup.tsx`), puis **récapitulatif et formulaire** (`project-guide-summary.tsx`) : activité, nom, email, message facultatif. Envoi vers `POST /api/contact` avec `kind: "project"` (voir `src/data/project-submit.ts`).
 
-Décocher un besoin à la page 1 retire aussi les fonctionnalités déjà cochées dans les catégories qui disparaissent.
+## Questions par parcours
 
-## Étapes par parcours
-
-| Parcours | Page 1 | Page 2 |
-| --- | --- | --- |
-| Sites web | 6 besoins : montrer, être contacté, donner des nouvelles, vendre, espace clients, modifier soi-même | colonnes des besoins cochés |
-| Logiciels métier | 4 besoins : organiser, espace clients, être contacté, modifier soi-même | colonnes des besoins cochés |
-| Refonte | « Que souhaitez-vous améliorer ? » (liste) | « Souhaitez-vous ajouter quelque chose ? » : demandes, vente, informer, gérer mon site |
-| Maintenance | Une seule étape : le type de suivi souhaité (pas de fonctionnalités) | |
+| Parcours | Questions, dans l'ordre |
+| --- | --- |
+| Sites web (6) | présenter son activité · être contacté ou prendre des rendez-vous · donner des nouvelles · vendre en ligne · espace clients · modifier soi-même |
+| Logiciels métier (5) | organiser son travail · suivre et piloter · espace clients · recevoir des demandes · modifier soi-même |
+| Refonte | la liste « Que souhaitez-vous améliorer ? », puis demandes · vente · nouvelles · modifier soi-même |
+| Maintenance | une seule étape : le type de suivi souhaité (pas de fonctionnalités) |
 
 ## Catégories
 
-Définies dans `src/data/home-guide.ts` (`categories`). Les besoins de la page 1 (`themes`) ouvrent une ou plusieurs de ces catégories. Chaque besoin du configurateur y apparaît une seule fois, avec au plus 7 éléments par colonne pour garder des colonnes équilibrées.
+Définies dans `src/data/home-guide.ts` (`categories`). Chaque catégorie correspond à une question (`questions`). Chaque besoin du configurateur y apparaît une seule fois, avec au plus 7 éléments par colonne pour garder des colonnes équilibrées.
 
 | Catégorie | Contenu |
 | --- | --- |
@@ -44,16 +44,16 @@ Au total les 49 besoins du configurateur restent proposés.
 ## Modifier le guide
 
 - Regrouper ou renommer : éditer `categories` dans `home-guide.ts`. Les titres, descriptions et identifiants viennent de `project-configurator.ts` ; ne changer que le regroupement ici.
-- Ajouter un besoin à la page 1 : créer un `theme(...)` dans `home-guide.ts`, l'ajouter à `themesByPath` et lui donner une icône dans `guide-icons.ts` (clé `need-…`).
+- Ajouter ou reformuler une question : éditer `questions` et la liste du parcours dans `guidePanels` (`home-guide.ts`).
 - Reformuler une fonctionnalité en mots simples : ajouter une entrée dans `plain` (`home-guide.ts`). Les identifiants ne changent pas.
-- Une étape avec `columns` affiche une colonne par catégorie ; sans `columns`, une liste simple en deux colonnes (refonte et maintenance).
-- Le récapitulatif regroupe les choix par colonne (`GuideColumn`).
+- Un panneau avec `question` s'affiche comme une question Oui/Non ; sans `question`, comme une liste simple (refonte et maintenance).
+- Le récapitulatif regroupe les choix par catégorie.
 - Les icônes viennent de `src/data/guide-icons.ts`, clés sur les identifiants des besoins.
 - Le défilement horizontal des étapes est décrit dans `docs/design-system/scroll-stack.md`.
 
 ## Ce que reçoit le backend
 
-Les cases cochées sont envoyées comme besoins « souhaités », avec l'activité. Les autres champs de l'ancien configurateur (public visé, objectif, existant, priorités, réponses détaillées) ne sont plus collectés par le guide et arrivent vides.
+Les cases cochées sont envoyées comme besoins « souhaités », avec l'activité. Les réponses « Je ne sais pas » ne sont pas transmises. Les autres champs de l'ancien configurateur (public visé, objectif, existant, priorités, réponses détaillées) ne sont plus collectés par le guide et arrivent vides.
 
 ## Points ouverts
 

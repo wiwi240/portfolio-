@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { contactEmail, type Language } from '@/data/portfolio-content'
 import type { PathId } from '@/data/project-configurator'
-import { guidePanels, guideThemes } from '@/data/home-guide'
+import { guidePanels, type GuideAnswer } from '@/data/home-guide'
 import { markProgrammaticScroll, useScrollToScene } from '@/lib/scroll-stack'
 import { paths } from '@/site'
 import { MethodScene } from './home-illustrations'
 import { ProjectEntry } from './project-entry'
 import { GuidePanel } from './project-guide'
-import { GuideNeeds } from './project-guide-needs'
+import { GuideQuestion } from './project-guide-question'
 import { GuideMockup } from './project-guide-mockup'
 import { GuideSummary } from './project-guide-summary'
 import { HorizontalScene, ScrollStack, StackScene } from './scroll-stack'
@@ -55,23 +55,20 @@ export function HomePage({ language }: { language: Language }) {
   const p = paths[language]
   const [path, setPath] = useState<PathId | null>(null)
   const [selected, setSelected] = useState<string[]>([])
-  const [chosenThemes, setChosenThemes] = useState<string[]>([])
+  const [answers, setAnswers] = useState<Record<string, GuideAnswer>>({})
   const [activity, setActivity] = useState('')
   const [selections, setSelections] = useState(0)
   // Index of the last slide the visitor may scroll to. Slides open up as they choose a path, tick options or press Next.
   const [unlocked, setUnlocked] = useState(0)
   const [target, setTarget] = useState<{ panel: number; seq: number } | null>(null)
   const scrollToScene = useScrollToScene()
-  const themes = guideThemes(path)
-  const guide = guidePanels(path, chosenThemes)
-  // With themes, page 1 asks the needs and the guide slides become page 2 and after.
-  const lead = themes.length > 0 ? 1 : 0
+  const guide = guidePanels(path)
 
   const choosePath = (next: PathId) => {
     markProgrammaticScroll()
     if (next !== path) {
       setSelected([])
-      setChosenThemes([])
+      setAnswers({})
       setUnlocked(1)
     } else setUnlocked((current) => Math.max(current, 1))
     setPath(next)
@@ -81,18 +78,20 @@ export function HomePage({ language }: { language: Language }) {
     setSelected((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]))
     // Ticking an option opens the slide that follows the one it belongs to.
     const owner = guide.findIndex((panel) => panel.items.some((item) => item.id === id))
-    if (owner >= 0) setUnlocked((current) => Math.max(current, owner + 2 + lead))
+    if (owner >= 0) setUnlocked((current) => Math.max(current, owner + 2))
   }
-  // Changing a need changes which features are offered, so choices in categories that disappear are dropped.
-  const toggleTheme = (id: string) => {
-    const next = chosenThemes.includes(id) ? chosenThemes.filter((item) => item !== id) : [...chosenThemes, id]
-    const offered = new Set(guidePanels(path, next).flatMap((panel) => panel.items.map((item) => item.id)))
-    setChosenThemes(next)
-    setSelected((current) => current.filter((item) => offered.has(item)))
-    setUnlocked((current) => Math.max(current, 2))
+  // Answering no or unsure drops anything ticked in that category, opens the next slide and moves on by itself.
+  const answer = (panelIndex: number, value: GuideAnswer) => {
+    const panel = guide[panelIndex]
+    setAnswers((current) => ({ ...current, [panel.id]: value }))
+    setUnlocked((current) => Math.max(current, panelIndex + 2))
+    if (value === 'yes') return
+    const ids = new Set(panel.items.map((item) => item.id))
+    setSelected((current) => current.filter((item) => !ids.has(item)))
+    window.setTimeout(() => goToPanel(panelIndex + 2), 450)
   }
   // Panel 0 is the path choice. The guide slides, the mockup and the summary only exist once a path is chosen.
-  const headingIds = ['project-entry-title', ...(lead ? ['guide-title-needs'] : []), ...guide.map((panel) => `guide-title-${panel.id}`), 'guide-mockup-title', 'guide-summary-title']
+  const headingIds = ['project-entry-title', ...guide.map((panel) => `guide-title-${panel.id}`), 'guide-mockup-title', 'guide-summary-title']
   // The slide may only just have been unlocked, so the scroll waits for the scene to be rebuilt.
   const goToPanel = (panel: number) => {
     setUnlocked((current) => Math.max(current, panel))
@@ -127,17 +126,18 @@ export function HomePage({ language }: { language: Language }) {
       </StackScene>
       <HorizontalScene id="votre-projet" label={t.projectLabel} unlocked={unlocked} panels={[
         { tone: 'tint', content: <ProjectEntry language={language} active={path} onSelect={choosePath} /> },
-        ...(lead
-          ? [{ tone: 'bg', content: <GuideNeeds language={language} themes={themes} chosen={chosenThemes} total={guide.length + 1} onToggle={toggleTheme} onBack={() => goToPanel(0)} onNext={() => goToPanel(2)} onAdvice={() => goToPanel(guide.length + 2)} focusSignal={selections} /> } as const]
-          : []),
         ...guide.map((panel, index) => ({
-          tone: (index + lead) % 2 === 0 ? 'bg' : 'tint',
-          content: <GuidePanel language={language} panel={panel} index={index + lead} total={guide.length + lead} selected={selected} onToggle={toggle} onBack={() => goToPanel(index + lead)} onNext={() => goToPanel(index + lead + 2)} focusSignal={lead ? 0 : selections} />,
+          tone: index % 2 === 0 ? 'bg' : 'tint',
+          content: panel.question ? (
+            <GuideQuestion language={language} panel={panel} index={index} total={guide.length} answer={answers[panel.id]} selected={selected} onAnswer={(value) => answer(index, value)} onToggle={toggle} onBack={() => goToPanel(index)} onNext={() => goToPanel(index + 2)} onSkip={() => goToPanel(guide.length + 2)} focusSignal={selections} />
+          ) : (
+            <GuidePanel language={language} panel={panel} index={index} total={guide.length} selected={selected} onToggle={toggle} onBack={() => goToPanel(index)} onNext={() => goToPanel(index + 2)} focusSignal={selections} />
+          ),
         } as const)),
         ...(path
           ? [
-              { tone: 'tint', content: <GuideMockup newIds={(guide[guide.length - 1]?.items ?? []).map((item) => item.id).filter((id) => selected.includes(id))} language={language} path={path} selected={selected} activity={activity} onActivityChange={setActivity} onBack={() => goToPanel(guide.length + lead)} onNext={() => goToPanel(guide.length + lead + 2)} /> } as const,
-              { tone: 'surface', content: <GuideSummary language={language} path={path} panels={guide} selected={selected} activity={activity} onActivityChange={setActivity} onBack={() => goToPanel(guide.length + lead + 1)} /> } as const,
+              { tone: 'tint', content: <GuideMockup newIds={(guide[guide.length - 1]?.items ?? []).map((item) => item.id).filter((id) => selected.includes(id))} language={language} path={path} selected={selected} activity={activity} onActivityChange={setActivity} onBack={() => goToPanel(guide.length)} onNext={() => goToPanel(guide.length + 2)} /> } as const,
+              { tone: 'surface', content: <GuideSummary language={language} path={path} panels={guide} selected={selected} activity={activity} onActivityChange={setActivity} onBack={() => goToPanel(guide.length + 1)} /> } as const,
             ]
           : []),
       ]} />

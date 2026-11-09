@@ -12,7 +12,7 @@ import {
 export type GuideItem = { id: string; title: Localized; description: Localized }
 export type GuideColumn = { id: string; title: Localized; items: GuideItem[] }
 // A slide with `columns` shows one column per category; `items` always lists every item of the slide.
-export type GuidePanelData = GuideColumn & { columns?: GuideColumn[] }
+export type GuidePanelData = GuideColumn & { columns?: GuideColumn[]; question?: Localized }
 
 const ask = (fr: string, en: string): Localized => ({ fr, en })
 
@@ -77,32 +77,19 @@ const category = (id: string): GuideColumn => {
   return { id, title: group.title, items }
 }
 
-// One slide whose columns are the given categories, side by side.
-const slide = (id: string, title: Localized, ids: string[]): GuidePanelData => {
-  const columns = ids.map(category)
-  return { id, title, items: columns.flatMap((column) => column.items), columns }
+// One plain question per category. Answering yes reveals the category's features; no or unsure moves on.
+export type GuideAnswer = 'yes' | 'no' | 'unsure'
+const questions: Record<string, Localized> = {
+  present: ask('Voulez-vous présenter votre activité ?', 'Do you want to present your business?'),
+  requests: ask('Voulez-vous être contacté ou prendre des rendez-vous ?', 'Do you want to be contacted or take appointments?'),
+  inform: ask('Voulez-vous donner des nouvelles et animer votre site ?', 'Do you want to share news and engage visitors?'),
+  sell: ask('Voulez-vous vendre en ligne ?', 'Do you want to sell online?'),
+  clients: ask('Voulez-vous offrir un espace à vos clients ?', 'Do you want to give your clients their own area?'),
+  content: ask('Voulez-vous pouvoir modifier le contenu vous-même ?', 'Do you want to edit the content yourself?'),
+  manage: ask('Voulez-vous mieux organiser votre travail ?', 'Do you want to organise your work better?'),
+  steer: ask('Voulez-vous suivre et piloter votre activité ?', 'Do you want to follow and steer your activity?'),
 }
-
-const featuresTitle = ask('Voici ce que nous pouvons faire pour vous', 'Here is what we can do for you')
-
-// Page 1 of the guide: what the visitor wants to be able to do, in everyday words. Each need opens one or more categories on page 2.
-export type GuideTheme = { id: string; title: Localized; description: Localized; categories: string[] }
-export const needsTitle = ask('Qu’est-ce que vous voulez pouvoir faire ?', 'What do you want to be able to do?')
-const theme = (id: string, fr: [string, string], en: [string, string], categoryIds: string[]): GuideTheme => ({ id: `need-${id}`, title: ask(fr[0], en[0]), description: ask(fr[1], en[1]), categories: categoryIds })
-const themes = {
-  show: theme('show', ['Montrer ce que je fais', 'Photos, services, qui je suis, avis de clients.'], ['Show what I do', 'Photos, services, who I am, client reviews.'], ['present']),
-  contact: theme('contact', ['Être contacté ou prendre des rendez-vous', 'Formulaire de contact, devis, réservations.'], ['Be contacted or take appointments', 'Contact form, quotes, bookings.'], ['requests']),
-  news: theme('news', ['Donner des nouvelles et animer', 'Actualités, newsletter, événements, questions fréquentes.'], ['Share news and engage', 'News, newsletter, events, frequently asked questions.'], ['inform']),
-  sell: theme('sell', ['Vendre en ligne', 'Produits ou prestations, panier, paiement, livraison.'], ['Sell online', 'Products or services, basket, payment, delivery.'], ['sell']),
-  clients: theme('clientspace', ['Offrir un espace à mes clients', 'Retrouver leurs documents, suivre leur dossier, m’écrire.'], ['Give my clients their own area', 'Find their documents, follow their file, message me.'], ['clients']),
-  organize: theme('organize', ['Mieux organiser mon travail', 'Fiches clients, planning, tâches, stocks, chiffres clés.'], ['Organise my work better', 'Client records, planning, tasks, stock, key figures.'], ['manage', 'steer']),
-  editing: theme('editing', ['Modifier mon site moi-même', 'Changer les textes et les photos sans aide.'], ['Edit my site myself', 'Change texts and photos without help.'], ['content']),
-}
-const themesByPath: Partial<Record<PathId, GuideTheme[]>> = {
-  create: [themes.show, themes.contact, themes.news, themes.sell, themes.clients, themes.editing],
-  tool: [themes.organize, themes.clients, themes.contact, themes.editing],
-}
-export const guideThemes = (path: PathId | null): GuideTheme[] => (path && themesByPath[path]) || []
+const question = (id: string): GuidePanelData => ({ ...category(id), question: questions[id] })
 
 const choices = (id: string, title: Localized, list: ReadonlyArray<readonly [string, string, string]>): GuidePanelData => ({
   id,
@@ -110,16 +97,14 @@ const choices = (id: string, title: Localized, list: ReadonlyArray<readonly [str
   items: list.map(([itemId, fr, en]) => ({ id: itemId, title: ask(fr, en), description: pathChoiceDetails[itemId].description })),
 })
 
-// Page 2: one column per category opened by the needs ticked on page 1 (`chosen` holds theme ids).
-export function guidePanels(path: PathId | null, chosen: string[] = []): GuidePanelData[] {
+export function guidePanels(path: PathId | null): GuidePanelData[] {
   switch (path) {
     case 'create':
-    case 'tool': {
-      const ids = guideThemes(path).filter((item) => chosen.includes(item.id)).flatMap((item) => item.categories)
-      return [slide('features', featuresTitle, [...new Set(ids)])]
-    }
+      return ['present', 'requests', 'inform', 'sell', 'clients', 'content'].map(question)
+    case 'tool':
+      return ['manage', 'steer', 'clients', 'requests', 'content'].map(question)
     case 'improve':
-      return [choices('improve', ask('Que souhaitez-vous améliorer ?', 'What would you like to improve?'), improvementOptions), slide('features', ask('Souhaitez-vous ajouter quelque chose ?', 'Would you like to add anything?'), ['requests', 'sell', 'inform', 'content'])]
+      return [choices('improve', ask('Que souhaitez-vous améliorer ?', 'What would you like to improve?'), improvementOptions), ...['requests', 'sell', 'inform', 'content'].map(question)]
     case 'support':
       return [choices('support', ask('Quel suivi souhaitez-vous ?', 'What kind of support do you need?'), supportOptions)]
     default:
