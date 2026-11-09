@@ -65,7 +65,8 @@ export function useHorizontalProgress(ref: RefObject<HTMLElement | null>) {
     window.addEventListener('scroll', schedule, { passive: true })
     window.addEventListener('resize', schedule)
     // Unlocking a panel lengthens the scene without any scroll: without this the slide would jump to the new progress.
-    const observer = new ResizeObserver(schedule)
+    // The callback runs before the next paint, so updating right away (not through a frame) avoids a flash of the new panel.
+    const observer = new ResizeObserver(update)
     observer.observe(scene)
     return () => {
       observer.disconnect()
