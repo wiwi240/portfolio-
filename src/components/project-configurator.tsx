@@ -50,8 +50,8 @@ import './project-configurator.css'
 
 const tr = (language: Language, fr: string, en: string) => (language === 'fr' ? fr : en)
 const steps = {
-  fr: ['Construisez votre projet', 'Parlons de votre projet'],
-  en: ['Build your project', 'Let’s talk about your project'],
+  fr: ['Votre projet', 'Vos besoins', 'Parlons de votre projet'],
+  en: ['Your project', 'Your needs', 'Let’s talk about your project'],
 }
 const materialOptions = [
   ['texts', 'Textes', 'Text'],
@@ -282,10 +282,10 @@ function Summary({
       draft.namePending ? tr(language, 'À définir', 'To be decided') : draft.projectName,
       0,
     ],
-    [tr(language, 'Éléments choisis', 'Selected features'), choiceNames('wanted'), 0],
+    [tr(language, 'Éléments choisis', 'Selected features'), choiceNames('wanted'), 1],
     ...(choiceNames('discuss')
       ? [
-          [tr(language, 'À définir ensemble', 'To discuss'), choiceNames('discuss'), 0] as [
+          [tr(language, 'À définir ensemble', 'To discuss'), choiceNames('discuss'), 1] as [
             string,
             string,
             number,
@@ -294,7 +294,7 @@ function Summary({
       : []),
     ...(draft.aspiration
       ? [
-          [tr(language, 'Idée particulière', 'Additional idea'), draft.aspiration, 0] as [
+          [tr(language, 'Idée particulière', 'Additional idea'), draft.aspiration, 1] as [
             string,
             string,
             number,
@@ -303,7 +303,7 @@ function Summary({
       : []),
     ...(draft.path === 'improve' || draft.path === 'support'
       ? [
-          [tr(language, 'Projet existant', 'Existing project'), draft.existingDetails, 1] as [
+          [tr(language, 'Projet existant', 'Existing project'), draft.existingDetails, 2] as [
             string,
             string,
             number,
@@ -312,7 +312,7 @@ function Summary({
       : []),
     ...(draft.importantDate
       ? [
-          [tr(language, 'Délai souhaité', 'Preferred timeline'), draft.importantDate, 1] as [
+          [tr(language, 'Délai souhaité', 'Preferred timeline'), draft.importantDate, 2] as [
             string,
             string,
             number,
@@ -320,11 +320,11 @@ function Summary({
         ]
       : []),
     ...(draft.budget
-      ? [[tr(language, 'Budget indicatif', 'Indicative budget'), draft.budget, 1] as [string, string, number]]
+      ? [[tr(language, 'Budget indicatif', 'Indicative budget'), draft.budget, 2] as [string, string, number]]
       : []),
     ...(materials
       ? [
-          [tr(language, 'Éléments disponibles', 'Available materials'), materials, 1] as [
+          [tr(language, 'Éléments disponibles', 'Available materials'), materials, 2] as [
             string,
             string,
             number,
@@ -410,7 +410,8 @@ export function ProjectConfigurator({ language }: { language: Language }) {
   const [step, setStep] = useState(0)
   const [maxStep, setMaxStep] = useState(0)
   const [mobilePanel, setMobilePanel] = useState<'choices' | 'preview' | 'summary'>('choices')
-  const [expandedCategory, setExpandedCategory] = useState(initialPath === 'tool' ? 'organize' : 'present')
+  const [expandedCategory, setExpandedCategory] = useState(initialPath === 'improve' ? 'improve' : 'suggestions')
+  const [moreOpen, setMoreOpen] = useState<Record<string, boolean>>({})
   const [lastChanged, setLastChanged] = useState('')
   const [changeSequence, setChangeSequence] = useState(0)
   const [summaryOpen, setSummaryOpen] = useState(false)
@@ -457,7 +458,7 @@ export function ProjectConfigurator({ language }: { language: Language }) {
     setPending({ message, run, confirmLabel })
   const applyPath = (path: PathId, hasSpecific: boolean) => {
     setDraft((current) => changePath(current, path, hasSpecific))
-    setExpandedCategory(path === 'tool' ? 'organize' : 'present')
+    setExpandedCategory(path === 'improve' ? 'improve' : 'suggestions')
     setLastChanged('')
     setSubmitState('idle')
     setAnnounce(tr(language, 'Parcours modifié.', 'Path changed.'))
@@ -536,7 +537,7 @@ export function ProjectConfigurator({ language }: { language: Language }) {
     requestAnimationFrame(() => headingRef.current?.focus())
   }
   const next = () => {
-    if (draft.activity.trim().length < 2) {
+    if (step === 0 && draft.activity.trim().length < 2) {
       setErrors({
         activity: tr(
           language,
@@ -547,8 +548,9 @@ export function ProjectConfigurator({ language }: { language: Language }) {
       document.getElementById('activity')?.focus()
       return
     }
-    setMaxStep(1)
-    setStep(1)
+    const target = Math.min(step + 1, steps[language].length - 1)
+    setMaxStep((value) => Math.max(value, target))
+    setStep(target)
     setErrors({})
     setMobilePanel('choices')
     requestAnimationFrame(() => headingRef.current?.focus())
@@ -557,7 +559,7 @@ export function ProjectConfigurator({ language }: { language: Language }) {
     setDraft(initialDraft(initialPath))
     setStep(0)
     setMaxStep(0)
-    setExpandedCategory(initialPath === 'tool' ? 'organize' : 'present')
+    setExpandedCategory(initialPath === 'improve' ? 'improve' : 'suggestions')
     setMobilePanel('choices')
     setSubmitState('idle')
     setAnnounce(tr(language, 'Réponses réinitialisées.', 'Answers reset.'))
@@ -717,7 +719,7 @@ export function ProjectConfigurator({ language }: { language: Language }) {
       <p className="pc-live" role="status" aria-live="polite">
         {announce}
       </p>
-      <div className={'pc-layout pc-layout-' + mobilePanel + (step === 1 ? ' pc-layout-contact' : '')}>
+      <div className={'pc-layout pc-layout-' + mobilePanel + (step === 2 ? ' pc-layout-contact' : '')}>
         <div className={'pc-controls pc-panel-' + mobilePanel}>
           <h2 ref={headingRef} tabIndex={-1}>
             {title}
@@ -829,10 +831,24 @@ export function ProjectConfigurator({ language }: { language: Language }) {
                   </div>
                 </fieldset>
               )}
+            </div>
+          ) : step === 1 ? (
+            <div key="needs" className="pc-form-stack">
               {draft.path === 'improve' && (
+                <section className="pc-group">
+                  <button
+                    type="button"
+                    className="pc-group-toggle"
+                    aria-expanded={expandedCategory === 'improve'}
+                    onClick={() => setExpandedCategory(expandedCategory === 'improve' ? '' : 'improve')}
+                  >
+                    {tr(language, 'Que souhaitez-vous améliorer ?', 'What would you like to improve?')}
+                    <span>{improvementOptions.length}</span>
+                    <ChevronDown size={18} aria-hidden="true" />
+                  </button>
+                  {expandedCategory === 'improve' && (
                 <div className="pc-path-details">
-                  <h3>{tr(language, 'Que souhaitez-vous améliorer ?', 'What would you like to improve?')}</h3>
-                  {improvementOptions.map(([id, fr, en]) => (
+                  {(moreOpen.improve ? improvementOptions : improvementOptions.slice(0, 6)).map(([id, fr, en]) => (
                     <button
                       type="button"
                       key={id}
@@ -847,7 +863,19 @@ export function ProjectConfigurator({ language }: { language: Language }) {
                       <Check size={16} aria-hidden="true" />
                     </button>
                   ))}
+                  <button
+                    type="button"
+                    className="pc-more"
+                    aria-expanded={!!moreOpen.improve}
+                    onClick={() => setMoreOpen((current) => ({ ...current, improve: !current.improve }))}
+                  >
+                    {moreOpen.improve
+                      ? tr(language, 'Afficher moins', 'Show fewer')
+                      : tr(language, `Afficher les ${improvementOptions.length - 6} autres`, `Show ${improvementOptions.length - 6} more`)}
+                  </button>
                 </div>
+                  )}
+                </section>
               )}
               {draft.path === 'support' ? (
                 <div className="pc-path-details">
@@ -870,11 +898,21 @@ export function ProjectConfigurator({ language }: { language: Language }) {
                 </div>
               ) : (
                 <>
+                  <div className="pc-catalog">
+                    <h3>{tr(language, 'Choisissez vos éléments', 'Choose your features')}</h3>
+                    <section className="pc-group">
+                      <button
+                        type="button"
+                        className="pc-group-toggle"
+                        aria-expanded={expandedCategory === 'suggestions'}
+                        onClick={() => setExpandedCategory(expandedCategory === 'suggestions' ? '' : 'suggestions')}
+                      >
+                        {tr(language, 'Suggestions pour votre projet', 'Suggestions for your project')}
+                        <span>{suggestions.length}</span>
+                        <ChevronDown size={18} aria-hidden="true" />
+                      </button>
+                      {expandedCategory === 'suggestions' && (
                   <div className="pc-suggestions">
-                    <div className="pc-section-heading">
-                      <Sparkles size={17} aria-hidden="true" />
-                      <h3>{tr(language, 'Suggestions pour votre projet', 'Suggestions for your project')}</h3>
-                    </div>
                     <p>
                       {tr(
                         language,
@@ -900,8 +938,8 @@ export function ProjectConfigurator({ language }: { language: Language }) {
                       })}
                     </div>
                   </div>
-                  <div className="pc-catalog">
-                    <h3>{tr(language, 'Choisissez vos éléments', 'Choose your features')}</h3>
+                      )}
+                    </section>
                     {categories.map((group) => {
                       const list =
                         group.id === 'all'
@@ -909,6 +947,7 @@ export function ProjectConfigurator({ language }: { language: Language }) {
                           : group.ids
                               .map((id) => needs.find((need) => need.id === id))
                               .filter((need): need is Need => !!need)
+                      const shown = moreOpen[group.id] ? list : list.slice(0, 6)
                       return (
                         <section key={group.id} className="pc-group">
                           <button
@@ -922,8 +961,9 @@ export function ProjectConfigurator({ language }: { language: Language }) {
                             <ChevronDown size={18} aria-hidden="true" />
                           </button>
                           {expandedCategory === group.id && (
+                            <>
                             <div className="pc-compact-grid">
-                              {list.map((need) => (
+                              {shown.map((need) => (
                                 <NeedTile
                                   key={need.id}
                                   need={need}
@@ -934,6 +974,19 @@ export function ProjectConfigurator({ language }: { language: Language }) {
                                 />
                               ))}
                             </div>
+                            {list.length > 6 && (
+                              <button
+                                type="button"
+                                className="pc-more"
+                                aria-expanded={!!moreOpen[group.id]}
+                                onClick={() => setMoreOpen((current) => ({ ...current, [group.id]: !current[group.id] }))}
+                              >
+                                {moreOpen[group.id]
+                                  ? tr(language, 'Afficher moins', 'Show fewer')
+                                  : tr(language, `Afficher les ${list.length - 6} autres`, `Show ${list.length - 6} more`)}
+                              </button>
+                            )}
+                            </>
                           )}
                         </section>
                       )
@@ -1122,14 +1175,16 @@ export function ProjectConfigurator({ language }: { language: Language }) {
           )}
           <div className="pc-step-actions">
             {step > 0 && (
-              <button type="button" className="button button-outline" onClick={() => go(0)}>
+              <button type="button" className="button button-outline" onClick={() => go(step - 1)}>
                 <ArrowLeft size={16} aria-hidden="true" />
-                {tr(language, 'Retour au projet', 'Back to project')}
+                {tr(language, 'Retour', 'Back')}
               </button>
             )}
-            {step === 0 && (
+            {step < steps[language].length - 1 && (
               <button type="button" className="button button-primary pc-next" onClick={next}>
-                {tr(language, 'Parlons de votre projet', 'Let’s talk about your project')}
+                {step === steps[language].length - 2
+                  ? tr(language, 'Parlons de votre projet', 'Let’s talk about your project')
+                  : tr(language, 'Continuer', 'Continue')}
                 <ArrowRight size={17} aria-hidden="true" />
               </button>
             )}

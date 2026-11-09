@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
+import { createElement, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import {
   ArrowLeft,
   ArrowRight,
@@ -15,6 +15,9 @@ import {
   Users,
   X,
 } from 'lucide-react'
+import { guideIcon } from '@/data/guide-icons'
+import { managementPageIds } from '@/data/management-pages'
+import { ManagementPage } from './preview-management-pages'
 import type { Language } from '@/data/portfolio-content'
 import type { ProjectDraft } from '@/data/project-configurator'
 import { previewContextFor, previewModules, type PreviewContext } from '@/data/project-preview-adapter'
@@ -172,11 +175,14 @@ export function ProjectStylePreview({
   language,
   lastChanged,
   changeSequence,
+  newIds,
 }: {
   draft: ProjectDraft
   language: Language
   lastChanged: string
   changeSequence: number
+  /** Optional ids shown with a "new" badge (used by the home guide). */
+  newIds?: string[]
 }) {
   const modules = useMemo(() => previewModules(draft, language), [draft, language])
   const enabled = useMemo(() => new Set(modules.map((item) => item.id)), [modules])
@@ -206,7 +212,6 @@ export function ProjectStylePreview({
   const [messages, setMessages] = useState<string[]>([])
   const [taskDone, setTaskDone] = useState(false)
   const [caseStep, setCaseStep] = useState(1)
-  const [editableText, setEditableText] = useState('')
   const [events, setEvents] = useState<{ title: string; date: string }[]>([])
   const [stock, setStock] = useState<Record<number, number>>({ 0: 6, 1: 3, 2: 9 })
   const [clientDetail, setClientDetail] = useState<number | null>(null)
@@ -277,7 +282,6 @@ export function ProjectStylePreview({
     setMessages([])
     setTaskDone(false)
     setCaseStep(1)
-    setEditableText('')
     setEvents([])
     setStock({ 0: 6, 1: 3, 2: 9 })
     setClientDetail(null)
@@ -351,7 +355,6 @@ export function ProjectStylePreview({
       if (removed.includes('stock')) setStock({ 0: 6, 1: 3, 2: 9 })
       if (removed.includes('customerManagement')) setClientDetail(null)
       if (removed.some((id) => ['tracking', 'orderTracking'].includes(id))) setCaseStep(1)
-      if (removed.some((id) => ['editTexts', 'manageOffers', 'publishNews'].includes(id))) setEditableText('')
       if (removed.includes(destination)) {
         setDestination(base)
         setHistory([base])
@@ -729,7 +732,10 @@ export function ProjectStylePreview({
             {contextModules.length > 0 && (
               <div className="psp-feature-links">
                 {contextModules.map((item) => (
-                  <button key={item.id} type="button" onClick={() => navigate(item.id)}>
+                  <button key={item.id} type="button" data-new={newIds?.includes(item.id) || undefined} onClick={() => navigate(item.id)}>
+                    <i className="psp-feature-icon" aria-hidden="true">
+                      {createElement(guideIcon(item.id), { size: 20, strokeWidth: 1.9 })}
+                    </i>
                     <strong>{pageName(item.id, language)}</strong>
                     <span>{item.description}</span>
                     <ChevronRight size={18} />
@@ -748,6 +754,20 @@ export function ProjectStylePreview({
                 `At ${content.name}, thoughtful work shapes every project.`,
               )}
             </p>
+            <div className="psp-about-points">
+              <div>
+                <strong>{tr(language, 'Écoute', 'Listening')}</strong>
+                <span>{tr(language, 'Un besoin compris avant de choisir une solution.', 'Your need understood before choosing a solution.')}</span>
+              </div>
+              <div>
+                <strong>{tr(language, 'Qualité', 'Quality')}</strong>
+                <span>{tr(language, 'Un résultat soigné, clair et facile à utiliser.', 'A polished, clear and easy-to-use result.')}</span>
+              </div>
+              <div>
+                <strong>{tr(language, 'Suivi', 'Follow-up')}</strong>
+                <span>{tr(language, 'Un accompagnement après la mise en ligne.', 'Support after launch.')}</span>
+              </div>
+            </div>
           </section>
           <section id="psp-contact" className="psp-home-section psp-home-contact">
             <small>{tr(language, 'ÉCHANGEONS', 'GET IN TOUCH')}</small>
@@ -1642,43 +1662,12 @@ export function ProjectStylePreview({
           </div>
         </div>
       )}
-      {[
-        'caseManagement',
-        'quotesDocuments',
-        'roles',
-        'statuses',
-        'editTexts',
-        'editImages',
-        'manageOffers',
-        'publishNews',
-        'multilingual',
-        'administrators',
-      ].includes(currentPage) && (
-        <div className="psp-explainer">
-          <h3>{pageName(currentPage, language)}</h3>
-          <p>{modules.find((item) => item.id === currentPage)?.description}</p>
-          {['editTexts', 'manageOffers', 'publishNews'].includes(currentPage) ? (
-            <label className="psp-edit-label">
-              {tr(language, 'Essayez une modification locale', 'Try a local edit')}
-              <input
-                value={editableText}
-                onChange={(event) => setEditableText(event.target.value)}
-                placeholder={content.items[0]}
-              />
-            </label>
-          ) : (
-            <div className="psp-mini-list">
-              {content.items.slice(0, 2).map((item) => (
-                <button type="button" key={item} onClick={() => setConfirmation(item)}>
-                  {item}
-                  <ChevronRight size={16} />
-                </button>
-              ))}
-            </div>
-          )}
-          {editableText && <p className="psp-success">{editableText}</p>}
-          {confirmation && <p className="psp-success">{confirmation}</p>}
-        </div>
+      {(managementPageIds as readonly string[]).includes(currentPage) && (
+        <ManagementPage
+          id={currentPage}
+          language={language}
+          description={modules.find((item) => item.id === currentPage)?.description}
+        />
       )}
       {![
         'dashboard',
@@ -1808,6 +1797,7 @@ export function ProjectStylePreview({
             <button
               type="button"
               key={context}
+              data-new={modules.some((item) => item.context === context && newIds?.includes(item.id)) || undefined}
               aria-pressed={currentContext === context}
               onClick={() => switchContext(context)}
             >
@@ -1828,6 +1818,7 @@ export function ProjectStylePreview({
               >
                 <button
                   type="button"
+                  data-page={base}
                   aria-current={currentPage === base ? 'page' : undefined}
                   onClick={() => navigate(base)}
                 >
@@ -1869,6 +1860,7 @@ export function ProjectStylePreview({
                     >
                       {tr(language, 'À propos', 'About')}
                     </button>
+{!contextModules.some((item) => item.id === 'enquiries') && (
                     <button
                       type="button"
                       onClick={() => {
@@ -1886,12 +1878,15 @@ export function ProjectStylePreview({
                     >
                       {tr(language, 'Contact', 'Contact')}
                     </button>
+)}
                   </>
                 )}
                 {contextModules.map((item) => (
                   <button
                     type="button"
                     key={item.id}
+                    data-page={item.id}
+                    data-new={newIds?.includes(item.id) || undefined}
                     aria-current={currentPage === item.id ? 'page' : undefined}
                     onClick={() => navigate(item.id)}
                   >

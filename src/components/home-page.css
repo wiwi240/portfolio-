@@ -1,7 +1,5 @@
 /* Home page. Header, footer, buttons and links come from redesign.css. */
 .home-page { color: var(--fg); }
-/* Every section spans the full width (so bands can bleed) and pads itself to the shared container. */
-.home-page > .home-container { width: 100%; padding-inline: max(var(--gutter), calc((100% - var(--container)) / 2)); }
 .home-section { padding-block: 72px 64px; }
 .home-page h1, .home-page h2, .home-page h3, .home-page p { margin: 0; }
 .home-page h2 { font-size: clamp(1.65rem, 2.45vw, 2.5rem); line-height: 1.16; letter-spacing: -.045em; }
@@ -24,19 +22,6 @@
 .home-section-heading--centered { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .home-section-heading--centered h2 { max-width: 24ch; margin: 8px auto; text-wrap: balance; }
 .home-section-heading--centered p { max-width: 62ch; margin-inline: auto; text-wrap: pretty; }
-
-/* Selected projects */
-.home-projects { padding-block: 84px 88px; }
-.home-projects-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(22px, 2.4vw, 34px); margin: 38px 0 0; }
-.home-project-card { display: grid; grid-template-rows: auto 1fr; min-width: 0; }
-.home-project-image { display: block; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--tint); box-shadow: var(--shadow-sm); transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease); }
-.home-project-image:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
-.home-project-image img { display: block; width: 100%; aspect-ratio: 1.78; object-fit: cover; object-position: top center; }
-.home-project-copy { display: flex; flex-direction: column; align-items: flex-start; padding: 18px 2px 0; }
-.home-project-copy h3 { font-size: clamp(1.15rem, 1.5vw, 1.4rem); }
-.home-project-copy p { min-height: 2.9em; margin: 7px 0 13px; color: var(--muted); font-size: .92rem; line-height: 1.5; }
-.home-project-copy .text-link { margin-top: auto; }
-.home-projects-cta { display: flex; width: max-content; margin: 36px auto 0; }
 
 /* Method */
 .home-method { padding-block: 84px 90px; background: var(--surface); border-block: 1px solid var(--border); }
@@ -123,18 +108,17 @@ html.dark .illustration {
 .delivery-plane { position: absolute; bottom: 12%; left: 12%; width: 16% !important; height: auto !important; color: var(--ill-blue-ink); fill: var(--ill-cyan-bg); filter: drop-shadow(0 6px 7px var(--ill-shadow)); transform: rotate(-12deg); }
 
 @media (max-width: 1024px) {
-  .home-projects, .home-method, .home-contact-panel { padding-block: 72px 76px; }
-  .home-projects-grid, .home-method-grid { gap: 24px; }
+  .home-method, .home-contact-panel { padding-block: 72px 76px; }
+  .home-method-grid { gap: 24px; }
   .home-method-copy p { min-height: 4.7em; }
 }
 @media (max-width: 760px) {
   .home-hero { min-height: 0; padding-block: 52px 56px; }
   .home-hero h1 { margin: 20px 0 18px; font-size: clamp(2.85rem, 8.8vw, 4rem); }
   .home-hero-lead, .home-page .home-hero-lead { max-width: 36ch; font-size: 1.05rem; }
-  .home-projects, .home-method, .home-contact-panel { padding-block: 58px 64px; }
-  .home-projects-grid, .home-method-grid { grid-template-columns: 1fr; gap: 34px; margin-top: 32px; }
-  .home-project-copy p, .home-method-copy p { min-height: 0; }
-  .home-projects-cta { margin-top: 32px; }
+  .home-method, .home-contact-panel { padding-block: 58px 64px; }
+  .home-method-grid { grid-template-columns: 1fr; gap: 34px; margin-top: 32px; }
+  .home-method-copy p { min-height: 0; }
   .home-method-card { width: min(100%, 520px); margin-inline: auto; }
   .method-scene { aspect-ratio: 1.4; }
   .home-method-copy { padding-top: 14px; }
@@ -148,6 +132,3 @@ html.dark .illustration {
   .home-hero .home-actions { width: 100%; flex-direction: column; align-items: center; gap: 10px; margin-top: 24px; }
   .home-hero .home-actions .button { width: min(100%, 280px); }
 }
-
-/* .button is inline-flex; these need block-level boxes to centre with auto margins */
-.home-page .home-projects-cta { display: flex; width: max-content; margin: 36px auto 0; }

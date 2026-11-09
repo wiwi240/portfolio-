@@ -113,12 +113,6 @@ html:not(.dark) .brand img, html:not(.dark) .footer-brand img { filter: brightne
 .about-values h3 { font-size: 1rem; }.about-values p { font-size: .92rem; }
 .timeline-section { background: transparent; }
 .portfolio-section-label { color: var(--accent); }.portfolio-section-text { color: var(--muted); }
-.portfolio-journey-date-card { color: var(--fg); background: var(--surface); border-color: var(--border); box-shadow: var(--shadow-sm); }
-.portfolio-journey-card, .portfolio-journey-card:hover, .portfolio-journey-card:focus { color: var(--fg); background: var(--surface); border-color: var(--border); box-shadow: var(--shadow-sm); }
-.portfolio-journey-card-copy p { color: var(--muted); }
-.portfolio-journey-icon { color: var(--accent); background: var(--tint); border-color: var(--border); }
-.portfolio-journey-line { background: var(--border); }
-.portfolio-journey-line::after { background: linear-gradient(180deg, var(--accent-fill), var(--accent-cyan)); }
 
 /* Contact */
 .contact-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(230px, .7fr); align-items: start; gap: 1.5rem; }

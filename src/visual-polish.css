@@ -1,0 +1,901 @@
+/* Visual polish layer: card depth, hover spotlight, hero glow, button gradient.
+   Loaded after redesign.css so it refines the base rules without editing them. */
+
+:root {
+  --card-sheen: rgb(255 255 255 / 0.7);
+  --shadow-card: 0 1px 2px rgb(11 43 85 / 0.05), 0 8px 24px rgb(11 43 85 / 0.07);
+  --spot: rgb(8 102 232 / 0.1);
+  --glow-a: rgb(8 102 232 / 0.18);
+  --glow-b: rgb(0 189 235 / 0.2);
+}
+
+html.dark {
+  --card-sheen: rgb(255 255 255 / 0.07);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.28);
+  --spot: rgb(102 167 255 / 0.14);
+  --glow-a: rgb(102 167 255 / 0.2);
+  --glow-b: rgb(64 217 244 / 0.16);
+}
+
+/* Cards: layered shadow, top sheen, soft surface gradient */
+.service-card,
+.project-card,
+.skill-detail {
+  position: relative;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 100%, var(--tint) 0%), color-mix(in srgb, var(--surface) 82%, var(--tint)));
+  box-shadow: inset 0 1px 0 var(--card-sheen), var(--shadow-card);
+}
+
+/* Spotlight that follows the pointer (--mx / --my set by src/lib/card-spotlight.ts) */
+.service-card::after,
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), var(--spot), transparent 70%);
+  transition: opacity var(--dur) var(--ease);
+}
+.service-card:hover::after,
+.project-card:hover::after {
+  opacity: 1;
+}
+
+.service-card:hover,
+.project-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow: inset 0 1px 0 var(--card-sheen), 0 2px 4px rgb(8 102 232 / 0.06), 0 22px 48px rgb(8 102 232 / 0.14);
+}
+
+/* Project image: bottom fade so it blends into the card body */
+.project-image {
+  position: relative;
+}
+.project-image::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 40%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgb(11 19 35 / 0.28));
+  opacity: 0.7;
+  transition: opacity var(--dur) var(--ease);
+}
+.project-card:hover .project-image::after {
+  opacity: 1;
+}
+
+/* Badges: small accent dot */
+.portfolio-badge {
+  align-items: center;
+  gap: 0.4rem;
+}
+.portfolio-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+}
+
+/* Primary button: gradient with a subtle top highlight */
+.button-primary {
+  background: linear-gradient(135deg, var(--accent-fill) 0%, color-mix(in srgb, var(--accent-fill) 72%, #00109a) 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), 0 10px 22px rgb(8 102 232 / 0.22);
+}
+.button-primary:hover {
+  background: linear-gradient(135deg, var(--accent-fill-hover) 0%, color-mix(in srgb, var(--accent-fill-hover) 70%, #00109a) 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.26), 0 14px 30px rgb(8 102 232 / 0.32);
+}
+.button:active {
+  transform: scale(0.98);
+}
+
+/* Hero: two soft blurred light blobs behind the content */
+.home-hero {
+  position: relative;
+}
+.home-hero::before,
+.home-hero::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: min(46vw, 520px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+.home-hero::before {
+  top: -8%;
+  left: 6%;
+  background: var(--glow-a);
+}
+.home-hero::after {
+  right: 4%;
+  bottom: -6%;
+  background: var(--glow-b);
+}
+
+/* Hero accent word: gradient text */
+.home-hero h1 em {
+  background: linear-gradient(100deg, var(--accent), var(--accent-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .service-card::after,
+  .project-card::after {
+    display: none;
+  }
+}
+
+/* ---------- Pass 2 ---------- */
+
+/* Grain: a very light noise so flat areas do not look digital */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+html.dark body::after {
+  opacity: 0.06;
+  filter: invert(1);
+}
+
+/* Section backgrounds: alternate bands instead of one flat background */
+.expertise-section,
+.contact-section {
+  background:
+    radial-gradient(60rem 28rem at 12% 0%, color-mix(in srgb, var(--accent-cyan) 9%, transparent), transparent 70%),
+    linear-gradient(180deg, transparent, color-mix(in srgb, var(--tint) 70%, transparent) 40%, transparent);
+}
+.about-section {
+  background-image: radial-gradient(color-mix(in srgb, var(--accent) 16%, transparent) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+}
+
+/* Home scenes: they overlap while scrolling, so they cannot be transparent.
+   Each one paints the site background image itself, under a veil of its own tone. */
+:root {
+  --scene-image: url('./assets/background.webp');
+  --veil-bg: 46%;
+  --veil-tint: 58%;
+  --veil-surface: 62%;
+}
+html.dark {
+  --scene-image: url('./assets/background-dark.webp');
+  --veil-bg: 22%;
+  --veil-tint: 34%;
+  --veil-surface: 40%;
+}
+.stack-scene--bg,
+.stack-scene--tint,
+.stack-scene--surface {
+  background-color: var(--bg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.stack-scene--bg {
+  background-image:
+    radial-gradient(60rem 30rem at 50% -10%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%),
+    linear-gradient(color-mix(in srgb, var(--bg) var(--veil-bg), transparent), color-mix(in srgb, var(--bg) var(--veil-bg), transparent)),
+    var(--scene-image);
+}
+.stack-scene--tint {
+  background-image:
+    radial-gradient(48rem 24rem at 85% 0%, color-mix(in srgb, var(--accent-cyan) 12%, transparent), transparent 70%),
+    linear-gradient(color-mix(in srgb, var(--tint) var(--veil-tint), transparent), color-mix(in srgb, var(--tint) var(--veil-tint), transparent)),
+    var(--scene-image);
+}
+.stack-scene--surface {
+  background-image:
+    radial-gradient(52rem 26rem at 10% 100%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%),
+    linear-gradient(color-mix(in srgb, var(--surface) var(--veil-surface), transparent), color-mix(in srgb, var(--surface) var(--veil-surface), transparent)),
+    var(--scene-image);
+}
+html.dark .service-card,
+html.dark .project-card,
+html.dark .skill-detail {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 100%, #fff 3%), var(--surface));
+}
+html.dark .service-card:hover,
+html.dark .project-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--border));
+  box-shadow: inset 0 1px 0 var(--card-sheen), 0 22px 48px rgb(0 0 0 / 0.45), 0 0 0 1px rgb(102 167 255 / 0.18);
+}
+
+/* Section headings: accent bar + gradient on page titles */
+.section-heading::before,
+.faq-page-heading::before {
+  content: '';
+  display: block;
+  width: 44px;
+  height: 4px;
+  margin-bottom: 1rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--accent-fill), var(--accent-cyan));
+}
+.page-header h1 {
+  background: linear-gradient(120deg, var(--fg) 55%, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hierarchy of radii: big cards rounder, small chips pill-shaped */
+.project-card,
+.contact-primary,
+.contact-secondary,
+.portrait-frame {
+  border-radius: 22px;
+}
+.skill-detail {
+  border-radius: var(--radius);
+}
+.portfolio-badge {
+  border-radius: var(--radius-pill);
+  padding-inline: 0.8rem;
+}
+.about-values article {
+  border-image: linear-gradient(180deg, var(--accent-cyan), var(--accent-fill)) 1;
+  border-left-width: 3px;
+}
+
+/* Project card: arrow chip that slides in on hover */
+.project-image::before {
+  content: '↗';
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(8px);
+  font-weight: 800;
+  box-shadow: var(--shadow-sm);
+  opacity: 0;
+  transform: translate(-6px, 6px) scale(0.9);
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.project-card:hover .project-image::before {
+  opacity: 1;
+  transform: none;
+}
+
+/* Contact card: brand gradient wash */
+.contact-primary {
+  background:
+    radial-gradient(34rem 16rem at 100% 0%, color-mix(in srgb, var(--accent-cyan) 16%, transparent), transparent 70%),
+    linear-gradient(135deg, var(--surface), var(--tint));
+}
+
+/* Header: lifts once the page scrolls */
+.site-header {
+  transition: box-shadow var(--dur) var(--ease), background-color var(--dur) var(--ease), backdrop-filter var(--dur) var(--ease);
+}
+html[data-scrolled] .site-header {
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  backdrop-filter: blur(22px) saturate(1.4);
+  box-shadow: var(--shadow);
+}
+
+/* Scroll reveal (see lib/page-effects.ts). Only active when JS marks the page reveal-ready. */
+html.reveal-ready [data-reveal] {
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transition-delay: calc(var(--reveal-i, 0) * 80ms);
+}
+html.reveal-ready [data-reveal='pending'] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+html.reveal-ready [data-reveal='in'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Home: the last scene runs straight into the footer, no strip of bare background between them */
+main:has(.home-page) + .site-footer {
+  margin-top: 0;
+}
+
+/* ---------- "Votre projet": path cards, guide options, final form ---------- */
+
+/* Shared depth + pointer spotlight */
+.project-entry-card,
+.guide-items label,
+.guide-final-form,
+.guide-summary > div {
+  position: relative;
+  box-shadow: inset 0 1px 0 var(--card-sheen), var(--shadow-card);
+}
+.project-entry-card::after,
+.guide-items label::after,
+.guide-final-form::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), var(--spot), transparent 70%);
+  transition: opacity var(--dur) var(--ease);
+}
+.project-entry-card:hover::after,
+.guide-items label:hover::after,
+.guide-final-form:hover::after {
+  opacity: 1;
+}
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .project-entry-card::after,
+  .guide-items label::after,
+  .guide-final-form::after {
+    display: none;
+  }
+}
+
+/* Path cards */
+.project-entry-card {
+  border-radius: 22px;
+  background: linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface) 84%, var(--tint)));
+}
+.project-entry-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+  box-shadow: inset 0 1px 0 var(--card-sheen), 0 2px 4px rgb(8 102 232 / 0.06), 0 26px 52px rgb(8 102 232 / 0.16);
+}
+.project-entry-card[aria-pressed='true'] {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 7%, var(--surface)), color-mix(in srgb, var(--accent) 12%, var(--tint)));
+  box-shadow: 0 0 0 2px var(--accent), 0 24px 50px rgb(8 102 232 / 0.2);
+}
+.project-entry-image img {
+  transition: transform var(--dur-slow) var(--ease);
+}
+.project-entry-card:hover .project-entry-image img {
+  transform: scale(1.05);
+}
+.project-entry-image::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 45%;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgb(11 19 35 / 0.32));
+}
+.project-entry-image span {
+  z-index: 2;
+  width: auto;
+  min-width: 40px;
+  height: 32px;
+  padding-inline: 0.7rem;
+  border-radius: var(--radius-pill);
+  border-color: rgb(255 255 255 / 0.35);
+  background: rgb(11 19 35 / 0.45);
+  backdrop-filter: blur(10px);
+  letter-spacing: 0.08em;
+}
+.project-entry-card[aria-pressed='true'] .project-entry-image span {
+  background: var(--accent-fill);
+}
+.project-entry-cta {
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.project-entry-card:hover .project-entry-cta,
+.project-entry-card[aria-pressed='true'] .project-entry-cta {
+  background: var(--accent-fill);
+  color: var(--on-accent);
+}
+
+/* "Not sure yet" link: pill instead of bare underlined text */
+.project-entry-unsure {
+  padding: 0.6rem 1.1rem;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.project-entry-unsure:hover {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--tint);
+}
+
+/* Guide options: custom checkbox, lifted selected state */
+.guide-items label {
+  border-radius: 18px;
+  border-color: var(--border);
+  transition: transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.guide-items label:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+}
+.guide-items label.is-selected {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 9%, var(--surface)), color-mix(in srgb, var(--accent-cyan) 12%, var(--tint)));
+  box-shadow: 0 0 0 1px var(--accent), 0 14px 30px rgb(8 102 232 / 0.14);
+}
+.guide-items input {
+  appearance: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border: 2px solid var(--border-strong);
+  border-radius: 7px;
+  background: var(--surface);
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.guide-items input::after {
+  content: '';
+  width: 11px;
+  height: 6px;
+  margin-top: -2px;
+  border-left: 2.5px solid var(--on-accent);
+  border-bottom: 2.5px solid var(--on-accent);
+  transform: rotate(-45deg) scale(0);
+  transition: transform var(--dur-fast) var(--ease);
+}
+.guide-items input:checked {
+  border-color: var(--accent-fill);
+  background: linear-gradient(135deg, var(--accent-fill), color-mix(in srgb, var(--accent-fill) 70%, #00109a));
+}
+.guide-items input:checked::after {
+  transform: rotate(-45deg) scale(1);
+}
+.guide-items input[type='radio'] {
+  border-radius: 50%;
+}
+.guide-items input[type='radio']::after {
+  width: 8px;
+  height: 8px;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--on-accent);
+  transform: scale(0);
+}
+.guide-items input[type='radio']:checked::after {
+  transform: scale(1);
+}
+
+/* Summary + final form */
+.guide-summary > div {
+  border-radius: 18px;
+  border-left: 3px solid var(--accent-cyan);
+}
+.guide-final-form {
+  border-radius: 24px;
+  background:
+    radial-gradient(28rem 12rem at 100% 0%, color-mix(in srgb, var(--accent-cyan) 14%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface) 88%, var(--tint)));
+  box-shadow: inset 0 1px 0 var(--card-sheen), var(--shadow);
+}
+.guide-field input,
+.guide-field textarea {
+  border-radius: 12px;
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.guide-field input:focus-visible,
+.guide-field textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* ---------- Path cards: compact media cards ----------
+   Photo or looping clip fills the card. Only the title shows at rest; hovering (or focusing)
+   plays the clip and slides up the description and call to action. */
+.project-entry.project-entry .project-entry-grid {
+  gap: 16px;
+}
+.project-entry.project-entry .project-entry-card {
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: clamp(260px, 36dvh, 310px);
+  min-height: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 14%, var(--border));
+  border-radius: 22px;
+  background: #0b1323;
+  color: #fff;
+  transform: none;
+  box-shadow: 0 2px 4px rgb(11 43 85 / 0.1), 0 16px 30px -14px rgb(11 43 85 / 0.4);
+}
+.project-entry.project-entry .project-entry-card:hover,
+.project-entry.project-entry .project-entry-card:focus-visible {
+  transform: translateY(-5px);
+  border-color: color-mix(in srgb, var(--accent-cyan) 60%, transparent);
+  box-shadow: 0 4px 8px rgb(11 43 85 / 0.12), 0 28px 46px -14px rgb(8 102 232 / 0.5);
+}
+.project-entry.project-entry .project-entry-card[aria-pressed='true'] {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-cyan) 55%, transparent), 0 26px 44px -14px rgb(8 102 232 / 0.55);
+}
+
+/* Media layer */
+.project-entry.project-entry .project-entry-card .project-entry-image {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  height: 100%;
+}
+.project-entry.project-entry .project-entry-card .project-entry-image img,
+.project-entry.project-entry .project-entry-card .project-entry-image video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease);
+}
+.project-entry.project-entry .project-entry-card:hover .project-entry-image img,
+.project-entry.project-entry .project-entry-card:hover .project-entry-image video {
+  transform: scale(1.06);
+}
+/* Shade: light at rest (photo stays visible), deeper on hover so the description reads */
+.project-entry.project-entry .project-entry-card .project-entry-image::after {
+  inset: 0;
+  height: auto;
+  background: linear-gradient(180deg, rgb(11 19 35 / 0.1) 0%, rgb(11 19 35 / 0) 35%, rgb(11 19 35 / 0.72) 100%);
+  opacity: 1;
+  transition: background var(--dur) var(--ease);
+}
+.project-entry.project-entry .project-entry-card:hover .project-entry-image::after,
+.project-entry.project-entry .project-entry-card:focus-visible .project-entry-image::after,
+.project-entry.project-entry .project-entry-card[aria-pressed='true'] .project-entry-image::after {
+  background: linear-gradient(180deg, rgb(11 19 35 / 0.28) 0%, rgb(11 19 35 / 0.5) 40%, rgb(11 19 35 / 0.9) 100%);
+}
+
+/* Number chip */
+.project-entry.project-entry .project-entry-image > span {
+  z-index: 2;
+  top: 14px;
+  left: 14px;
+  min-width: 38px;
+  height: 30px;
+  border: 0;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  color: var(--accent);
+  backdrop-filter: none;
+  box-shadow: var(--shadow-sm);
+}
+.project-entry.project-entry .project-entry-card[aria-pressed='true'] .project-entry-image > span {
+  background: var(--accent-fill);
+  color: var(--on-accent);
+}
+
+/* Caption: title always, details on hover */
+.project-entry.project-entry .project-entry-card .project-entry-copy {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 18px 20px;
+  background: none;
+  backdrop-filter: none;
+  border: 0;
+  box-shadow: none;
+}
+.project-entry.project-entry .project-entry-card .project-entry-copy strong,
+.project-entry.project-entry .project-entry-card[aria-pressed='true'] .project-entry-copy strong {
+  color: #fff;
+  font-size: 1.3rem;
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
+}
+.project-entry.project-entry .project-entry-card .project-entry-more {
+  display: grid;
+  grid-template-rows: 0fr 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+.project-entry.project-entry .project-entry-card .project-entry-more > * {
+  min-height: 0;
+  overflow: hidden;
+}
+.project-entry.project-entry .project-entry-card:hover .project-entry-more,
+.project-entry.project-entry .project-entry-card:focus-visible .project-entry-more,
+.project-entry.project-entry .project-entry-card[aria-pressed='true'] .project-entry-more {
+  grid-template-rows: 1fr 1fr;
+  opacity: 1;
+}
+.project-entry.project-entry .project-entry-card .project-entry-text {
+  display: block;
+  margin-top: 8px;
+  color: rgb(255 255 255 / 0.92);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+.project-entry.project-entry .project-entry-card .project-entry-cta {
+  align-self: start;
+  justify-self: start;
+  margin-top: 12px;
+  color: #fff;
+  background: rgb(255 255 255 / 0.18);
+  border: 1px solid rgb(255 255 255 / 0.32);
+}
+.project-entry.project-entry .project-entry-card:hover .project-entry-cta,
+.project-entry.project-entry .project-entry-card[aria-pressed='true'] .project-entry-cta {
+  background: linear-gradient(135deg, var(--accent-fill), color-mix(in srgb, var(--accent-fill) 65%, var(--accent-cyan)));
+  border-color: transparent;
+}
+.project-entry.project-entry .project-entry-card::after {
+  z-index: 1;
+  background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgb(255 255 255 / 0.16), transparent 65%);
+}
+
+/* Touch screens have no hover: show everything, slightly taller */
+@media (hover: none) {
+  .project-entry.project-entry .project-entry-card {
+    height: auto;
+    min-height: 300px;
+  }
+  .project-entry.project-entry .project-entry-card .project-entry-more {
+    grid-template-rows: 1fr 1fr;
+    opacity: 1;
+  }
+  .project-entry.project-entry .project-entry-card .project-entry-image::after {
+    background: linear-gradient(180deg, rgb(11 19 35 / 0.2) 0%, rgb(11 19 35 / 0.45) 40%, rgb(11 19 35 / 0.9) 100%);
+  }
+}
+@media (max-width: 900px) {
+  .project-entry.project-entry .project-entry-card {
+    height: 260px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-entry.project-entry .project-entry-card:hover,
+  .project-entry.project-entry .project-entry-card:hover .project-entry-image img {
+    transform: none;
+  }
+}
+
+/* ---------- Guide options as choice cards ---------- */
+.guide-items {
+  gap: 14px;
+}
+.guide-items label {
+  align-items: center;
+  gap: 16px;
+  min-height: 92px;
+  padding: 16px 52px 16px 16px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface) 86%, var(--tint)));
+  box-shadow: inset 0 1px 0 var(--card-sheen), var(--shadow-card);
+}
+.guide-items label:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+  box-shadow: inset 0 1px 0 var(--card-sheen), 0 3px 6px rgb(8 102 232 / 0.06), 0 22px 40px -14px rgb(8 102 232 / 0.3);
+}
+
+/* Native input stays for keyboard and screen readers, but is drawn by the check badge */
+.guide-items input[type] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.guide-items input::after {
+  display: none;
+}
+
+.guide-item-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px 16px 16px 6px;
+  color: var(--accent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, var(--surface)), color-mix(in srgb, var(--accent-cyan) 22%, var(--surface)));
+  box-shadow: inset 0 1px 0 var(--card-sheen);
+  transition: transform var(--dur) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.guide-items label:hover .guide-item-icon {
+  transform: scale(1.08) rotate(-4deg);
+}
+.guide-items label.is-selected .guide-item-icon {
+  color: var(--on-accent);
+  background: linear-gradient(135deg, var(--accent-fill), color-mix(in srgb, var(--accent-fill) 55%, var(--accent-cyan)));
+  box-shadow: 0 10px 20px -6px rgb(8 102 232 / 0.55);
+}
+
+.guide-item-copy strong {
+  font-family: var(--font-display);
+  font-size: 1.04rem;
+  letter-spacing: -0.02em;
+}
+
+/* Check badge, top right */
+.guide-item-check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--border-strong);
+  border-radius: 50%;
+  color: transparent;
+  background: var(--surface);
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), transform var(--dur) var(--ease);
+}
+.guide-items label:hover .guide-item-check {
+  border-color: var(--accent);
+}
+.guide-items label.is-selected {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, var(--surface)), color-mix(in srgb, var(--accent-cyan) 13%, var(--tint)));
+  box-shadow: 0 0 0 1px var(--accent), 0 20px 38px -14px rgb(8 102 232 / 0.4);
+}
+.guide-items label.is-selected .guide-item-check {
+  color: var(--on-accent);
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent-fill), color-mix(in srgb, var(--accent-fill) 60%, var(--accent-cyan)));
+  transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-items label:hover,
+  .guide-items label:hover .guide-item-icon,
+  .guide-items label.is-selected .guide-item-check {
+    transform: none;
+  }
+}
+
+/* ---------- Guide: progress, mockup slide, recap, final form ---------- */
+
+/* Step progress bar under the eyebrow */
+.guide-progress {
+  display: block;
+  width: min(220px, 60%);
+  height: 6px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.guide-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-fill), var(--accent-cyan));
+  transition: width var(--dur-slow) var(--ease);
+}
+
+/* Mockup slide: the preview floats in a glowing frame, the activity field sits in its own card */
+.guide-mockup-frame {
+  position: relative;
+}
+.guide-mockup-frame::before {
+  content: '';
+  position: absolute;
+  inset: 6% -3% -4% 4%;
+  z-index: -1;
+  border-radius: 40px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 38%, transparent), color-mix(in srgb, var(--accent-cyan) 42%, transparent));
+  filter: blur(46px);
+  opacity: 0.55;
+}
+.guide-mockup-frame .psp-browser {
+  border-radius: 22px;
+  box-shadow: 0 2px 6px rgb(11 43 85 / 0.1), 0 40px 80px -24px rgb(11 43 85 / 0.5);
+}
+.guide-mockup-activity {
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface) 88%, var(--tint)));
+  box-shadow: inset 0 1px 0 var(--card-sheen), var(--shadow-card);
+}
+
+/* Recap: each category is a card, each choice a chip with its icon */
+.guide-summary > div {
+  border-radius: 18px;
+  border-left-width: 4px;
+}
+.guide-summary ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.guide-summary li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 9px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
+  border-radius: var(--radius-pill);
+  color: var(--fg);
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+.guide-summary li svg {
+  flex: none;
+  color: var(--accent);
+}
+
+/* Final form */
+.guide-final-form {
+  padding: clamp(22px, 3vw, 34px);
+  border-color: color-mix(in srgb, var(--accent) 18%, var(--border));
+}
+.guide-final-form::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  border-radius: 24px 24px 0 0;
+  background: linear-gradient(90deg, var(--accent-fill), var(--accent-cyan));
+}
+.guide-field label {
+  letter-spacing: 0.01em;
+}
+.guide-field input,
+.guide-field textarea {
+  min-height: 48px;
+  padding: 12px 14px;
+  background: color-mix(in srgb, var(--bg) 70%, var(--surface));
+}
+.guide-final-form .button-primary {
+  justify-self: stretch;
+  min-height: 52px;
+  font-size: 1rem;
+}
+.guide-success {
+  justify-items: center;
+  padding-block: 18px;
+  text-align: center;
+}
+.guide-success-badge {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  color: var(--on-accent);
+  background: linear-gradient(135deg, var(--success), color-mix(in srgb, var(--success) 60%, var(--accent-cyan)));
+  box-shadow: 0 0 0 10px color-mix(in srgb, var(--success) 14%, transparent), 0 18px 34px -10px color-mix(in srgb, var(--success) 60%, transparent);
+  animation: guide-pop 0.5s var(--ease) both;
+}
+@keyframes guide-pop {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide-success-badge { animation: none; }
+  .guide-progress > span { transition: none; }
+}
+
+/* Mockup slide: render the demo site at a larger virtual width so more than the hero is visible */
+@media (min-width: 901px) {
+  .guide-mockup-frame .psp-canvas.device-desktop .psp-site {
+    zoom: 0.78;
+  }
+}

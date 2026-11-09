@@ -6,10 +6,12 @@ import { LegalPage } from '@/components/legal-pages'
 import { ProjectConfigurator } from '@/components/project-configurator'
 import { SocialLinks } from '@/components/social-links'
 import { ThemeSwitch } from '@/components/ui/theme-switch'
+import { services } from '@/data/services'
 import { copy, projects, contactEmail, githubUrl, type Language, type ProjectItem } from '@/data/portfolio-content'
 import { metadata, paths, resolveRoute, siteOrigin, type PageId } from '@/site'
 import './App.css'
 import './redesign.css'
+import './visual-polish.css'
 
 type MainPage = Exclude<PageId, 'notFound'>
 const navPages = ['home', 'projects', 'expertise', 'about', 'contact'] as const satisfies ReadonlyArray<MainPage>
@@ -22,12 +24,6 @@ const ui = {
     discover: 'Découvrir mes projets', contactMe: 'Me contacter', expertiseCta: 'Voir mes expertises',
     intro: 'Je conçois des interfaces et des applications web utiles, lisibles et maintenables.',
     servicesTitle: 'Ce que je peux construire', servicesIntro: 'Du site web à l’application métier, je relie expérience utilisateur et structure technique.',
-    services: [
-      { title: 'Sites web', text: 'Vitrines, portfolios et sites de présentation, rapides à charger et simples à mettre à jour.', path: 'create' },
-      { title: 'Applications web', text: 'Interfaces interactives avec comptes, données et parcours utilisateur.', path: 'tool' },
-      { title: 'Logiciels métier', text: 'Outils sur mesure pour suivre clients, dossiers, rendez-vous et documents.', path: 'tool' },
-      { title: 'Refonte et maintenance', text: 'Modernisation d’un site existant, corrections et mises à jour régulières.', path: 'improve' },
-    ],
     defineNeed: 'Définir ce besoin', viewProject: 'Voir le projet', viewOnGithub: 'Voir sur GitHub', githubProfile: 'Profil GitHub',
     featured: 'Projets à découvrir', allProjects: 'Tous les projets',
     projectsIntro: 'Une sélection de réalisations existantes, présentées avec leurs captures réelles.',
@@ -43,12 +39,6 @@ const ui = {
     discover: 'Explore my projects', contactMe: 'Contact me', expertiseCta: 'Explore my expertise',
     intro: 'I build useful, readable and maintainable web interfaces and applications.',
     servicesTitle: 'What I can build', servicesIntro: 'From websites to business applications, I connect user experience with sound technical foundations.',
-    services: [
-      { title: 'Websites', text: 'Showcase sites, portfolios and presentation pages that load fast and are easy to update.', path: 'create' },
-      { title: 'Web applications', text: 'Interactive interfaces with accounts, data and user journeys.', path: 'tool' },
-      { title: 'Business software', text: 'Custom tools to follow clients, files, appointments and documents.', path: 'tool' },
-      { title: 'Redesign and maintenance', text: 'Modernising an existing site, fixes and regular updates.', path: 'improve' },
-    ],
     defineNeed: 'Define this need', viewProject: 'View project', viewOnGithub: 'View on GitHub', githubProfile: 'GitHub profile',
     featured: 'Featured projects', allProjects: 'All projects',
     projectsIntro: 'A selection of existing work, presented with real screenshots.',
@@ -141,7 +131,7 @@ export default function App({ pathname }: { pathname?: string }) {
       {page === 'home' && <HomePage language={language} />}
       {page === 'configurator' && <ProjectConfigurator language={language} />}
       {page === 'projects' && <><PageHeader eyebrow={t.projects} title={c.projects.title} intro={t.projectsIntro} /><section className="section page-section"><div className="container project-grid">{projects[language].map((project) => <ProjectCard key={project.id} project={project} language={language} />)}</div></section></>}
-      {page === 'expertise' && <><PageHeader eyebrow={t.role} title={t.expertise} intro={c.stack.title} /><section className="section expertise-section"><div className="container expertise-layout"><div className="expertise-copy"><h2>{c.stack.label}</h2><p>{c.stack.lead}</p><div className="skill-detail" aria-live="polite">{selectedSkill ? <><span className="eyebrow">{selectedSkill.category}</span><h3>{selectedSkill.label}</h3><p>{selectedSkill.purpose}</p></> : <p>{language === 'fr' ? 'Survolez une compétence ou parcourez la roue au clavier pour en savoir plus.' : 'Hover over a skill or explore the wheel with your keyboard to learn more.'}</p>}</div></div><div className="orbit-frame"><Suspense fallback={<div className="orbit-loading" aria-hidden="true" />}><OrbitingSkills defaultVariant="all" language={language} onSkillHoverChange={setSelectedSkill} /></Suspense></div></div></section><section className="section section-soft"><div className="container"><div className="section-heading"><span className="eyebrow">{t.expertise}</span><h2>{t.servicesTitle}</h2></div><div className="services-grid">{t.services.map((service) => <article className="service-card" key={service.title}><h3>{service.title}</h3><p>{service.text}</p><a className="text-link" href={`${p.configurator}?parcours=${service.path}`}>{t.defineNeed} <ArrowRight aria-hidden="true" /></a></article>)}</div></div></section></>}
+      {page === 'expertise' && <><PageHeader eyebrow={t.role} title={t.expertise} intro={c.stack.title} /><section className="section expertise-section"><div className="container expertise-layout"><div className="expertise-copy"><h2>{c.stack.label}</h2><p>{c.stack.lead}</p><div className="skill-detail" aria-live="polite">{selectedSkill ? <><span className="eyebrow">{selectedSkill.category}</span><h3>{selectedSkill.label}</h3><p>{selectedSkill.purpose}</p></> : <p>{language === 'fr' ? 'Survolez une compétence ou parcourez la roue au clavier pour en savoir plus.' : 'Hover over a skill or explore the wheel with your keyboard to learn more.'}</p>}</div></div><div className="orbit-frame"><Suspense fallback={<div className="orbit-loading" aria-hidden="true" />}><OrbitingSkills defaultVariant="all" language={language} onSkillHoverChange={setSelectedSkill} /></Suspense></div></div></section><section className="section section-soft"><div className="container"><div className="section-heading"><span className="eyebrow">{t.expertise}</span><h2>{t.servicesTitle}</h2></div><div className="services-grid">{services[language].map((service) => <article className="service-card" key={service.id}><h3>{service.title}</h3><p>{service.text}</p><a className="text-link" href={`${p.configurator}?parcours=${service.path}`}>{t.defineNeed} <ArrowRight aria-hidden="true" /></a></article>)}</div></div></section></>}
       {page === 'about' && <><PageHeader eyebrow={t.role} title={t.about} intro={t.aboutIntro} /><section className="section about-section"><div className="container about-layout"><div className="portrait-frame"><img src="/portrait-william-mahi.webp" alt={c.about.portraitAlt} width="900" height="900" decoding="async" /></div><div className="about-copy"><span className="eyebrow">{t.role}</span><h2>{c.about.titlePrefix + ' ' + c.about.titleAccent}</h2><p>{c.about.lead}</p><div className="about-values">{c.about.cards.map((item) => <article key={item.title}><h3>{item.title}</h3><p>{item.text}</p></article>)}</div></div></div></section><section className="section timeline-section"><div className="container"><JourneyTimeline language={language} label={c.journey.label} title={c.journey.title} intro={c.journey.intro} /></div></section></>}
       {page === 'contact' && <><PageHeader eyebrow={t.contact} title={c.contact.titleLineOne + ' ' + c.contact.titleLineTwo} intro={t.contactIntro} /><section className="section contact-section"><div className="container contact-layout"><div className="contact-primary"><span className="eyebrow">Email</span><h2>{t.contactMe}</h2><p>{c.contact.lead}</p><a className="button button-primary" href={p.configurator}>{language === 'fr' ? 'Décrire mon projet' : 'Describe my project'}<ArrowRight aria-hidden="true" /></a><a className="contact-address" href={contactMailto}>{contactEmail}</a></div><div className="contact-secondary"><span className="eyebrow">{t.contactWays}</span><SocialLinks language={language} variant="contact" /></div></div></section></>}
       {page === 'faq' && <section className="faq-page"><div className="container"><header className="faq-page-heading"><span className="eyebrow">{faq.label}</span><h1>{faq.title}</h1><p>{faq.intro}</p></header><div className="faq-page-list">{faq.items.map(([question, answer], index) => <article key={question}><span>0{index + 1}</span><div><h2>{question}</h2><p>{answer}</p></div></article>)}</div></div></section>}

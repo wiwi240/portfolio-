@@ -19,7 +19,13 @@
   gap: 18px;
 }
 .project-entry-card {
+  display: block;
+  width: 100%;
+  padding: 0;
   overflow: hidden;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
@@ -36,8 +42,15 @@
   border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
   box-shadow: var(--shadow);
 }
+.project-entry-card[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    var(--shadow);
+}
 .project-entry-image {
   position: relative;
+  display: block;
   height: 210px;
   overflow: hidden;
 }
@@ -60,10 +73,10 @@
   place-items: center;
   width: 36px;
   height: 36px;
-  border: 1px solid #ffffff88;
+  border: 1px solid color-mix(in srgb, var(--on-accent) 55%, transparent);
   border-radius: 50%;
-  background: #0b1323cc;
-  color: #fff;
+  background: var(--accent-fill);
+  color: var(--on-accent);
   font-size: 0.75rem;
   font-weight: 900;
 }
@@ -73,23 +86,28 @@
   min-height: 190px;
   padding: 22px;
 }
-.project-entry-copy h3 {
+.project-entry-copy strong {
+  font-family: var(--font-display);
   font-size: 1.3rem;
   line-height: 1.2;
+  letter-spacing: -0.045em;
 }
-.project-entry .project-entry-copy p {
+.project-entry-card[aria-pressed='true'] .project-entry-copy strong {
+  color: var(--accent);
+}
+.project-entry-text {
   margin-top: 8px;
   color: var(--muted);
   font-size: 0.92rem;
   line-height: 1.5;
 }
-.project-entry-copy > span svg {
+.project-entry-cta svg {
   transition: transform var(--dur-fast) var(--ease);
 }
-.project-entry-card:hover .project-entry-copy > span svg {
+.project-entry-card:hover .project-entry-cta svg {
   transform: translateX(3px);
 }
-.project-entry-copy > span {
+.project-entry-cta {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -112,7 +130,7 @@
   text-decoration: underline;
   text-underline-offset: 4px;
 }
-.project-entry a:focus-visible {
+.project-entry :is(a, button):focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
 }
@@ -147,7 +165,7 @@
     min-height: 0;
     padding: 18px;
   }
-  .project-entry-copy > span {
+  .project-entry-cta {
     margin-top: 13px;
   }
 }

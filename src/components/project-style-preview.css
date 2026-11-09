@@ -1236,24 +1236,6 @@ html.dark .psp-contexts button[aria-pressed='true'] {
   border-bottom-color: #68aaff;
   color: #68aaff;
 }
-@media (min-width: 761px) and (max-width: 1100px) {
-  .pc-mobile-tabs {
-    display: none;
-  }
-  .pc-layout,
-  .pc-layout-preview,
-  .pc-layout-summary {
-    display: grid;
-    grid-template-columns: minmax(265px, 30fr) minmax(0, 70fr);
-  }
-  .pc-layout .pc-controls,
-  .pc-layout .pc-preview-column {
-    display: block;
-  }
-  .pc-layout .pc-summary-column {
-    display: none;
-  }
-}
 @media (max-width: 760px) {
   .psp-browser {
     height: calc(100dvh - 160px);
@@ -1542,4 +1524,10 @@ html.dark .psp-contexts button[aria-pressed='true'] {
   .psp-expand span {
     display: none;
   }
+}
+
+/* Extras only the guide's mockup theme shows (see guide-mockup-theme.css) */
+.psp-feature-icon,
+.psp-about-points {
+  display: none;
 }

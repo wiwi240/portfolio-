@@ -75,8 +75,8 @@ export const pathOptions: { id: PathId; title: Localized; description: Localized
     id: 'improve',
     title: t('Améliorer un projet existant', 'Improve an existing project'),
     description: t(
-      'Modernisez son apparence, ajoutez des fonctionnalités ou simplifiez son utilisation.',
-      'Modernise its appearance, add features or make it easier to use.',
+      'Modernisez l’apparence de votre site, ajoutez des fonctionnalités ou simplifiez son utilisation.',
+      'Modernise the look of your site, add features or make it easier to use.',
     ),
     image: '/configurator-assets/improve-workspace.webp',
   },

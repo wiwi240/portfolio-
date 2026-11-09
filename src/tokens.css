@@ -38,6 +38,12 @@
   --shadow-sm: 0 4px 14px rgb(11 43 85 / 0.06);
   --shadow: 0 16px 40px rgb(11 43 85 / 0.1);
 
+  /* Scroll stack (docs/design-system/scroll-stack.md). Top padding clears the floating header. */
+  --radius-xl: 28px;
+  --shadow-stack: 0 -24px 60px rgb(11 43 85 / 0.14);
+  --stack-pad-top: 6.25rem;
+  --stack-pad-bottom: 3rem;
+
   /* Motion */
   --dur-fast: 150ms;
   --dur: 250ms;
@@ -79,6 +85,7 @@ html.dark {
   --success-tint: #112f24;
   --shadow-sm: 0 4px 14px rgb(0 0 0 / 0.22);
   --shadow: 0 16px 40px rgb(0 0 0 / 0.34);
+  --shadow-stack: 0 -24px 60px rgb(0 0 0 / 0.5);
   color-scheme: dark;
 }
 

@@ -1,0 +1,337 @@
+/* Pinned horizontal timeline (see timeline.tsx). Colours come from the --tl-* props set on the section. */
+.tl {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  color: var(--tl-fg);
+  background: var(--tl-bg);
+}
+.tl-pin {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  height: 100dvh;
+  padding-block: 6.5rem 3.2rem;
+  overflow: clip;
+}
+.tl-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  width: min(var(--container), calc(100% - 2 * var(--gutter)));
+  margin-inline: auto;
+}
+.tl-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--tl-active);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.tl-eyebrow::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-cyan, var(--tl-active));
+}
+.tl-head h2 {
+  margin: 0.5rem 0 0;
+  color: var(--tl-fg);
+  font-size: clamp(2rem, 3.6vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.05em;
+}
+.tl-head p {
+  max-width: 52ch;
+  margin: 0.7rem 0 0;
+  color: var(--tl-muted);
+  line-height: 1.6;
+}
+.tl-period {
+  flex: none;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border, currentColor);
+  border-radius: 999px;
+  color: var(--tl-muted);
+  background: var(--surface, transparent);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+}
+
+/* Stage: the axis stays still, the track slides over it */
+.tl-stage {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  align-items: center;
+  min-height: 0;
+}
+.tl-axis {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--tl-muted) 35%, transparent);
+  transform: translateY(-50%);
+}
+.tl-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--tl-active), var(--accent-cyan, var(--tl-active)));
+}
+.tl-track {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  height: 100%;
+  margin: 0;
+  /* first milestone starts at the centre of the screen */
+  padding: 0 50vw 0 calc(50vw - var(--tl-col) / 2);
+  list-style: none;
+  will-change: transform;
+}
+.tl {
+  --tl-col: clamp(280px, 25vw, 340px);
+}
+.tl-lead {
+  flex: none;
+  align-self: center;
+  width: min(32vw, 420px);
+  margin-right: 4rem;
+}
+.tl-lead img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 28px 28px 28px 8px;
+  box-shadow: var(--shadow, none);
+}
+
+/* Milestone column: copy / dot / date, alternating above and below the axis */
+.tl-item {
+  position: relative;
+  flex: 0 0 var(--tl-col);
+  display: grid;
+  grid-template-rows: 1fr 0 1fr;
+  justify-items: start;
+}
+.tl-half {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+  padding-inline: 1.1rem;
+}
+.tl-half--top {
+  justify-content: flex-end;
+  padding-bottom: 0;
+}
+.tl-half--bottom {
+  justify-content: flex-start;
+  padding-top: 0;
+}
+.tl-half time {
+  margin-block: 1.1rem;
+  color: var(--tl-muted);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.tl-dot {
+  position: absolute;
+  top: 50%;
+  left: 1.1rem;
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  border: 3px solid color-mix(in srgb, var(--tl-muted) 60%, transparent);
+  border-radius: 50%;
+  background: var(--surface, var(--tl-bg));
+  transform: translate(-1px, -50%);
+  transition: border-color 0.4s, background-color 0.4s, box-shadow 0.4s;
+}
+.tl-item.is-active .tl-dot {
+  border-color: var(--tl-active);
+  background: var(--accent-cyan, var(--tl-active));
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--tl-active) 22%, transparent);
+}
+
+/* Stem: grows from the dot towards the copy */
+.tl-stem {
+  display: block;
+  flex: none;
+  width: 2px;
+  height: clamp(28px, 5dvh, 56px);
+  margin-left: 0;
+  background: var(--tl-active);
+  transform: scaleY(0);
+  transition: transform calc(var(--tl-dur) * 0.5) var(--ease, ease-out);
+}
+.tl-item.is-above .tl-stem {
+  transform-origin: bottom;
+}
+.tl-item.is-below .tl-stem {
+  transform-origin: top;
+}
+.tl-item.is-active .tl-stem {
+  transform: scaleY(1);
+}
+
+/* Copy card */
+.tl-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  max-width: calc(var(--tl-col) - 1.4rem);
+  padding: 1.1rem 1.15rem;
+  border: 1px solid var(--border, transparent);
+  border-radius: 20px;
+  background: linear-gradient(180deg, var(--surface, transparent), color-mix(in srgb, var(--surface, transparent) 86%, var(--tint, transparent)));
+  box-shadow: var(--shadow-sm, none);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--tl-dur) var(--ease, ease-out), transform var(--tl-dur) var(--ease, ease-out);
+  transition-delay: calc(var(--tl-dur) * 0.35);
+}
+.tl-item.is-below .tl-copy {
+  transform: translateY(-14px);
+}
+.tl-item.is-active .tl-copy {
+  opacity: 1;
+  transform: none;
+}
+.tl-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px 12px 12px 4px;
+  color: var(--on-accent, #fff);
+  background: linear-gradient(135deg, var(--tl-active), var(--accent-cyan, var(--tl-active)));
+}
+.tl-icon svg {
+  width: 19px;
+  height: 19px;
+}
+.tl-copy h3 {
+  margin: 0.2rem 0 0;
+  color: var(--tl-fg);
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+.tl-copy p {
+  margin: 0;
+  color: var(--tl-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+.tl-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.3rem;
+}
+.tl-tags span {
+  padding: 0.18rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--tl-active) 25%, var(--border, transparent));
+  border-radius: 999px;
+  color: var(--tl-active);
+  background: color-mix(in srgb, var(--tl-active) 8%, transparent);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.tl-hint {
+  position: absolute;
+  right: 0;
+  bottom: 1rem;
+  left: 0;
+  margin: 0;
+  color: var(--tl-muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* Pinned mode: the section is tall, the viewport sticks while the track slides */
+.tl.is-pinned .tl-pin {
+  position: sticky;
+  top: 0;
+}
+
+/* Flat mode (small screens, reduced motion): a plain scrollable strip with everything shown */
+.tl.is-flat .tl-pin {
+  height: auto;
+  padding-block: 3rem 2rem;
+}
+.tl.is-flat .tl-head {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.tl.is-flat .tl-stage {
+  overflow-x: auto;
+  overflow-y: clip;
+  padding-block: 1rem;
+}
+.tl.is-flat .tl-track {
+  height: 560px;
+  padding-inline: var(--gutter);
+  scroll-snap-type: x proximity;
+}
+.tl.is-flat .tl-item {
+  scroll-snap-align: start;
+  flex-basis: min(78vw, 300px);
+}
+.tl.is-flat .tl-lead {
+  width: min(70vw, 280px);
+  margin-right: 1rem;
+}
+.tl.is-flat .tl-copy,
+.tl.is-flat .tl-stem {
+  transition: none;
+}
+.tl.is-flat .tl-copy {
+  opacity: 1;
+  transform: none;
+}
+.tl.is-flat .tl-stem {
+  transform: none;
+}
+.tl.is-flat .tl-axis {
+  display: none;
+}
+.tl.is-flat .tl-dot {
+  border-color: var(--tl-active);
+  background: var(--accent-cyan, var(--tl-active));
+}
+.tl.is-flat .tl-item::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: color-mix(in srgb, var(--tl-active) 55%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tl-copy,
+  .tl-stem,
+  .tl-dot {
+    transition: none;
+  }
+}

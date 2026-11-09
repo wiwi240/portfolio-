@@ -1,0 +1,5 @@
+/* Lenis owns the smoothing; the native smooth scrolling set on html would stack a second animation on top. */
+html.lenis,
+html.lenis body {
+  scroll-behavior: auto;
+}

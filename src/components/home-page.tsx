@@ -1,15 +1,23 @@
+import { useEffect, useState } from 'react'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
-import { contactEmail, projects, type Language } from '@/data/portfolio-content'
+import { contactEmail, type Language } from '@/data/portfolio-content'
+import type { PathId } from '@/data/project-configurator'
+import { guidePanels } from '@/data/home-guide'
+import { markProgrammaticScroll, useScrollToScene } from '@/lib/scroll-stack'
 import { paths } from '@/site'
 import { MethodScene } from './home-illustrations'
 import { ProjectEntry } from './project-entry'
+import { GuidePanel } from './project-guide'
+import { GuideMockup } from './project-guide-mockup'
+import { GuideSummary } from './project-guide-summary'
+import { HorizontalScene, ScrollStack, StackScene } from './scroll-stack'
 import './home-page.css'
+import './home-stack.css'
 
 const content = {
   fr: {
     heroRole: 'Développeur web freelance', lead: 'Des sites web et des outils sur mesure pour votre activité.', projects: 'Voir mes réalisations', contact: 'Décrire mon projet',
-    workLabel: 'Quelques réalisations', workTitle: 'Des projets qui prennent vie', workIntro: 'Un aperçu de mes réalisations et des solutions développées.', workCta: 'Voir tous les projets', projectCta: 'Voir le projet',
-    projectSummaries: ['Présenter l’univers et les réalisations d’une tatoueuse.', 'Accompagner le raisonnement grâce à une interface de guidage.', 'Présenter mon approche, mes compétences et mes projets.'],
+    projectLabel: 'Votre projet',
     methodLabel: 'Un projet construit avec vous', methodTitle: 'Une méthode claire et collaborative', methodIntro: 'Du premier échange à la mise en ligne, nous avançons ensemble.',
     steps: [
       ['Définir ensemble', 'Nous précisons vos besoins, vos priorités et le périmètre du projet.'],
@@ -20,8 +28,7 @@ const content = {
   },
   en: {
     heroRole: 'Freelance web developer', lead: 'Tailored websites and tools for your business.', projects: 'View my work', contact: 'Describe my project',
-    workLabel: 'Selected projects', workTitle: 'Projects brought to life', workIntro: 'A glimpse of my work and the solutions I have developed.', workCta: 'View all projects', projectCta: 'View project',
-    projectSummaries: ['Presenting a tattoo artist’s world and work.', 'Supporting step-by-step reasoning through a guided interface.', 'Presenting my approach, skills and projects.'],
+    projectLabel: 'Your project',
     methodLabel: 'A project built with you', methodTitle: 'A clear, collaborative process', methodIntro: 'From our first conversation to launch, we move forward together.',
     steps: [
       ['Define together', 'We clarify your needs, priorities and the scope of the project.'],
@@ -37,14 +44,72 @@ function Eyebrow({ children }: { children: string }) { return <span className="e
 export function HomePage({ language }: { language: Language }) {
   const t = content[language]
   const p = paths[language]
-  const selected = ['sakura-line', 'rubber-duck', 'portfolio'].map(id => projects[language].find(project => project.id === id)).filter(project => project !== undefined)
+  const [path, setPath] = useState<PathId | null>(null)
+  const [selected, setSelected] = useState<string[]>([])
+  const [activity, setActivity] = useState('')
+  const [selections, setSelections] = useState(0)
+  // Index of the last slide the visitor may scroll to. Slides open up as they choose a path, tick options or press Next.
+  const [unlocked, setUnlocked] = useState(0)
+  const [target, setTarget] = useState<{ panel: number; seq: number } | null>(null)
+  const scrollToScene = useScrollToScene()
+  const guide = guidePanels(path)
+
+  const choosePath = (next: PathId) => {
+    markProgrammaticScroll()
+    if (next !== path) {
+      setSelected([])
+      setUnlocked(1)
+    } else setUnlocked((current) => Math.max(current, 1))
+    setPath(next)
+    setSelections((count) => count + 1)
+  }
+  const toggle = (id: string) => {
+    setSelected((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]))
+    // Ticking an option opens the slide that follows the one it belongs to.
+    const owner = guide.findIndex((panel) => panel.items.some((item) => item.id === id))
+    if (owner >= 0) setUnlocked((current) => Math.max(current, owner + 2))
+  }
+  // Panel 0 is the path choice. The guide slides, the mockup and the summary only exist once a path is chosen.
+  const headingIds = ['project-entry-title', ...guide.map((panel) => `guide-title-${panel.id}`), 'guide-mockup-title', 'guide-summary-title']
+  // The slide may only just have been unlocked, so the scroll waits for the scene to be rebuilt.
+  const goToPanel = (panel: number) => {
+    setUnlocked((current) => Math.max(current, panel))
+    setTarget((current) => ({ panel, seq: (current?.seq ?? 0) + 1 }))
+  }
+  useEffect(() => {
+    if (target) scrollToScene('votre-projet', { panel: target.panel, focusId: headingIds[target.panel] })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target])
+
+  // The slides are rebuilt for the chosen path, so the scroll target is only known once they are rendered.
+  useEffect(() => {
+    if (selections > 0) scrollToScene('votre-projet', { panel: 1 })
+  }, [selections, scrollToScene])
+
   return <div className="home-page">
-    <section className="home-container home-hero" aria-labelledby="home-title">
-      <div className="home-hero-copy"><Eyebrow>{t.heroRole}</Eyebrow><h1 id="home-title"><span>Code. Design.</span><em>Build.</em></h1><p className="home-hero-lead">{t.lead}</p><div className="home-actions"><a className="button button-primary" href="#votre-projet">{t.contact}<ArrowRight /></a><a className="button button-outline" href={p.projects}>{t.projects}</a></div></div>
-    </section>
-    <ProjectEntry language={language} />
-    <section className="home-container home-section home-projects" aria-labelledby="projects-title"><div className="home-section-heading home-section-heading--centered"><Eyebrow>{t.workLabel}</Eyebrow><h2 id="projects-title">{t.workTitle}</h2><p>{t.workIntro}</p></div><div className="home-projects-grid">{selected.map((project, i) => <article className="home-project-card" key={project.id}><a className="home-project-image" href={`${p.projects}#${project.id}`} aria-label={t.projectCta + ' : ' + project.title}><img src={project.image.replace(/\.png$/, '.webp')} alt={(language === 'fr' ? 'Capture de ' : 'Screenshot of ') + project.title} width={project.id === 'rubber-duck' ? 1923 : project.id === 'portfolio' ? 2532 : 2559} height={project.id === 'rubber-duck' ? 1114 : project.id === 'portfolio' ? 1245 : 1248} loading="lazy" decoding="async" /></a><div className="home-project-copy"><h3>{project.id === 'portfolio' ? 'Portfolio WM' : project.title}</h3><p>{t.projectSummaries[i]}</p><a className="text-link" href={`${p.projects}#${project.id}`}>{t.projectCta}<ArrowUpRight aria-hidden="true" /></a></div></article>)}</div><a className="button button-primary home-projects-cta" href={p.projects}>{t.workCta}<ArrowRight aria-hidden="true" /></a></section>
-    <section className="home-container home-section home-method" aria-labelledby="method-title"><div className="home-section-heading home-section-heading--centered"><Eyebrow>{t.methodLabel}</Eyebrow><h2 id="method-title">{t.methodTitle}</h2><p>{t.methodIntro}</p></div><div className="home-method-grid">{t.steps.map(([title, description], i) => <article className="home-method-card" key={title}><span className="home-step-number">0{i + 1}</span><MethodScene step={i} language={language} /><div className="home-method-copy"><h3>{title}</h3><p>{description}</p></div></article>)}</div></section>
-    <section className="home-container home-section home-contact-panel" aria-labelledby="contact-title"><Eyebrow>{t.contactLabel}</Eyebrow><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactLead}</p><a className="button button-primary" href={p.configurator}>{t.projectContact}<ArrowUpRight aria-hidden="true" /></a><a className="home-contact-email" href={'mailto:' + contactEmail}>{contactEmail}</a></section>
+    <ScrollStack>
+      <StackScene id="accueil" tone="clear" labelledBy="home-title">
+        <div className="stack-scene-inner home-hero">
+          <div className="home-hero-copy"><Eyebrow>{t.heroRole}</Eyebrow><h1 id="home-title"><span>Code. Design.</span><em>Build.</em></h1><p className="home-hero-lead">{t.lead}</p><div className="home-actions"><a className="button button-primary" href="#votre-projet" onClick={(event) => { event.preventDefault(); scrollToScene('votre-projet', { panel: 0, focusId: 'project-entry-title' }) }}>{t.contact}<ArrowRight /></a><a className="button button-outline" href={p.projects}>{t.projects}</a></div></div>
+        </div>
+      </StackScene>
+      <HorizontalScene id="votre-projet" label={t.projectLabel} unlocked={unlocked} panels={[
+        { tone: 'tint', content: <ProjectEntry language={language} active={path} onSelect={choosePath} /> },
+        ...guide.map((panel, index) => ({
+          tone: index % 2 === 0 ? 'bg' : 'tint',
+          content: <GuidePanel language={language} panel={panel} index={index} total={guide.length} selected={selected} onToggle={toggle} onBack={() => goToPanel(index)} onNext={() => goToPanel(index + 2)} focusSignal={selections} />,
+        } as const)),
+        ...(path
+          ? [
+              { tone: 'tint', content: <GuideMockup newIds={(guide[guide.length - 1]?.items ?? []).map((item) => item.id).filter((id) => selected.includes(id))} language={language} path={path} selected={selected} activity={activity} onActivityChange={setActivity} onBack={() => goToPanel(guide.length)} onNext={() => goToPanel(guide.length + 2)} /> } as const,
+              { tone: 'surface', content: <GuideSummary language={language} path={path} panels={guide} selected={selected} activity={activity} onActivityChange={setActivity} onBack={() => goToPanel(guide.length + 1)} /> } as const,
+            ]
+          : []),
+      ]} />
+      <StackScene id="methode" tone="surface" className="home-converge">
+        <section className="stack-scene-inner home-section home-method" aria-labelledby="method-title"><div className="home-section-heading home-section-heading--centered"><Eyebrow>{t.methodLabel}</Eyebrow><h2 id="method-title">{t.methodTitle}</h2><p>{t.methodIntro}</p></div><div className="home-method-grid">{t.steps.map(([title, description], i) => <article className="home-method-card" key={title}><span className="home-step-number">0{i + 1}</span><MethodScene step={i} language={language} /><div className="home-method-copy"><h3>{title}</h3><p>{description}</p></div></article>)}</div></section>
+        <section className="stack-scene-inner home-section home-contact-panel" aria-labelledby="contact-title"><Eyebrow>{t.contactLabel}</Eyebrow><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactLead}</p><a className="button button-primary" href={p.configurator}>{t.projectContact}<ArrowUpRight aria-hidden="true" /></a><a className="home-contact-email" href={'mailto:' + contactEmail}>{contactEmail}</a></section>
+      </StackScene>
+    </ScrollStack>
   </div>
 }

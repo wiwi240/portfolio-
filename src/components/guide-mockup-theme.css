@@ -1,0 +1,552 @@
+/* Mockup theme for the guide slide only.
+   The demo is a basic wireframe-like preview of the features, not the final design, so it uses
+   one clean neutral look (white, brand blue, soft cards) instead of imitating a client's style. */
+
+/* Disclaimer above the preview */
+.guide-mockup-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+  border-radius: 14px;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+.guide-mockup-disclaimer svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--accent);
+}
+.guide-mockup-disclaimer strong {
+  font-weight: 800;
+}
+
+.guide-mockup-frame .psp-shell {
+  --psp-accent: #0866e8;
+  --mk-ink: #0f1b2d;
+  --mk-muted: #5b6b7f;
+  --mk-line: #e3ecf6;
+  --mk-grad: linear-gradient(135deg, #0866e8, #00bdeb);
+}
+
+/* The page behind the cards */
+.guide-mockup-frame .psp-canvas {
+  background: #eaf1fa;
+}
+.guide-mockup-frame .psp-site {
+  background:
+    radial-gradient(40rem 22rem at 90% -5%, rgb(0 189 235 / 0.14), transparent 70%),
+    radial-gradient(34rem 20rem at -5% 30%, rgb(8 102 232 / 0.1), transparent 70%),
+    #f7faff;
+  color: var(--mk-ink);
+  font-family: var(--font);
+}
+.guide-mockup-frame .psp-site h1,
+.guide-mockup-frame .psp-site h2,
+.guide-mockup-frame .psp-site h3,
+.guide-mockup-frame .psp-brand,
+.guide-mockup-frame .psp-widget h3,
+.guide-mockup-frame .psp-products h3,
+.guide-mockup-frame .psp-gallery strong {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+/* Navbar: floating glass pill */
+.guide-mockup-frame .psp-site-header {
+  top: 10px;
+  min-height: 56px;
+  margin: 10px 4% 0;
+  padding: 0 14px 0 18px;
+  border: 1px solid var(--mk-line);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.82);
+  backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: 0 1px 2px rgb(11 43 85 / 0.05), 0 12px 28px -10px rgb(11 43 85 / 0.2);
+}
+.guide-mockup-frame .psp-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--mk-ink);
+  font-size: 15px;
+  letter-spacing: -0.02em;
+}
+.guide-mockup-frame .psp-brand::before {
+  content: '';
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 7px 7px 7px 3px;
+  background: var(--mk-grad);
+  box-shadow: 0 6px 12px -4px rgb(8 102 232 / 0.6);
+}
+.guide-mockup-frame .psp-site-header nav {
+  gap: 2px;
+  background: none;
+}
+.guide-mockup-frame .psp-site-header nav button {
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: transparent;
+  color: var(--mk-muted);
+  font-size: 11.5px;
+  font-weight: 700;
+  transition: background-color 0.15s, color 0.15s;
+}
+.guide-mockup-frame .psp-site-header nav button:hover {
+  background: #eef4fc;
+  color: var(--mk-ink);
+}
+.guide-mockup-frame .psp-site-header nav button[aria-current='page'] {
+  background: #e4efff;
+  color: #0757c5;
+}
+
+/* Hero */
+.guide-mockup-frame .psp-hero {
+  gap: 4%;
+  align-items: center;
+  min-height: 0;
+  margin: 18px 4% 0;
+  padding: clamp(18px, 3.5%, 34px);
+  border: 1px solid var(--mk-line);
+  border-radius: 28px;
+  background: linear-gradient(135deg, #fff 30%, #eaf4ff);
+  box-shadow: 0 2px 4px rgb(11 43 85 / 0.05), 0 28px 50px -24px rgb(8 102 232 / 0.35);
+}
+.guide-mockup-frame .psp-hero-copy {
+  padding: 4% 0 4% 3%;
+}
+.guide-mockup-frame .psp-hero-copy small,
+.guide-mockup-frame .psp-home-section > small,
+.guide-mockup-frame .psp-intro small {
+  display: inline-flex;
+  padding: 5px 11px;
+  border-radius: 999px;
+  color: #0757c5;
+  background: #e4efff;
+  letter-spacing: 0.14em;
+}
+.guide-mockup-frame .psp-hero h1 {
+  margin: 14px 0 10px;
+  color: var(--mk-ink);
+  font-size: clamp(26px, 3.2vw, 46px);
+  line-height: 1.06;
+}
+.guide-mockup-frame .psp-hero p,
+.guide-mockup-frame .psp-intro p {
+  color: var(--mk-muted);
+}
+.guide-mockup-frame .psp-hero-media {
+  min-height: 0;
+  aspect-ratio: 4 / 3.2;
+  border-radius: 22px;
+  box-shadow: 0 24px 44px -18px rgb(11 43 85 / 0.5);
+}
+.guide-mockup-frame .psp-hero-media img {
+  min-height: 0;
+}
+
+/* Buttons */
+.guide-mockup-frame .psp-primary,
+.guide-mockup-frame .psp-secondary {
+  min-height: 42px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.guide-mockup-frame .psp-primary {
+  border: 0;
+  background: linear-gradient(135deg, #0866e8, #0a54c4);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 10px 20px -6px rgb(8 102 232 / 0.55);
+}
+.guide-mockup-frame .psp-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.25), 0 14px 26px -6px rgb(8 102 232 / 0.65);
+}
+.guide-mockup-frame .psp-secondary {
+  border: 1px solid #c8d8ea;
+  background: #fff;
+  color: var(--mk-ink);
+}
+
+/* Banners inside the preview */
+.guide-mockup-frame .psp-permanent-note,
+.guide-mockup-frame .psp-start-note {
+  background: #f1f7ff;
+  border-color: var(--mk-line);
+  color: #3d5878;
+}
+.guide-mockup-frame .psp-start-note {
+  margin: 14px 4% 0;
+  padding: 8px 14px;
+  border: 1px dashed #b9d0ec;
+  border-radius: 12px;
+  width: auto;
+  background: transparent;
+}
+
+/* Sections */
+.guide-mockup-frame .psp-home-section,
+.guide-mockup-frame .psp-page {
+  min-height: 0;
+  background: transparent;
+}
+.guide-mockup-frame .psp-home-section h2,
+.guide-mockup-frame .psp-intro h2 {
+  margin: 12px 0 14px;
+  color: var(--mk-ink);
+  font-size: clamp(22px, 2.6vw, 34px);
+}
+.guide-mockup-frame .psp-service-line {
+  border: 0;
+  padding: 0 0 4px;
+}
+
+/* Feature cards */
+.guide-mockup-frame .psp-feature-links {
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 14px;
+}
+.guide-mockup-frame .psp-feature-links button {
+  position: relative;
+  grid-template-columns: 1fr;
+  align-content: start;
+  gap: 6px;
+  padding: 18px;
+  border: 1px solid var(--mk-line);
+  border-radius: 20px;
+  background: linear-gradient(180deg, #fff, #f5f9ff);
+  box-shadow: inset 0 1px 0 #fff, 0 2px 4px rgb(11 43 85 / 0.04), 0 14px 26px -16px rgb(11 43 85 / 0.3);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.guide-mockup-frame .psp-feature-links button:hover {
+  transform: translateY(-4px);
+  border-color: #9cc3f5;
+  box-shadow: inset 0 1px 0 #fff, 0 4px 8px rgb(8 102 232 / 0.08), 0 24px 36px -16px rgb(8 102 232 / 0.4);
+}
+.guide-mockup-frame .psp-feature-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 6px;
+  border-radius: 13px 13px 13px 5px;
+  color: #fff;
+  background: var(--mk-grad);
+  box-shadow: 0 10px 18px -8px rgb(8 102 232 / 0.7);
+}
+.guide-mockup-frame .psp-feature-links strong {
+  color: var(--mk-ink);
+  font-family: var(--font-display);
+  font-size: 14px;
+}
+.guide-mockup-frame .psp-feature-links span {
+  grid-row: auto;
+  color: var(--mk-muted);
+}
+.guide-mockup-frame .psp-feature-links button > svg:last-child {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  grid-column: auto;
+  grid-row: auto;
+  color: #9db4cf;
+  transition: transform 0.2s, color 0.2s;
+}
+.guide-mockup-frame .psp-feature-links button:hover > svg:last-child {
+  color: #0866e8;
+  transform: translateX(3px);
+}
+
+/* About: three value cards */
+.guide-mockup-frame .psp-home-about {
+  background: transparent;
+}
+.guide-mockup-frame .psp-about-points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+.guide-mockup-frame .psp-about-points > div {
+  padding: 18px;
+  border: 1px solid var(--mk-line);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 14px 26px -18px rgb(11 43 85 / 0.35);
+}
+.guide-mockup-frame .psp-about-points strong {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-display);
+  font-size: 14px;
+}
+.guide-mockup-frame .psp-about-points span {
+  color: var(--mk-muted);
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+/* Contact form as a card */
+.guide-mockup-frame .psp-home-contact {
+  background: transparent;
+}
+.guide-mockup-frame .psp-demo-form {
+  max-width: none;
+  padding: 22px;
+  border: 1px solid var(--mk-line);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgb(11 43 85 / 0.04), 0 26px 44px -26px rgb(11 43 85 / 0.4);
+}
+.guide-mockup-frame .psp-demo-form input,
+.guide-mockup-frame .psp-demo-form textarea,
+.guide-mockup-frame .psp-edit-label input {
+  border: 1px solid #d3e0ee;
+  border-radius: 12px;
+  background: #f9fbfe;
+}
+.guide-mockup-frame .psp-demo-form input:focus,
+.guide-mockup-frame .psp-demo-form textarea:focus {
+  outline: none;
+  border-color: #0866e8;
+  box-shadow: 0 0 0 4px rgb(8 102 232 / 0.15);
+}
+
+/* Other pages: same card language */
+.guide-mockup-frame .psp-widget,
+.guide-mockup-frame .psp-products article,
+.guide-mockup-frame .psp-gallery button,
+.guide-mockup-frame .psp-cart-line,
+.guide-mockup-frame .psp-faq details {
+  border: 1px solid var(--mk-line);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgb(11 43 85 / 0.04), 0 18px 30px -20px rgb(11 43 85 / 0.35);
+}
+.guide-mockup-frame .psp-products article,
+.guide-mockup-frame .psp-gallery button {
+  overflow: hidden;
+  padding: 0 0 16px;
+}
+.guide-mockup-frame .psp-products article > :not(img),
+.guide-mockup-frame .psp-gallery button > :not(img) {
+  margin-inline: 16px;
+}
+.guide-mockup-frame .psp-booking {
+  background: transparent;
+}
+
+/* Footer */
+.guide-mockup-frame .psp-site-footer {
+  margin-top: 26px;
+  border: 0;
+  padding: 22px 5%;
+  color: #b6c7dc;
+  background: linear-gradient(135deg, #0f1b2d, #14304f);
+}
+
+@media (max-width: 900px) {
+  .guide-mockup-frame .psp-about-points {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Disclaimer + browser share the slide height */
+.guide-mockup-disclaimer {
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+.guide-mockup-frame .psp-browser {
+  height: min(740px, calc(100dvh - var(--stack-pad-top) - var(--stack-pad-bottom) - 70px));
+}
+
+.guide-mockup-frame .psp-service-line strong {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+}
+.guide-mockup-frame .psp-service-line span {
+  color: var(--mk-muted);
+}
+
+/* Cover the gap above the sticky pill so scrolled content does not show through it */
+.guide-mockup-frame .psp-site-header::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -6%;
+  right: -6%;
+  height: 10px;
+  background: #f7faff;
+  pointer-events: none;
+}
+
+/* Dropdown menu (compact header or narrow preview): a real card, not transparent */
+.guide-mockup-frame .psp-site-header.compact nav,
+.guide-mockup-frame .psp-site-header nav.open {
+  gap: 2px;
+}
+.guide-mockup-frame .psp-site-header.compact nav.open,
+.guide-mockup-frame .psp-canvas.device-mobile .psp-site-header nav.open,
+.guide-mockup-frame .psp-site-header nav.open {
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  padding: 8px;
+  border: 1px solid var(--mk-line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 24px 44px -18px rgb(11 43 85 / 0.45);
+}
+.guide-mockup-frame .psp-site-header nav.open button {
+  width: 100%;
+  border-radius: 12px;
+  text-align: left;
+}
+
+/* ---------- Page pills (left column) ---------- */
+.guide-mockup-pages {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+.guide-mockup-pages strong {
+  color: var(--muted);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.guide-mockup-pages ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.guide-mockup-pages button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
+  border-radius: 999px;
+  color: var(--fg);
+  background: var(--surface);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.guide-mockup-pages button:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+}
+.guide-mockup-pages button[aria-current='page'] {
+  color: var(--on-accent);
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent-fill), color-mix(in srgb, var(--accent-fill) 60%, var(--accent-cyan)));
+}
+.guide-mockup-pages em,
+.guide-mockup-frame [data-new]::after {
+  padding: 1px 7px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #00bdeb, #0866e8);
+  font-size: 0.64rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.guide-mockup-frame .psp-feature-links button[data-new]::after {
+  content: 'New';
+  position: absolute;
+  right: 44px;
+  top: 20px;
+}
+.guide-mockup-frame .psp-site-header nav button[data-new]::after {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 6px;
+  padding: 0;
+  border-radius: 50%;
+  vertical-align: middle;
+  background: #00bdeb;
+  box-shadow: 0 0 0 3px rgb(0 189 235 / 0.25);
+}
+.guide-mockup-frame .psp-feature-links button[data-new] {
+  border-color: #7fd6ef;
+}
+
+/* ---------- Neutral image placeholders (replace stock photos) ---------- */
+.guide-mockup-frame .psp-hero-media img,
+.guide-mockup-frame .psp-products article > img,
+.guide-mockup-frame .psp-gallery button > img {
+  opacity: 0;
+}
+.guide-mockup-frame .psp-hero-media,
+.guide-mockup-frame .psp-products article,
+.guide-mockup-frame .psp-gallery button {
+  position: relative;
+}
+.guide-mockup-frame .psp-hero-media {
+  background:
+    radial-gradient(circle at 28% 32%, rgb(255 255 255 / 0.85) 0 9%, transparent 9.5%),
+    radial-gradient(circle at 72% 68%, rgb(255 255 255 / 0.35) 0 20%, transparent 20.5%),
+    linear-gradient(135deg, #0866e8, #00bdeb 70%, #7be3f7);
+}
+.guide-mockup-frame .psp-hero-media::after {
+  content: '';
+  position: absolute;
+  inset: 14% 12% 14% 12%;
+  border: 2px dashed rgb(255 255 255 / 0.55);
+  border-radius: 18px;
+}
+.guide-mockup-frame .psp-products article::before,
+.guide-mockup-frame .psp-gallery button::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 190px;
+  background:
+    radial-gradient(circle at 30% 38%, rgb(255 255 255 / 0.8) 0 8%, transparent 8.5%),
+    linear-gradient(135deg, var(--ph-a, #0866e8), var(--ph-b, #00bdeb));
+}
+.guide-mockup-frame .psp-products article:nth-child(3n + 2),
+.guide-mockup-frame .psp-gallery button:nth-child(3n + 2) {
+  --ph-a: #6d5bf0;
+  --ph-b: #0866e8;
+}
+.guide-mockup-frame .psp-products article:nth-child(3n),
+.guide-mockup-frame .psp-gallery button:nth-child(3n) {
+  --ph-a: #00a6c8;
+  --ph-b: #5be0c4;
+}
+
+/* Context tab (public / client area) carries a dot when it holds pages added in the last step */
+.guide-mockup-frame .psp-contexts button[data-new]::after {
+  content: '';
+  display: inline-block;
+  padding: 0;
+  width: 7px;
+  height: 7px;
+  margin-left: 7px;
+  border-radius: 50%;
+  vertical-align: middle;
+  background: #00bdeb;
+  box-shadow: 0 0 0 3px rgb(0 189 235 / 0.25);
+}

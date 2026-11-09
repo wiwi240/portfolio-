@@ -68,7 +68,7 @@
 }
 .pc-stepper {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 20px;
 }
@@ -108,9 +108,10 @@
 }
 .pc-layout {
   display: grid;
-  grid-template-columns: minmax(350px, 1.04fr) minmax(390px, 1.2fr) minmax(255px, 0.67fr);
+  grid-template-columns: minmax(0, 55fr) minmax(0, 45fr);
   align-items: start;
   gap: 18px;
+  position: relative;
 }
 .pc-controls,
 .pc-preview-column,
@@ -376,12 +377,6 @@
   outline-offset: 3px;
 }
 @media (max-width: 1250px) {
-  .pc-layout {
-    grid-template-columns: minmax(330px, 1fr) minmax(350px, 1fr);
-  }
-  .pc-summary-column {
-    grid-column: 1/-1;
-  }
   .pc-summary-rows {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0 16px;
@@ -525,11 +520,6 @@
 }
 
 /* The questionnaire and browser share the step area; the existing summary opens on demand. */
-.pc-layout {
-  grid-template-columns: minmax(340px, 30fr) minmax(0, 70fr);
-  gap: 15px;
-  position: relative;
-}
 .pc-preview-column {
   position: relative;
   padding: 0;
@@ -655,38 +645,8 @@ html.dark .pc-summary-handle {
 @media (min-width: 1101px) {
   .pc-preview-column {
     position: sticky;
-    top: 16px;
+    top: 94px;
     align-self: start;
-  }
-}
-@media (min-width: 761px) and (max-width: 1100px) {
-  .pc-layout {
-    display: grid;
-    grid-template-columns: minmax(280px, 31fr) minmax(0, 69fr);
-    align-items: start;
-  }
-  .pc-layout .pc-controls,
-  .pc-layout .pc-preview-column {
-    display: block;
-  }
-  .pc-layout .pc-summary-column {
-    display: none;
-  }
-  .pc-layout-preview {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .pc-layout-preview .pc-controls {
-    display: none;
-  }
-  .pc-layout-summary {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .pc-layout-summary .pc-controls,
-  .pc-layout-summary .pc-preview-column {
-    display: none;
-  }
-  .pc-layout .pc-panel-summary.pc-summary-column {
-    grid-column: 1/-1;
   }
 }
 .pc-pending {
@@ -707,24 +667,6 @@ html.dark .pc-summary-handle {
   outline-offset: 2px;
 }
 @media (min-width: 761px) and (max-width: 1100px) {
-  .pc-mobile-tabs {
-    display: none;
-  }
-  .pc-layout,
-  .pc-layout-preview,
-  .pc-layout-summary {
-    display: grid;
-    grid-template-columns: minmax(265px, 30fr) minmax(0, 70fr);
-  }
-  .pc-layout .pc-controls,
-  .pc-layout .pc-preview-column {
-    display: block;
-  }
-  .pc-layout .pc-summary-column {
-    display: none;
-  }
-}
-@media (min-width: 761px) and (max-width: 1100px) {
   .pc-paths label {
     grid-template-columns: minmax(0, 1fr) 22px;
     min-height: 76px;
@@ -738,9 +680,6 @@ html.dark .pc-summary-handle {
   }
 }
 /* Compact project builder */
-.pc-stepper {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
 .pc-paths label,
 .pc-paths label.active {
   display: grid;
@@ -1138,22 +1077,15 @@ html.dark .pc-summary-handle {
     transition: none;
   }
 }
-@media (min-width: 761px) {
-  .pc-preview-column {
-    position: sticky;
-    top: 94px;
-    align-self: start;
-  }
-}
 /* The sticky column creates a stacking context; lift it above the site header while the preview is expanded. */
 .pc-preview-column:has(.psp-shell.is-expanded) {
   z-index: 1000;
 }
 
-/* Step 2 is a form: give it more room than the choice list */
-@media (min-width: 761px) {
+/* Step 2 is a form: the configuration column stays the larger one. Below 1101px the layout is one column. */
+@media (min-width: 1101px) {
   .pc-layout.pc-layout-contact {
-    grid-template-columns: minmax(340px, 44fr) minmax(0, 56fr);
+    grid-template-columns: minmax(0, 60fr) minmax(0, 40fr);
   }
 }
 
@@ -1294,4 +1226,24 @@ html.dark .pc-summary-handle {
   .pc-spinner {
     animation-duration: 2s;
   }
+}
+
+/* Lists capped at six choices: the rest sits behind this button. */
+.pc-more {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 8px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.pc-more:hover {
+  background: var(--tint);
 }

@@ -1,0 +1,91 @@
+/* Scroll stack: scenes are sticky siblings, each one slides over the previous one.
+   Pattern documented in docs/design-system/scroll-stack.md. */
+.scroll-stack {
+  position: relative;
+}
+
+.stack-scene {
+  position: sticky;
+  /* A scene shorter than the viewport sticks at 0; a taller one sticks once its bottom edge is reached. */
+  top: min(0px, calc(100dvh - var(--stack-h, 100dvh)));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100dvh;
+  padding-block: var(--stack-pad-top) var(--stack-pad-bottom);
+  overflow: clip;
+}
+
+.stack-scene--bg {
+  background: var(--bg);
+}
+.stack-scene--tint {
+  background: var(--tint);
+}
+.stack-scene--surface {
+  background: var(--surface);
+}
+
+.stack-scene + .stack-scene {
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow: var(--shadow-stack);
+}
+
+.stack-scene-inner {
+  width: min(var(--container), calc(100% - 2 * var(--gutter)));
+  margin-inline: auto;
+}
+
+/* No overlapping motion: scenes read as ordinary stacked sections. */
+@media (prefers-reduced-motion: reduce) {
+  .stack-scene {
+    position: relative;
+    top: auto;
+  }
+}
+
+/* Horizontal scene: a tall scene whose pinned viewport slides its panels left as the page scrolls.
+   Default layout is vertical; the media query below must match horizontalQuery in lib/scroll-stack.ts. */
+.hscene {
+  display: block;
+  min-height: 0;
+  padding: 0;
+}
+.hscene-panel.is-locked {
+  display: none;
+}
+.hscene-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100dvh;
+  padding-block: var(--stack-pad-top) var(--stack-pad-bottom);
+}
+@media (min-width: 901px) and (min-height: 640px) and (prefers-reduced-motion: no-preference) {
+  .hscene {
+    height: calc(100dvh + (var(--reach) - 1) * max(80vw, 80dvh));
+  }
+  .hscene-pin {
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    overflow: clip;
+  }
+  .hscene-track {
+    display: flex;
+    width: calc(var(--panels) * 100%);
+    height: 100%;
+    transform: translate3d(calc(var(--hscene-p, 0) * -1 * (var(--reach) - 1) / var(--panels) * 100%), 0, 0);
+    will-change: transform;
+  }
+  .hscene-panel.is-locked {
+    display: flex;
+    visibility: hidden;
+  }
+  .hscene-panel {
+    flex: 0 0 calc(100% / var(--panels));
+    min-height: 0;
+    height: 100%;
+    overflow: clip;
+  }
+}

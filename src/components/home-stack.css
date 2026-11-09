@@ -1,0 +1,43 @@
+/* Home scenes: fits the existing hero, method and contact blocks into the scroll stack. */
+.home-page .stack-scene .home-hero {
+  min-height: 0;
+  padding-block: 0;
+}
+
+.home-converge .home-method {
+  padding-block: 0;
+  border: 0;
+  background: none;
+}
+.home-converge .home-contact-panel {
+  margin-top: 48px;
+  padding-block: 48px 0;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 760px) {
+  .home-converge .home-method,
+  .home-converge .home-contact-panel {
+    padding-block: 0;
+  }
+  .home-converge .home-contact-panel {
+    margin-top: 40px;
+    padding-top: 40px;
+  }
+}
+
+/* Entry cards sit in a pinned panel: tighter than the standalone section so four cards fit on a laptop screen. */
+.home-page .hscene .project-entry {
+  padding-block: 0;
+}
+.home-page .hscene .project-entry-heading {
+  margin-bottom: 24px;
+}
+@media (min-width: 901px) and (min-height: 640px) and (prefers-reduced-motion: no-preference) {
+  .home-page .hscene .project-entry-image {
+    height: clamp(110px, 19dvh, 185px);
+  }
+  .home-page .hscene .project-entry-copy {
+    min-height: 0;
+  }
+}

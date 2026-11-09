@@ -1,0 +1,282 @@
+/* Guided slides: one configurator category per panel. Tokens only. */
+.guide-panel {
+  max-width: 1000px;
+}
+.home-page .guide-panel h2 {
+  margin-top: 10px;
+  max-width: 24ch;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  text-wrap: balance;
+}
+.home-page .guide-hint {
+  margin-top: 12px;
+  color: var(--muted);
+}
+.guide-items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+.guide-items label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.guide-items label:hover {
+  border-color: var(--accent);
+}
+.guide-items label.is-selected {
+  border-color: var(--accent);
+  background: var(--tint);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.guide-items label:has(input:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.guide-items input {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin: 3px 0 0;
+  accent-color: var(--accent);
+}
+.guide-item-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.guide-item-copy strong {
+  font-weight: 800;
+}
+.guide-item-copy small {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.guide-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.guide-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.guide-summary > div {
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.home-page .guide-summary h3 {
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.guide-summary ul {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .guide-items,
+  .guide-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .guide-nav .button {
+    flex: 1 1 140px;
+  }
+}
+
+/* Final slide: recap on the left, request form on the right. */
+.guide-final {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  align-items: center;
+  max-width: var(--container);
+}
+.home-page .guide-final h2 {
+  margin-top: 10px;
+  max-width: 20ch;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  text-wrap: balance;
+}
+.guide-final .guide-summary {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+.guide-final .guide-summary > div {
+  padding: 12px 16px;
+}
+.guide-final .guide-summary ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 6px;
+}
+.guide-final-form {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+.guide-final-form form {
+  display: grid;
+  gap: 14px;
+}
+.guide-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.guide-field label {
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+.guide-field input,
+.guide-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--fg);
+}
+.guide-field textarea {
+  resize: vertical;
+}
+.guide-field input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+.guide-error {
+  color: var(--danger);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+.guide-activity {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+.guide-activity .guide-field {
+  width: 100%;
+}
+.guide-undecided {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.guide-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.home-page .guide-privacy {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.guide-privacy a {
+  color: var(--accent);
+  font-weight: 700;
+}
+.guide-final-form .button {
+  justify-self: start;
+}
+.guide-success {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  color: var(--success);
+}
+.guide-success strong {
+  color: var(--fg);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+}
+.home-page .guide-success p {
+  color: var(--muted);
+}
+@media (max-width: 900px) {
+  .guide-final {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 520px) {
+  .guide-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Mockup slide: the configurator's preview next to a short text. */
+.guide-mockup {
+  display: grid;
+  grid-template-columns: minmax(0, 0.55fr) minmax(0, 1.45fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
+  max-width: var(--container);
+}
+.home-page .guide-mockup h2 {
+  margin-top: 10px;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  text-wrap: balance;
+}
+.guide-mockup-frame {
+  min-width: 0;
+}
+.guide-mockup-frame .psp-browser {
+  height: min(790px, calc(100dvh - var(--stack-pad-top) - var(--stack-pad-bottom)));
+}
+/* The enlarge mode uses position: fixed, which a transformed slide track would turn into a track-sized box. */
+.guide-mockup-frame .psp-expand {
+  display: none;
+}
+@media (max-width: 900px) {
+  .guide-mockup {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.guide-mockup-activity {
+  margin-top: 16px;
+  justify-items: start;
+}
+.guide-mockup-activity input {
+  width: 100%;
+}
+.guide-mockup-activity small {
+  color: var(--muted);
+}
