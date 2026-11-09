@@ -314,3 +314,50 @@
   font-size: 0.9rem;
   font-weight: 700;
 }
+
+/* Category columns must fit one screen: tighter heading and one-line descriptions. */
+.home-page .guide-panel:has(.guide-columns) h2 {
+  max-width: none;
+  font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+}
+.guide-panel:has(.guide-columns) .guide-hint {
+  margin-top: 6px;
+}
+.guide-panel:has(.guide-columns) .guide-columns {
+  margin-top: 14px;
+}
+.guide-panel:has(.guide-columns) .guide-nav {
+  margin-top: 16px;
+}
+.guide-items.guide-items-compact label {
+  min-height: 0;
+  gap: 12px;
+  padding: 7px 48px 7px 12px;
+}
+.guide-items.guide-items-compact {
+  gap: 8px;
+}
+.guide-items-compact .guide-item-copy {
+  gap: 1px;
+}
+.guide-items-compact .guide-item-copy small {
+  font-size: 0.78rem;
+  line-height: 1.35;
+  -webkit-line-clamp: 1;
+}
+@media (min-width: 761px) and (max-height: 820px) {
+  .guide-items-compact .guide-item-copy small {
+    display: none;
+  }
+  .guide-items.guide-items-compact label {
+    padding-block: 4px;
+  }
+  .guide-items.guide-items-compact {
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .guide-items-compact .guide-item-icon {
+    width: 36px;
+    height: 36px;
+  }
+}

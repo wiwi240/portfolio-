@@ -71,7 +71,7 @@ export function GuidePanel({ language, panel, index, total, selected, onToggle, 
           {panel.columns.map((column) => (
             <div key={column.id} className="guide-column" role="group" aria-labelledby={`guide-col-${column.id}`}>
               <h3 id={`guide-col-${column.id}`}>{column.title[language]}</h3>
-              <div className="guide-items">{renderItems(column.items)}</div>
+              <div className="guide-items guide-items-compact">{renderItems(column.items)}</div>
             </div>
           ))}
         </div>
