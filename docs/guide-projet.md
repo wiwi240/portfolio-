@@ -10,6 +10,7 @@ Le visiteur est souvent un client peu à l'aise avec le web. Le guide lui évite
 
 1. **Choix du parcours** (`project-entry.tsx`) : sites web, logiciels métier, refonte et amélioration, maintenance et suivi. Un bouton « Je ne sais pas encore » mène à un parcours sans question.
 2. **Une question par catégorie** (`project-guide-question.tsx`) : question en langage courant (« Voulez-vous vendre en ligne ? ») avec trois réponses : Oui, Non, Je ne sais pas.
+   - Chaque question est suivie d'une phrase qui liste ce qu'elle couvre, affichée tant que le visiteur n'a pas répondu `Oui`.
    - `Oui` affiche en dessous les fonctionnalités de la catégorie, à cocher. Rien n'est coché par défaut.
    - `Non` et `Je ne sais pas` passent à la question suivante après un court délai, et retirent ce qui était coché dans cette catégorie.
    - Un lien « Passer et envoyer ma demande » saute directement au formulaire à chaque question.
@@ -44,7 +45,7 @@ Au total les 49 besoins du configurateur restent proposés.
 ## Modifier le guide
 
 - Regrouper ou renommer : éditer `categories` dans `home-guide.ts`. Les titres, descriptions et identifiants viennent de `project-configurator.ts` ; ne changer que le regroupement ici.
-- Ajouter ou reformuler une question : éditer `questions` et la liste du parcours dans `guidePanels` (`home-guide.ts`).
+- Ajouter ou reformuler une question (texte et phrase de détail) : éditer `questions` et la liste du parcours dans `guidePanels` (`home-guide.ts`).
 - Reformuler une fonctionnalité en mots simples : ajouter une entrée dans `plain` (`home-guide.ts`). Les identifiants ne changent pas.
 - Un panneau avec `question` s'affiche comme une question Oui/Non ; sans `question`, comme une liste simple (refonte et maintenance).
 - Le récapitulatif regroupe les choix par catégorie.

@@ -12,7 +12,7 @@ import {
 export type GuideItem = { id: string; title: Localized; description: Localized }
 export type GuideColumn = { id: string; title: Localized; items: GuideItem[] }
 // A slide with `columns` shows one column per category; `items` always lists every item of the slide.
-export type GuidePanelData = GuideColumn & { columns?: GuideColumn[]; question?: Localized }
+export type GuidePanelData = GuideColumn & { columns?: GuideColumn[]; question?: Localized; hint?: Localized }
 
 const ask = (fr: string, en: string): Localized => ({ fr, en })
 
@@ -79,17 +79,42 @@ const category = (id: string): GuideColumn => {
 
 // One plain question per category. Answering yes reveals the category's features; no or unsure moves on.
 export type GuideAnswer = 'yes' | 'no' | 'unsure'
-const questions: Record<string, Localized> = {
-  present: ask('Voulez-vous présenter votre activité ?', 'Do you want to present your business?'),
-  requests: ask('Voulez-vous être contacté ou prendre des rendez-vous ?', 'Do you want to be contacted or take appointments?'),
-  inform: ask('Voulez-vous donner des nouvelles et animer votre site ?', 'Do you want to share news and engage visitors?'),
-  sell: ask('Voulez-vous vendre en ligne ?', 'Do you want to sell online?'),
-  clients: ask('Voulez-vous offrir un espace à vos clients ?', 'Do you want to give your clients their own area?'),
-  content: ask('Voulez-vous pouvoir modifier le contenu vous-même ?', 'Do you want to edit the content yourself?'),
-  manage: ask('Voulez-vous mieux organiser votre travail ?', 'Do you want to organise your work better?'),
-  steer: ask('Voulez-vous suivre et piloter votre activité ?', 'Do you want to follow and steer your activity?'),
+// Each question names the concrete result for the visitor, and the hint lists what it covers so the answer is never a guess.
+const questions: Record<string, { ask: Localized; hint: Localized }> = {
+  present: {
+    ask: ask('Voulez-vous des pages qui expliquent qui vous êtes et ce que vous proposez ?', 'Do you want pages that explain who you are and what you offer?'),
+    hint: ask('Page d’accueil, présentation de l’entreprise, vos services, votre équipe, vos réalisations et les avis de vos clients.', 'Home page, about the business, your services, your team, your work and client reviews.'),
+  },
+  requests: {
+    ask: ask('Voulez-vous que vos clients puissent vous écrire ou réserver depuis le site ?', 'Do you want clients to be able to write to you or book from the site?'),
+    hint: ask('Formulaire de contact, demande de devis, envoi de fichiers, rendez-vous, réservation, plan d’accès.', 'Contact form, quote request, file upload, appointments, booking, directions.'),
+  },
+  inform: {
+    ask: ask('Voulez-vous publier des informations qui changent régulièrement ?', 'Do you want to publish information that changes regularly?'),
+    hint: ask('Actualités, questions fréquentes, menu ou carte, lettre d’information, événements et inscriptions.', 'News, frequently asked questions, menu, newsletter, events and sign-ups.'),
+  },
+  sell: {
+    ask: ask('Voulez-vous que vos clients puissent acheter et payer directement sur le site ?', 'Do you want clients to be able to buy and pay directly on the site?'),
+    hint: ask('Catalogue, une page par produit, panier, paiement en ligne, livraison, codes de réduction, suivi de commande.', 'Catalogue, one page per product, basket, online payment, delivery, discount codes, order tracking.'),
+  },
+  clients: {
+    ask: ask('Voulez-vous que chaque client ait son compte personnel sur le site ?', 'Do you want each client to have a personal account on the site?'),
+    hint: ask('Se connecter, retrouver ses documents, vous écrire, suivre l’avancement de sa demande, être prévenu par email.', 'Log in, find their documents, message you, follow their request, get email updates.'),
+  },
+  content: {
+    ask: ask('Voulez-vous pouvoir modifier le site vous-même, sans faire appel à un développeur ?', 'Do you want to edit the site yourself, without calling a developer?'),
+    hint: ask('Changer les textes et les photos, gérer vos produits ou prestations, publier des actualités, ajouter des langues ou des administrateurs.', 'Change texts and photos, manage your products or services, publish news, add languages or administrators.'),
+  },
+  manage: {
+    ask: ask('Voulez-vous un outil pour gérer vos clients et vos dossiers au quotidien ?', 'Do you want a tool to manage your clients and cases day to day?'),
+    hint: ask('Fiches clients, suivi des dossiers, devis et documents, planning, liste des tâches, stocks.', 'Client records, case follow-up, quotes and documents, planning, to-do list, stock.'),
+  },
+  steer: {
+    ask: ask('Voulez-vous suivre votre activité avec des chiffres et automatiser des tâches ?', 'Do you want to follow your activity with figures and automate tasks?'),
+    hint: ask('Tableau de bord, chiffres clés, accès différents selon les personnes, statut de chaque demande, tâches automatiques, liaison avec vos outils.', 'Dashboard, key figures, different access per person, status of each request, automatic tasks, links with your tools.'),
+  },
 }
-const question = (id: string): GuidePanelData => ({ ...category(id), question: questions[id] })
+const question = (id: string): GuidePanelData => ({ ...category(id), question: questions[id].ask, hint: questions[id].hint })
 
 const choices = (id: string, title: Localized, list: ReadonlyArray<readonly [string, string, string]>): GuidePanelData => ({
   id,

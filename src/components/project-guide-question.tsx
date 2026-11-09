@@ -45,6 +45,7 @@ export function GuideQuestion({ language, panel, index, total, answer, selected,
       <h2 id={titleId} ref={headingRef} tabIndex={-1}>
         {panel.question?.[language]}
       </h2>
+      {panel.hint && answer !== 'yes' && <p className="guide-hint">{panel.hint[language]}</p>}
       <div className="guide-answers" role="radiogroup" aria-labelledby={titleId}>
         {answers.map(([value, label]) => (
           <button key={value} type="button" role="radio" aria-checked={answer === value} className={answer === value ? 'is-selected' : undefined} onClick={() => onAnswer(value)}>

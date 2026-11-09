@@ -415,3 +415,17 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+/* The hint only helps before answering; once the features are listed it would repeat them. Short screens drop card descriptions. */
+@media (min-width: 761px) and (max-height: 820px) {
+  .guide-question .guide-item-copy small {
+    display: none;
+  }
+  .guide-question .guide-items label {
+    min-height: 0;
+    padding-block: 10px;
+  }
+  .guide-question .guide-items {
+    gap: 10px;
+  }
+}
