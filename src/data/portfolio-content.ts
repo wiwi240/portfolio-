@@ -338,7 +338,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       title: 'Rubber Duck',
       summary:
         'Outil pédagogique pensé pour accompagner le raisonnement par étapes avec une interface de guidage et une logique de contexte réutilisable.',
-      image: '/projects/rubber-duck.png',
+      image: '/projects/rubber-duck.webp',
       href: 'https://github.com/wiwi240/rubberduck_ai',
       technologies: ['Stack à préciser'],
     },
@@ -347,7 +347,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       title: 'Sakura Line Studio',
       summary:
         'Site conçu pour une tatoueuse avec une présentation claire de l’activité et une base permettant des mises à jour simples.',
-      image: '/projects/sakura-line.png',
+      image: '/projects/sakura-line.webp',
       technologies: ['Stack à préciser'],
     },
     {
@@ -355,7 +355,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       title: 'Questonnaut',
       summary:
         'Application de création d’habitudes gamifiée, conçue pour rendre le suivi plus engageant et plus lisible au quotidien.',
-      image: '/projects/questonnaut.png',
+      image: '/projects/questonnaut.webp',
       technologies: ['Stack à préciser'],
     },
     {
@@ -363,7 +363,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       title: 'Portfolio',
       summary:
         'Portfolio personnel développé pour présenter mon approche, mes projets et ma manière de construire des interfaces lisibles.',
-      image: '/projects/portfolio.png',
+      image: '/projects/portfolio.webp',
       href: 'https://github.com/wiwi240/portfolio-',
       technologies: ['React', 'TypeScript', 'Tailwind CSS'],
     },
@@ -374,7 +374,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       title: 'Rubber Duck',
       summary:
         'A pedagogical tool designed to support step-by-step reasoning with guided interactions and reusable context logic.',
-      image: '/projects/rubber-duck.png',
+      image: '/projects/rubber-duck.webp',
       href: 'https://github.com/wiwi240/rubberduck_ai',
       technologies: ['Stack to confirm'],
     },
@@ -383,7 +383,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       title: 'Sakura Line Studio',
       summary:
         'A website for a tattoo artist with a clean presentation and a foundation built for simple future updates.',
-      image: '/projects/sakura-line.png',
+      image: '/projects/sakura-line.webp',
       technologies: ['Stack to confirm'],
     },
     {
@@ -391,7 +391,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       title: 'Questonnaut',
       summary:
         'A gamified habit-building app designed to make progress tracking more engaging and easier to read every day.',
-      image: '/projects/questonnaut.png',
+      image: '/projects/questonnaut.webp',
       technologies: ['Stack to confirm'],
     },
     {
@@ -399,7 +399,7 @@ export const projects: Record<Language, ProjectItem[]> = {
       title: 'Portfolio',
       summary:
         'A personal portfolio built to present my approach, my projects, and the way I structure readable interfaces.',
-      image: '/projects/portfolio.png',
+      image: '/projects/portfolio.webp',
       href: 'https://github.com/wiwi240/portfolio-',
       technologies: ['React', 'TypeScript', 'Tailwind CSS'],
     },

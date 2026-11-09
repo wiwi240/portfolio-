@@ -1,6 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://www.williammahi.dev/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/projets</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/projets"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/projects"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/projects</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/projets"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/projects"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/expertises</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/expertises"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/expertise"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/expertise</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/expertises"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/expertise"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/a-propos</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/a-propos"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/about"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/about</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/a-propos"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/about"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/contact</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/contact"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/contact</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/contact"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/configurateur</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/configurateur"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/project-configurator"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/project-configurator</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/configurateur"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/project-configurator"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/faq</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/faq"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/faq"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/faq</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/faq"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/faq"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/mentions-legales</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/legal-notice"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/legal-notice</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/mentions-legales"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/legal-notice"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/cgu</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/cgu"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/terms-of-use"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/terms-of-use</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/cgu"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/terms-of-use"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/politique-de-confidentialite</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/politique-de-confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/privacy-policy"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/politique-de-confidentialite"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/privacy-policy"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/cookies</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/cookies"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/cookies"/>
+  </url>
+  <url>
+    <loc>https://www.williammahi.dev/en/cookies</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/cookies"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/cookies"/>
   </url>
 </urlset>

@@ -39,9 +39,12 @@ Le front vit dans `src/`.
 
 Responsabilités principales :
 
-- `src/App.tsx` : composition de la page principale, gestion du contenu bilingue FR/EN, structure des sections ;
+- `src/App.tsx` : routage côté client (FR `/projets`, `/expertises`, `/a-propos`, `/contact`, `/configurateur`, `/faq` et pages légales ; EN sous `/en/...`), métadonnées par page, thème clair/sombre ;
+- `src/site.ts` : table des chemins FR/EN. Toute nouvelle page doit aussi être ajoutée dans `vercel.json` (rewrites) et `public/sitemap.xml` ;
+- `src/data/` : contenus (`portfolio-content.ts`), parcours et services (`services.ts`, `home-guide.ts`), options du configurateur (`project-configurator.ts`) et envoi d'une demande (`project-submit.ts`) ;
+- `src/components/` : pages et sections (accueil, guide de projet, configurateur, timeline, pages légales) ;
 - `src/components/ui/` : composants de présentation et effets visuels ;
-- `src/lib/` : utilitaires front ;
+- `src/lib/` : utilitaires front (défilement fluide, effets de page) ;
 - `src/assets/` : ressources statiques.
 
 Le front utilise un alias `@` qui pointe vers `src`. C'est un bon compromis : il simplifie les imports sans introduire de couche d'abstraction inutile.
@@ -122,6 +125,8 @@ Ce n'est pas une sécurité "complète", mais pour un MVP de portfolio c'est un 
 - `api/` : points d'entrée serveur pour Vercel
 - `public/` : assets publics
 - `maquette/` : éléments de maquette / exploration visuelle
+- `docs/` : offres, design system et notes de travail
+- `verification/` : captures de contrôle visuel
 
 ## Lancement en local
 
@@ -158,7 +163,7 @@ Point de rigueur : si tu ajoutes un jour un fichier d'exemple d'environnement, i
 
 ## Tests
 
-Le backend contient un fichier de tests `backend/src/index.test.js`.
+Le backend contient `backend/src/index.test.js` et `backend/src/project-request.test.js` (60 tests), plus `api/index.test.mjs` pour la fonction Vercel. Lancer avec `node --test --test-force-exit` depuis `backend/`, car une connexion à la base reste ouverte après les tests.
 
 Leur rôle actuel est pertinent :
 
@@ -169,15 +174,10 @@ Leur rôle actuel est pertinent :
 
 Pour ce type de projet, c'est le bon niveau de test à prioriser. Tester agressivement les animations du front aurait moins de valeur que sécuriser les règles du formulaire et de l'API.
 
-## État actuel du README précédent
-
-L'ancien README était essentiellement le texte par défaut de Vite.
-
-C'était un mauvais README pour ce dépôt, pour une raison simple : il documentait le template d'origine, pas le produit réel. Un README utile doit expliquer le système que tu maintiens aujourd'hui, pas l'outil qui l'a initialisé.
-
 ## Limites actuelles à garder en tête
 
-- Le contenu métier est très concentré dans `src/App.tsx`. Pour un portfolio c'est encore acceptable, mais au-delà d'un certain volume il faudra extraire les données de contenu.
+- Une partie du rendu des pages reste concentrée dans `src/App.tsx` ; les données ont déjà été extraites dans `src/data/`.
+- Le projet déclare Node 24.x : vérifier que le réglage Vercel correspond.
 - Le fallback mémoire du backend ne doit pas être considéré comme une solution de production.
 - La présence de deux points d'entrée dans `api/` mérite de rester cohérente avec la stratégie de déploiement, sinon cela devient vite du bruit structurel.
 
