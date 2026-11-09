@@ -286,6 +286,34 @@ async function storeMessage(data) {
   }
 }
 
+// Optional email to the site owner for each request, through Resend's HTTP API (no extra dependency).
+// Enabled only when RESEND_API_KEY and CONTACT_NOTIFY_TO are set. A failure never blocks the visitor's request.
+async function notifyOwner(data, fetchImpl = fetch) {
+  const apiKey = process.env.RESEND_API_KEY?.trim()
+  const to = process.env.CONTACT_NOTIFY_TO?.trim()
+  if (!apiKey || !to) return false
+  const from = process.env.CONTACT_NOTIFY_FROM?.trim() || 'Portfolio <onboarding@resend.dev>'
+  try {
+    const response = await fetchImpl('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from,
+        to: to.split(',').map((address) => address.trim()).filter(Boolean),
+        reply_to: data.email,
+        subject: `Nouvelle demande de ${data.name}`,
+        text: `${data.name} <${data.email}>\n\n${data.message}`,
+      }),
+      signal: AbortSignal.timeout(5000),
+    })
+    if (!response.ok) console.error('Notification email refused:', response.status)
+    return response.ok
+  } catch (error) {
+    console.error('Notification email failed:', error.message)
+    return false
+  }
+}
+
 app.get('/api/health', async (_req, res) => {
   if (databaseReady && pool) {
     try {
@@ -345,6 +373,8 @@ app.post('/api/contact', async (req, res) => {
   }
 
   const result = await storeMessage(validation.data)
+  // Awaited on purpose: serverless functions may be frozen once the response is sent.
+  await notifyOwner(validation.data)
 
   res.status(201).json({
     message: 'Message recu.',
@@ -395,4 +425,5 @@ module.exports = {
   startServer,
   validateContactPayload,
   normalizeText,
+  notifyOwner,
 }

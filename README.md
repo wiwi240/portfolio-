@@ -69,7 +69,7 @@ Le back expose principalement :
 - `GET /api/health`
 - `POST /api/contact`
 
-Le guide de projet de l’accueil (voir `docs/guide-projet.md`) utilise `POST /api/contact` avec `kind: "project"`. L’API valide les réponses structurées, construit elle-même une synthèse lisible, puis enregistre la synthèse dans `contact_messages.message` et les réponses dans `contact_messages.project_data`. Les demandes se récupèrent depuis cette table. Aucun email de notification n’est configuré par le dépôt.
+Le guide de projet de l’accueil (voir `docs/guide-projet.md`) utilise `POST /api/contact` avec `kind: "project"`. L’API valide les réponses structurées, construit elle-même une synthèse lisible, puis enregistre la synthèse dans `contact_messages.message` et les réponses dans `contact_messages.project_data`. Les demandes se récupèrent depuis cette table. Si `RESEND_API_KEY` et `CONTACT_NOTIFY_TO` sont définies, un email est envoyé à chaque demande (réponse directe possible vers le client) ; un échec d’envoi ne bloque jamais la demande.
 
 ### 3. Adaptation Vercel
 
@@ -158,14 +158,15 @@ Celles visibles dans le code sont :
 - `PGSSLMODE`
 - `CONTACT_RATE_LIMIT_WINDOW_MS`
 - `CONTACT_RATE_LIMIT_MAX`
+- `RESEND_API_KEY`, `CONTACT_NOTIFY_TO`, `CONTACT_NOTIFY_FROM` (facultatives : email de notification à chaque demande via Resend ; sans les deux premières, aucun email n’est envoyé)
 
 Point de rigueur : si tu ajoutes un jour un fichier d'exemple d'environnement, il devra refléter exactement cette liste, pas une version partielle ou théorique.
 
 ## Tests
 
-Le backend contient `backend/src/index.test.js` et `backend/src/project-request.test.js` (60 tests), plus `api/index.test.mjs` pour la fonction Vercel. Lancer avec `node --test --test-force-exit` depuis `backend/`, car une connexion à la base reste ouverte après les tests.
+Le backend contient `backend/src/index.test.js` et `backend/src/project-request.test.js` (63 tests), plus `api/index.test.mjs` pour la fonction Vercel. Lancer avec `node --test --test-force-exit` depuis `backend/`, car une connexion à la base reste ouverte après les tests.
 
-`src/data/project-configurator.test.mjs` est obsolète (il importe `changePath`, supprimé) et ne s'exécute plus.
+Les tests de données du guide se lancent avec `node --test src/data/project-configurator.test.mjs`.
 
 Leur rôle actuel est pertinent :
 

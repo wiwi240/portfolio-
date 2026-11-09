@@ -816,3 +816,46 @@ test('POST /api/contact rejects a malformed project without a success response',
     assert.equal(response.status, 400)
   } finally { await stopTestServer(server) }
 })
+
+test('notifyOwner does nothing without configuration', async () => {
+  const { notifyOwner } = loadBackend()
+  delete process.env.RESEND_API_KEY
+  delete process.env.CONTACT_NOTIFY_TO
+  let called = false
+  const sent = await notifyOwner({ name: 'Marie', email: 'marie@example.com', message: 'Bonjour' }, async () => { called = true })
+  assert.equal(sent, false)
+  assert.equal(called, false)
+})
+
+test('notifyOwner sends the request to the owner with a reply-to', async () => {
+  const { notifyOwner } = loadBackend()
+  process.env.RESEND_API_KEY = 'key'
+  process.env.CONTACT_NOTIFY_TO = 'moi@example.com, autre@example.com'
+  try {
+    let call
+    const sent = await notifyOwner({ name: 'Marie', email: 'marie@example.com', message: 'Bonjour' }, async (url, init) => { call = { url, init }; return { ok: true, status: 200 } })
+    const body = JSON.parse(call.init.body)
+    assert.equal(sent, true)
+    assert.equal(call.url, 'https://api.resend.com/emails')
+    assert.equal(call.init.headers.Authorization, 'Bearer key')
+    assert.deepEqual(body.to, ['moi@example.com', 'autre@example.com'])
+    assert.equal(body.reply_to, 'marie@example.com')
+    assert.match(body.text, /Bonjour/)
+  } finally {
+    delete process.env.RESEND_API_KEY
+    delete process.env.CONTACT_NOTIFY_TO
+  }
+})
+
+test('notifyOwner swallows provider failures', async () => {
+  const { notifyOwner } = loadBackend()
+  process.env.RESEND_API_KEY = 'key'
+  process.env.CONTACT_NOTIFY_TO = 'moi@example.com'
+  try {
+    assert.equal(await notifyOwner({ name: 'M', email: 'm@example.com', message: 'x' }, async () => { throw new Error('down') }), false)
+    assert.equal(await notifyOwner({ name: 'M', email: 'm@example.com', message: 'x' }, async () => ({ ok: false, status: 500 })), false)
+  } finally {
+    delete process.env.RESEND_API_KEY
+    delete process.env.CONTACT_NOTIFY_TO
+  }
+})

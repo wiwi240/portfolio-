@@ -57,6 +57,5 @@ Les cases cochées sont envoyées comme besoins « souhaités », avec l'activit
 
 ## Points ouverts
 
-- **Aucune notification** : une demande est enregistrée dans `contact_messages`, mais aucun email n'est envoyé. À traiter si le guide sert à trouver des clients.
-- **Test obsolète** : `src/data/project-configurator.test.mjs` importe `changePath`, qui n'existe plus, et ne s'exécute pas. À corriger ou à supprimer.
-- **Routes** : `vercel.json` garde `/configurateur` et `/en/project-configurator`. À vérifier qu'elles ont encore un sens.
+- **Notification email** : implémentée côté backend (Resend), mais inactive tant que `RESEND_API_KEY` et `CONTACT_NOTIFY_TO` ne sont pas définies sur Vercel.
+- **Routes** : `/configurateur` et `/en/project-configurator` redirigent volontairement vers l'accueil (`#votre-projet`), en gardant le paramètre `parcours`.
