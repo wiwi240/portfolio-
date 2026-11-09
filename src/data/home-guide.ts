@@ -23,15 +23,21 @@ export const entryTitles: Partial<Record<PathId, Localized>> = {
   support: ask('Maintenance & suivi', 'Maintenance & support'),
 }
 
-const category = (id: string): GuidePanelData => {
-  const group = compactCategories.find((item) => item.id === id)
-  if (!group) throw new Error(`Unknown category: ${id}`)
-  const items = group.ids.map((needId) => {
-    const need = needs.find((item) => item.id === needId)
-    if (!need) throw new Error(`Unknown need: ${needId}`)
-    return { id: need.id, title: need.title, description: need.description }
-  })
-  return { id, title: group.title, items }
+// Every need of a group is offered, split into slides of at most PAGE_SIZE so each slide stays readable.
+const PAGE_SIZE = 6
+const groupTitles: Record<string, Localized> = {
+  ...Object.fromEntries(compactCategories.map((group) => [group.id, group.title])),
+  content: ask('Gérer mon site', 'Manage my site'),
+}
+
+const category = (id: string): GuidePanelData[] => {
+  const title = groupTitles[id]
+  if (!title) throw new Error(`Unknown category: ${id}`)
+  const items = needs.filter((need) => need.group === id).map((need) => ({ id: need.id, title: need.title, description: need.description }))
+  const pages: GuidePanelData[] = []
+  for (let start = 0; start < items.length; start += PAGE_SIZE)
+    pages.push({ id: start === 0 ? id : `${id}-${start / PAGE_SIZE + 1}`, title, items: items.slice(start, start + PAGE_SIZE) })
+  return pages
 }
 
 const choices = (id: string, title: Localized, list: ReadonlyArray<readonly [string, string, string]>): GuidePanelData => ({
@@ -43,11 +49,11 @@ const choices = (id: string, title: Localized, list: ReadonlyArray<readonly [str
 export function guidePanels(path: PathId | null): GuidePanelData[] {
   switch (path) {
     case 'create':
-      return ['present', 'requests', 'sell', 'clients'].map(category)
+      return ['present', 'requests', 'sell', 'clients', 'content'].flatMap(category)
     case 'tool':
-      return ['organize', 'clients', 'requests'].map(category)
+      return ['organize', 'clients', 'requests', 'content'].flatMap(category)
     case 'improve':
-      return [choices('improve', ask('Que souhaitez-vous améliorer ?', 'What would you like to improve?'), improvementOptions), ...['present', 'requests', 'sell'].map(category)]
+      return [choices('improve', ask('Que souhaitez-vous améliorer ?', 'What would you like to improve?'), improvementOptions), ...['present', 'requests', 'sell', 'content'].flatMap(category)]
     case 'support':
       return [choices('support', ask('Quel suivi souhaitez-vous ?', 'What kind of support do you need?'), supportOptions)]
     default:
