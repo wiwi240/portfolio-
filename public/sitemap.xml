@@ -51,16 +51,6 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/contact"/>
   </url>
   <url>
-    <loc>https://www.williammahi.dev/configurateur</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/configurateur"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/project-configurator"/>
-  </url>
-  <url>
-    <loc>https://www.williammahi.dev/en/project-configurator</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/configurateur"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/project-configurator"/>
-  </url>
-  <url>
     <loc>https://www.williammahi.dev/faq</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/faq"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/faq"/>

@@ -1,5 +1,4 @@
 import { ArrowRight, Check } from 'lucide-react'
-import { paths } from '@/site'
 import { entryTitles } from '@/data/home-guide'
 import { entryVideos } from '@/data/entry-videos'
 import { pathOptions, type PathId } from '@/data/project-configurator'
@@ -15,7 +14,6 @@ const stopClip = (card: HTMLElement) => { const video = card.querySelector('vide
 type ProjectEntryProps = { language: Language; active: PathId | null; onSelect: (path: PathId) => void }
 
 export function ProjectEntry({ language, active, onSelect }: ProjectEntryProps) {
-  const p = paths[language]
   const fr = language === 'fr'
   const cards = pathOptions.filter((option) => entryTitles[option.id])
   return (
@@ -76,10 +74,10 @@ export function ProjectEntry({ language, active, onSelect }: ProjectEntryProps) 
           )
         })}
       </div>
-      <a className="project-entry-unsure" href={`${p.configurator}?parcours=unsure`}>
+      <button type="button" className="project-entry-unsure" onClick={() => onSelect('unsure')}>
         {fr ? 'Je ne sais pas encore' : 'I am not sure yet'}
         <ArrowRight size={16} aria-hidden="true" />
-      </a>
+      </button>
     </section>
   )
 }

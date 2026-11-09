@@ -39,6 +39,14 @@ const content = {
   },
 }
 
+const pathIds: PathId[] = ['create', 'tool', 'improve', 'support', 'unsure']
+// Links such as /?parcours=tool#votre-projet open the guide with that path already chosen.
+function requestedPath(): PathId | null {
+  if (typeof window === 'undefined') return null
+  const requested = new URLSearchParams(window.location.search).get('parcours')
+  return pathIds.find((id) => id === requested) ?? null
+}
+
 function Eyebrow({ children }: { children: string }) { return <span className="eyebrow">{children}</span> }
 
 export function HomePage({ language }: { language: Language }) {
@@ -86,6 +94,16 @@ export function HomePage({ language }: { language: Language }) {
     if (selections > 0) scrollToScene('votre-projet', { panel: 1 })
   }, [selections, scrollToScene])
 
+  // On a direct link the scene is still being laid out at mount, so the path is chosen once the page has settled,
+  // exactly as if the visitor had clicked it.
+  useEffect(() => {
+    const requested = requestedPath()
+    if (!requested) return
+    const timer = window.setTimeout(() => choosePath(requested), 900)
+    return () => window.clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return <div className="home-page">
     <ScrollStack>
       <StackScene id="accueil" tone="clear" labelledBy="home-title">
@@ -108,7 +126,7 @@ export function HomePage({ language }: { language: Language }) {
       ]} />
       <StackScene id="methode" tone="surface" className="home-converge">
         <section className="stack-scene-inner home-section home-method" aria-labelledby="method-title"><div className="home-section-heading home-section-heading--centered"><Eyebrow>{t.methodLabel}</Eyebrow><h2 id="method-title">{t.methodTitle}</h2><p>{t.methodIntro}</p></div><div className="home-method-grid">{t.steps.map(([title, description], i) => <article className="home-method-card" key={title}><span className="home-step-number">0{i + 1}</span><MethodScene step={i} language={language} /><div className="home-method-copy"><h3>{title}</h3><p>{description}</p></div></article>)}</div></section>
-        <section className="stack-scene-inner home-section home-contact-panel" aria-labelledby="contact-title"><Eyebrow>{t.contactLabel}</Eyebrow><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactLead}</p><a className="button button-primary" href={p.configurator}>{t.projectContact}<ArrowUpRight aria-hidden="true" /></a><a className="home-contact-email" href={'mailto:' + contactEmail}>{contactEmail}</a></section>
+        <section className="stack-scene-inner home-section home-contact-panel" aria-labelledby="contact-title"><Eyebrow>{t.contactLabel}</Eyebrow><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactLead}</p><a className="button button-primary" href="#votre-projet">{t.projectContact}<ArrowUpRight aria-hidden="true" /></a><a className="home-contact-email" href={'mailto:' + contactEmail}>{contactEmail}</a></section>
       </StackScene>
     </ScrollStack>
   </div>
