@@ -39,7 +39,7 @@ Le front vit dans `src/`.
 
 Responsabilités principales :
 
-- `src/App.tsx` : routage côté client (FR `/projets`, `/expertises`, `/a-propos`, `/contact`, `/configurateur`, `/faq` et pages légales ; EN sous `/en/...`), métadonnées par page, thème clair/sombre ;
+- `src/App.tsx` : routage côté client (FR `/projets`, `/a-propos` (À propos et expertises ; `/expertises` y redirige vers `#expertises`), `/contact`, `/configurateur`, `/faq` et pages légales ; EN sous `/en/...`), métadonnées par page, thème clair/sombre ;
 - `src/site.ts` : table des chemins FR/EN. Toute nouvelle page doit aussi être ajoutée dans `vercel.json` (rewrites) et `public/sitemap.xml` ;
 - `src/data/` : contenus (`portfolio-content.ts`), parcours et services (`services.ts`, `home-guide.ts`), options du configurateur (`project-configurator.ts`) et envoi d'une demande (`project-submit.ts`) ;
 - `src/components/` : pages et sections (accueil, guide de projet, configurateur, timeline, pages légales) ;

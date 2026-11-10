@@ -235,3 +235,7 @@ html.dark .illustration { --ill-line: #e8f1ff; --ill-bar: #0f1f5c; --ill-bar-ink
 .project-body h3 { font-weight: 900; }
 .project-body p { color: var(--fg); font-weight: 500; }
 .portfolio-badge { border: 2px solid var(--nb-line) !important; border-radius: 0 !important; background: var(--tint) !important; color: var(--fg) !important; font-weight: 800; }
+
+/* About and expertise page */
+.skill-detail { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--surface) !important; background-image: none !important; box-shadow: var(--nb-shadow) !important; }
+.orbit-frame * { font-weight: 800; }
