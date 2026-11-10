@@ -1,0 +1,57 @@
+/* Home preview of finished projects: three cards, then a link to the full page. */
+.home-projects { padding-block: 72px 80px; }
+/* Marquee: three identical tracks side by side, all slide left by one track width, then the loop restarts unseen. */
+.home-projects-marquee { display: flex; width: 100vw; margin: 36px 0 0 calc(50% - 50vw); padding-block: 12px 18px; overflow: hidden; }
+.home-projects-track { display: flex; flex: none; gap: 28px; min-width: max-content; margin: 0; padding: 0 14px; list-style: none; animation: home-projects-scroll 48s linear infinite; }
+.home-projects-marquee:hover .home-projects-track,
+.home-projects-marquee:focus-within .home-projects-track,
+.home-projects-marquee.is-paused .home-projects-track { animation-play-state: paused; }
+@keyframes home-projects-scroll { to { transform: translateX(-100%); } }
+.home-projects-track li { flex: none; width: clamp(280px, 26vw, 360px); }
+.home-projects-toggle { display: grid; place-items: center; width: 44px; height: 44px; margin: 8px auto 0; cursor: pointer; }
+.home-projects-toggle svg { width: 18px; height: 18px; }
+@media (prefers-reduced-motion: reduce) {
+  .home-projects-marquee { overflow-x: auto; }
+  .home-projects-track { animation: none; }
+  .home-projects-track[aria-hidden] { display: none; }
+  .home-projects-toggle { display: none; }
+}
+.home-project-card { display: flex; flex-direction: column; height: 100%; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); color: inherit; text-decoration: none; transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.home-project-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.home-project-card:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.home-project-image { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; }
+.home-project-image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.home-project-number { position: absolute; top: 12px; left: 12px; padding: 6px 9px; border-radius: var(--radius-sm); background: var(--surface); color: var(--accent); font-size: .8rem; font-weight: 800; letter-spacing: .08em; }
+.home-project-copy { display: flex; flex-direction: column; gap: 8px; padding: 18px 20px 22px; }
+.home-project-copy strong { font-family: var(--font-display); font-size: 1.25rem; }
+.home-project-copy span { line-height: 1.5; }
+.home-projects .home-projects-all { display: flex; width: max-content; margin: 36px auto 0 !important; }
+@media (max-width: 900px) { .home-projects { padding-block: 48px 56px; } }
+
+.home-projects .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* The white text band only shows on hover or keyboard focus; the card is just the framed image otherwise.
+   On touch screens there is no hover, so the band stays visible under the image. */
+.home-project-card { position: relative; }
+.home-project-image { aspect-ratio: 4 / 3; }
+@media (hover: hover) {
+  .home-project-copy {
+    position: absolute;
+    inset: auto 0 0 0;
+    background: var(--surface);
+    transform: translateY(101%);
+    transition: transform var(--dur) var(--ease);
+  }
+  .home-project-card:hover .home-project-copy,
+  .home-project-card:focus-visible .home-project-copy { transform: none; }
+}
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+  .home-project-copy { transform: none; opacity: 0; transition: opacity var(--dur-fast) linear; }
+  .home-project-card:hover .home-project-copy,
+  .home-project-card:focus-visible .home-project-copy { opacity: 1; }
+}
+
+/* The whole description must be readable on hover, so the card never gets shorter than its text band. */
+.home-project-image { min-height: 17rem; }
+.home-project-image img { position: absolute; inset: 0; }
+@media (hover: hover) { .home-project-copy { max-height: 100%; overflow-y: auto; } }

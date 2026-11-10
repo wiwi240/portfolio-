@@ -1,0 +1,32 @@
+/* Home activity chart: maps the site tokens onto the colour variables the skyline reads, then dresses it neobrutalist. */
+.about-activity { padding-block: 72px 80px; }
+.about-activity-chart {
+  --color-background: var(--surface);
+  --color-foreground: var(--fg);
+  --color-border: var(--border);
+  --color-muted-foreground: var(--muted);
+  width: 100%;
+  max-width: 980px;
+  margin: 36px auto 0;
+}
+.about-activity-chart > section {
+  border: var(--nb-border, 1px solid var(--border)) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--nb-shadow, var(--shadow-sm));
+  font-family: var(--font);
+}
+.about-activity-chart > section > div { border-radius: 0 !important; }
+.about-activity-chart [role='tooltip'] { border-radius: 0 !important; box-shadow: var(--nb-shadow-sm, var(--shadow-sm)) !important; }
+@media (max-width: 900px) { .about-activity { padding-block: 48px 56px; } }
+/* The home heading styles are scoped to .home-page, so the About page needs its own. */
+.about-activity h2 { margin: 8px auto; font-size: clamp(1.65rem, 2.45vw, 2.5rem); line-height: 1.16; letter-spacing: -.045em; }
+.about-activity p { margin: 0; line-height: 1.65; }
+
+/* Window finish, matching the other neobrutalist windows: black top bar, thick inner frame, square controls. */
+.about-activity-chart > section { position: relative; overflow: hidden; padding-top: 28px; }
+.about-activity-chart > section::before { content: ''; position: absolute; inset: 0 0 auto; height: 8px; background: var(--nb-line, #000); }
+.about-activity-chart > section > div:not(.sr-only) { border: var(--nb-border, 1px solid var(--border)) !important; background: var(--bg); }
+.about-activity-chart [role='group'] { border: 3px solid var(--nb-line, #000) !important; border-radius: 0 !important; padding: 2px; }
+.about-activity-chart [role='group'] span, .about-activity-chart [role='group'] button { border-radius: 0 !important; }
+.about-activity-chart canvas { background: transparent; }
+.about-activity-chart button[title='Less'], .about-activity-chart button[aria-label^='Highlight'] { border: 2px solid var(--nb-line, #000) !important; border-radius: 0 !important; box-shadow: none !important; }

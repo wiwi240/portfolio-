@@ -21,16 +21,6 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/projects"/>
   </url>
   <url>
-    <loc>https://www.williammahi.dev/expertises</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/expertises"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/expertise"/>
-  </url>
-  <url>
-    <loc>https://www.williammahi.dev/en/expertise</loc>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/expertises"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/expertise"/>
-  </url>
-  <url>
     <loc>https://www.williammahi.dev/a-propos</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://www.williammahi.dev/a-propos"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.williammahi.dev/en/about"/>

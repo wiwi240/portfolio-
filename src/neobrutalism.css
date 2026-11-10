@@ -1,0 +1,513 @@
+/* Neobrutalism skin (blue). Loaded last: it only overrides tokens and adds hard borders, flat fills and offset shadows.
+   Remove the import in App.tsx to get the previous look back. */
+:root {
+  --nb-line: #000000;
+  --nb-border: 3px solid var(--nb-line);
+  --nb-shadow: 6px 6px 0 var(--nb-line);
+  --nb-shadow-sm: 4px 4px 0 var(--nb-line);
+
+  --bg: #cfe2ff;
+  --surface: #ffffff;
+  --tint: #a9ccff;
+  --fg: #000000;
+  --muted: #1b2a4a;
+  --border: #000000;
+  --border-strong: #000000;
+  --accent: #0a3fd6;
+  --accent-hover: #082fa3;
+  --accent-fill: #1f5bff;
+  --accent-fill-hover: #0a3fd6;
+  --on-accent: #ffffff;
+  --accent-cyan: #4fd8ff;
+  --focus: #000000;
+
+  --radius-sm: 0;
+  --radius: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --shadow-sm: var(--nb-shadow-sm);
+  --shadow: var(--nb-shadow);
+  --shadow-stack: none;
+  --font-display: 'Cabinet Grotesk', 'Satoshi', 'Segoe UI', sans-serif;
+}
+html.dark {
+  /* Dark mode keeps the same hard black lines as light mode: a deep royal blue page, navy cards, black borders and shadows. */
+  --nb-line: #000000;
+  --bg: #1a3596;
+  --surface: #0d1b52;
+  --tint: #213fa6;
+  --fg: #ffffff;
+  --muted: #d3dfff;
+  --border: #000000;
+  --border-strong: #000000;
+  --accent: #9fc0ff;
+  --accent-hover: #c2d6ff;
+  --accent-fill: #4d7fff;
+  --focus: #ffffff;
+  --shadow-sm: var(--nb-shadow-sm);
+  --shadow: var(--nb-shadow);
+  --shadow-stack: none;
+}
+
+h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.03em; }
+.eyebrow { padding: 2px 10px; border: var(--nb-border); background: var(--accent-cyan); color: #000; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* Flat blocks: borders, offset shadows, no gradients */
+.site-header, .service-card, .project-card, .project-entry-card, .home-contact-panel, .guide-summary > *, .guide-mockup-frame,
+.build-window, .build-panel, .brief-document, .about-values > *, .faq-page-list > *, .portrait-frame, .guide-final-form,
+.guide-items label, .guide-success {
+  border: var(--nb-border) !important;
+  border-radius: 0 !important;
+  background: var(--surface) !important;
+  background-image: none !important;
+  box-shadow: var(--nb-shadow) !important;
+}
+.site-header { box-shadow: 0 5px 0 var(--nb-line) !important; }
+
+/* Interactive: shadow shrinks on hover and press, as if the block is pushed in */
+.button, .guide-answers button {
+  border: var(--nb-border) !important;
+  border-radius: 0 !important;
+  background-image: none !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  font-weight: 800;
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.button-primary, .guide-answers button.is-selected { background: var(--accent-fill) !important; color: #fff !important; }
+.button-outline, .guide-answers button { background: var(--surface) !important; color: var(--fg) !important; }
+.button:hover, .guide-answers button:hover, .guide-items label:hover, .project-entry-card:hover, .service-card:hover, .project-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--nb-line) !important;
+}
+.button:active, .guide-answers button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--nb-line) !important;
+}
+
+/* Guide cards: selected = blue fill, icon and badge squared */
+.guide-items label.is-selected { background: var(--tint) !important; transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--nb-line) !important; }
+.guide-item-icon { border: var(--nb-border); border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; box-shadow: none !important; }
+.guide-items label.is-selected .guide-item-icon { background: var(--accent-fill) !important; color: #fff !important; }
+.guide-item-check { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--surface) !important; color: transparent; box-shadow: none !important; }
+.guide-items label.is-selected .guide-item-check { background: var(--accent-fill) !important; color: #fff !important; border-color: var(--nb-line) !important; transform: none; }
+.guide-progress { border: var(--nb-border); border-radius: 0 !important; background: var(--surface) !important; }
+.guide-progress span { border-radius: 0 !important; background: var(--accent-fill) !important; }
+
+/* Fields */
+input, textarea, select { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--surface) !important; color: var(--fg); }
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 4px solid var(--accent-cyan); outline-offset: 2px; }
+
+a.text-link { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 3px; }
+img { border-radius: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .button:hover, .guide-answers button:hover, .guide-items label:hover, .project-entry-card:hover, .service-card:hover, .project-card:hover { transform: none; }
+}
+
+/* Section backgrounds: flat blue bands separated by a thick line, no photo, no veil, no gradient */
+.stack-scene--bg, .stack-scene--tint, .stack-scene--surface {
+  background-image: none !important;
+  border-top: var(--nb-border);
+}
+.stack-scene--bg { background-color: var(--bg) !important; }
+.stack-scene--tint { background-color: var(--tint) !important; }
+.stack-scene--surface { background-color: var(--surface) !important; }
+.expertise-section, .contact-section, .about-section { background-image: none !important; -webkit-mask-image: none; mask-image: none; }
+body { background-image: none; }
+
+/* Flat blue everywhere: no photo, grain, dots, blur or gradient */
+body::before, html.dark body::before { display: none !important; }
+body::after { display: none !important; }
+.stack-scene--bg, .stack-scene--tint, .stack-scene--surface { background-image: none !important; }
+.home-hero::before, .home-hero::after { display: none !important; }
+
+/* Hero accent word: a compact sticker instead of a full-width bar */
+.home-hero h1 em {
+  display: table;
+  margin: 0.12em auto 0;
+  padding: 0.02em 0.28em 0.06em;
+  border: 4px solid var(--nb-line);
+  background: var(--accent-cyan);
+  color: #000;
+  -webkit-text-fill-color: #000;
+  box-shadow: 8px 8px 0 var(--nb-line);
+  transform: rotate(-2deg);
+}
+.home-hero h1 { font-weight: 900; }
+.home-hero-lead { font-weight: 600; }
+.desktop-nav a { font-weight: 800; }
+.desktop-nav a[aria-current="page"]::after { height: 4px; background: var(--nb-line); }
+.eyebrow::before { display: none; }
+.section-heading::before, .faq-page-heading::before, .guide-final-form::before, .guide-mockup-frame::before { background-image: none !important; background: var(--nb-line) !important; height: 6px; }
+
+/* Method illustrations: one hard style for all three scenes (same borders, offset shadows, black lines, no soft shadows) */
+.illustration {
+  --ill-line: #000;
+  --ill-bar: #ffffff;
+  --ill-bar-ink: #000;
+  --ill-dot: #000;
+  --ill-canvas: #eaf2ff;
+  --ill-chat-line: #000;
+  --ill-shadow: #000;
+}
+.build-window, .delivery-site, .brief-document, .build-panel, .delivery-document, .brief-chat {
+  border: 3px solid var(--nb-line) !important;
+  border-radius: 0 !important;
+  background: var(--ill-paper) !important;
+  box-shadow: 5px 5px 0 var(--nb-line) !important;
+}
+.brief-target { border: 3px solid var(--nb-line) !important; box-shadow: 4px 4px 0 var(--nb-line) !important; }
+.scene-window-bar { border-bottom: 3px solid var(--nb-line) !important; }
+.build-field, .build-button, .build-preview-button, .home-method-card .illustration * { border-radius: 0 !important; }
+.build-field { border: 2px solid var(--nb-line) !important; }
+.build-button, .build-preview-button { border: 2px solid var(--nb-line); }
+.home-step-number { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; box-shadow: 3px 3px 0 var(--nb-line); }
+.home-method-card { padding: 0 0 4px; }
+.home-method-copy { padding-top: 24px; }
+.home-method-copy h3 { font-weight: 900; }
+.home-method-copy p, .home-section-heading p { color: var(--fg); font-weight: 500; }
+
+/* Titles were too tight: loosen the display letter-spacing */
+h1, h2, h3, h4, .home-hero h1 { letter-spacing: -0.015em !important; }
+
+
+/* Timeline: thick black rail with a blue fill, square markers, hard cards */
+.tl { --tl-fg: var(--fg); --tl-muted: var(--fg); --tl-active: var(--accent-fill); }
+.tl-eyebrow { padding: 2px 10px; border: var(--nb-border); background: var(--accent-cyan); color: #000; font-weight: 800; }
+.tl-eyebrow::before { display: none; }
+.tl-head h2 { font-weight: 900; letter-spacing: -0.015em; }
+.tl-head p { color: var(--fg); font-weight: 500; }
+.tl-period { border: var(--nb-border); border-radius: 0; background: var(--surface); color: var(--fg); font-weight: 800; box-shadow: 3px 3px 0 var(--nb-line); }
+
+.tl-axis { height: 10px; border: 3px solid var(--nb-line); border-radius: 0; background: var(--surface); }
+.tl-fill { background: var(--accent-fill) !important; border-radius: 0; box-shadow: inset 0 -3px 0 rgb(0 0 0 / 0.25); }
+
+.tl-dot { width: 24px; height: 24px; border: var(--nb-border); border-radius: 0; background: var(--surface); box-shadow: 3px 3px 0 var(--nb-line); transform: translate(-6px, -50%); }
+.tl-item.is-active .tl-dot { border-color: var(--nb-line); background: var(--accent-cyan); box-shadow: 4px 4px 0 var(--nb-line); transform: translate(-6px, -50%) rotate(45deg); }
+.tl-stem { width: 4px; background: var(--nb-line); }
+
+.tl-copy { border: var(--nb-border); border-radius: 0; background: var(--surface); background-image: none; box-shadow: var(--nb-shadow); }
+.tl-icon { border: var(--nb-border); border-radius: 0; background: var(--accent-cyan); color: #000; }
+.tl-copy h3 { font-weight: 900; }
+.tl-copy p { color: var(--fg); font-weight: 500; }
+.tl-tags span { border: 2px solid var(--nb-line); border-radius: 0; background: var(--tint); color: var(--fg); font-weight: 800; }
+.tl-half time { padding: 2px 8px; border: 2px solid var(--nb-line); background: var(--surface); color: var(--fg); font-weight: 800; width: max-content; }
+.tl-lead img { border: var(--nb-border); border-radius: 0; box-shadow: var(--nb-shadow); }
+.tl-hint { color: var(--fg); font-weight: 700; }
+
+/* Harmony: every full-width band is blue (alternating two tones); inner sections never paint their own box or lines */
+.stack-scene--bg, .stack-scene--surface { background-color: var(--bg) !important; }
+.stack-scene--tint { background-color: var(--tint) !important; }
+.home-method, .home-section { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+.home-contact-panel { background: var(--surface) !important; border: var(--nb-border) !important; box-shadow: var(--nb-shadow) !important; }
+.illustration svg, .illustration img { filter: none !important; }
+.illustration * { box-shadow: none; }
+.build-window, .delivery-site, .brief-document, .build-panel, .delivery-document, .brief-chat { box-shadow: 5px 5px 0 var(--nb-line) !important; }
+.brief-target { box-shadow: 4px 4px 0 var(--nb-line) !important; }
+
+/* Entry cards: numbers match the method badges, images are squared and framed */
+.project-entry-image > span { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; font-weight: 800; box-shadow: 3px 3px 0 var(--nb-line); backdrop-filter: none !important; }
+.project-entry-image, .project-entry-image img, .project-entry-image video { border-radius: 0 !important; }
+.project-entry-image { border-bottom: var(--nb-border); }
+.project-entry-image::before, .project-entry-image::after { display: none !important; }
+.project-entry-copy strong { display: inline-block; width: max-content; max-width: 100%; padding: 4px 10px; border: var(--nb-border); background: var(--surface); color: #000 !important; text-shadow: none !important; font-weight: 900; box-shadow: 3px 3px 0 var(--nb-line); }
+
+/* Neobrutalism skin */
+.home-project-card { border: var(--nb-border); border-radius: 0; box-shadow: var(--nb-shadow); }
+.home-project-card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--nb-line); }
+.home-project-image { border-bottom: var(--nb-border); }
+.home-project-number { border: var(--nb-border); border-radius: 0; background: var(--accent-cyan); color: #000; box-shadow: 3px 3px 0 var(--nb-line); }
+.home-project-copy strong { font-weight: 900; }
+.home-project-copy span { color: var(--fg); font-weight: 500; }
+@media (prefers-reduced-motion: reduce) { .home-project-card:hover { transform: none; } }
+.home-projects-toggle { border: var(--nb-border); border-radius: 0; background: var(--surface); color: var(--fg); box-shadow: 3px 3px 0 var(--nb-line); }
+.home-projects-toggle:active { transform: translate(3px, 3px); box-shadow: none; }
+@media (hover: hover) { .home-project-copy { border-top: var(--nb-border); } }
+.home-project-image { border-bottom: 0; }
+@media (hover: none) { .home-project-image { border-bottom: var(--nb-border); } }
+
+/* Projects page cards */
+.project-card::after { display: none !important; }
+.project-image { border-bottom: 0 !important; }
+.project-image::before { border: var(--nb-border); border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; backdrop-filter: none !important; box-shadow: 3px 3px 0 var(--nb-line) !important; }
+@media (hover: hover) { .project-body { border-top: var(--nb-border); } }
+@media (hover: none) { .project-image { border-bottom: var(--nb-border) !important; } }
+.project-body h3 { font-weight: 900; }
+.project-body p { color: var(--fg); font-weight: 500; }
+.portfolio-badge { border: 2px solid var(--nb-line) !important; border-radius: 0 !important; background: var(--tint) !important; color: var(--fg) !important; font-weight: 800; }
+
+/* About and expertise page */
+.skill-detail { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--surface) !important; background-image: none !important; box-shadow: var(--nb-shadow) !important; }
+
+/* Skills wheel: dashed black orbits, square white tiles with hard shadows, boxed centre and labels */
+.orbit-frame { background: none !important; }
+.orbiting-skills__ring-guide { border: 3px dashed var(--nb-line) !important; border-radius: 50% !important; opacity: 0.55; }
+.orbiting-skills__center {
+  border: 4px solid var(--nb-line) !important;
+  border-radius: 0 !important;
+  background: var(--accent-cyan) !important;
+  box-shadow: 6px 6px 0 var(--nb-line) !important;
+  backdrop-filter: none !important;
+}
+.orbiting-skills__center::before { display: none !important; }
+.orbiting-skills__center span { color: #000 !important; font-weight: 900 !important; letter-spacing: 0.04em !important; font-size: clamp(0.5rem, 1.75cqw, 0.8rem) !important; }
+.orbiting-skills__logo {
+  border: 3px solid var(--nb-line) !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  box-shadow: 4px 4px 0 var(--nb-line) !important;
+  backdrop-filter: none !important;
+}
+.orbiting-skills__item-button:hover .orbiting-skills__counter-rotation,
+.orbiting-skills__item-button:focus-visible .orbiting-skills__counter-rotation { translate: -2px -2px; filter: none !important; }
+.orbiting-skills__item-button:hover .orbiting-skills__logo,
+.orbiting-skills__item-button:focus-visible .orbiting-skills__logo { background: var(--accent-cyan) !important; box-shadow: 6px 6px 0 var(--nb-line) !important; }
+.orbiting-skills__item-button:focus-visible { outline: none; }
+.orbiting-skills__label {
+  border: 3px solid var(--nb-line) !important;
+  border-radius: 0 !important;
+  background: var(--surface) !important;
+  color: var(--fg) !important;
+  font-weight: 900 !important;
+  box-shadow: 4px 4px 0 var(--nb-line) !important;
+  backdrop-filter: none !important;
+}
+html.dark .orbiting-skills__logo { background: #ffffff !important; border-color: var(--nb-line) !important; box-shadow: 4px 4px 0 var(--nb-line) !important; }
+
+/* Square tiles need more room than circles: size them from the wheel itself so neighbours on adjacent orbits never touch,
+   keep the shadow small, and lift the hovered orbit above the others so its label is never hidden. */
+.orbiting-skills .orbiting-skills__canvas { container-type: inline-size; }
+.orbiting-skills .orbiting-skills__item-button.orbiting-skills__item-button--lg { --skill-size: clamp(1rem, 5.2cqw, 2.8rem); }
+.orbiting-skills .orbiting-skills__item-button.orbiting-skills__item-button--md { --skill-size: clamp(1rem, 4.9cqw, 2.6rem); }
+.orbiting-skills .orbiting-skills__item-button.orbiting-skills__item-button--sm { --skill-size: clamp(1rem, 4.5cqw, 2.4rem); }
+.orbiting-skills__logo { border-width: 2px !important; box-shadow: 3px 3px 0 var(--nb-line) !important; }
+.orbiting-skills__item-button:hover .orbiting-skills__logo,
+.orbiting-skills__item-button:focus-visible .orbiting-skills__logo { box-shadow: 4px 4px 0 var(--nb-line) !important; }
+.orbiting-skills__orbit-layer:has(.orbiting-skills__item-button:hover, .orbiting-skills__item-button:focus-visible) { z-index: 10; }
+.orbiting-skills__label { border-width: 2px !important; box-shadow: 3px 3px 0 var(--nb-line) !important; }
+.orbiting-skills__center { width: clamp(2.2rem, 13.5cqw, 7rem) !important; height: clamp(2.2rem, 13.5cqw, 7rem) !important; border-width: 3px !important; box-shadow: 5px 5px 0 var(--nb-line) !important; }
+
+/* Sorting bar */
+.orbiting-skills .orbiting-skills__filter { border: var(--nb-border); border-radius: 0; background: var(--surface); color: var(--fg); font-weight: 900; box-shadow: 3px 3px 0 var(--nb-line); transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease); }
+.orbiting-skills .orbiting-skills__filter:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--nb-line); }
+.orbiting-skills .orbiting-skills__filter[aria-pressed='true'] { background: var(--accent-fill); color: #fff; transform: translate(3px, 3px); box-shadow: none; }
+
+/* Small wheels (phones): lighter shadows and a centre that fits inside the first orbit */
+@container (max-width: 340px) {
+  .orbiting-skills__logo { box-shadow: 2px 2px 0 var(--nb-line) !important; border-width: 2px !important; }
+  .orbiting-skills__center span { font-size: 0.5rem !important; letter-spacing: 0.02em !important; }
+}
+
+/* Dark mode: the method illustrations use the blue palette instead of the grey-green product screens */
+html.dark .illustration {
+  --ill-paper: #0d1b52; --ill-canvas: #182f8c; --ill-line: #000000; --ill-ink: #ffffff; --ill-muted: #b9c9ff;
+  --ill-bar: #0d1b52; --ill-bar-ink: #ffffff; --ill-dot: #ffffff; --ill-tint: #213fa6;
+  --ill-blue: #3d73ff; --ill-blue-ink: #8fb5ff; --ill-cyan: #4fd8ff; --ill-cyan-soft: #1c4fb8; --ill-cyan-bg: #1a3aa6;
+  --ill-skel: #e8f1ff; --ill-skel-soft: #7b93e6; --ill-chat: #162a78; --ill-chat-line: #000000; --ill-chat-bar: #4fd8ff; --ill-chat-bar-2: #8fb0ff;
+  --ill-shadow: #000000;
+}
+
+/* Footer: same hard line as the section bands */
+.site-footer { border-top: var(--nb-border) !important; background: var(--surface) !important; }
+
+/* Dark mode: black accents that would disappear on navy switch to cyan */
+html.dark .desktop-nav a[aria-current="page"]::after { background: var(--accent-cyan); }
+html.dark .mobile-nav a[aria-current="page"] { color: var(--accent-cyan); }
+html.dark .tl-stem { background: #000; }
+
+
+/* ---------- Home: method cards and contact band ---------- */
+.home-converge .home-method { padding-block: 8px 0; }
+.home-method-grid { gap: clamp(36px, 4.4vw, 64px) !important; margin-top: 44px !important; }
+.home-method-card {
+  border: var(--nb-border);
+  background: var(--surface);
+  box-shadow: var(--nb-shadow);
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.home-method-card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--nb-line); }
+.home-method-visual { padding: 14px; border-bottom: var(--nb-border); background: var(--tint); }
+.home-method-visual .illustration { margin: 0; }
+.home-method-copy { padding: 18px 20px 22px !important; }
+.home-method-head h3 { font-size: clamp(1.2rem, 1.6vw, 1.5rem) !important; }
+.home-method-copy p { min-height: 0 !important; margin-top: 10px !important; color: var(--fg) !important; font-weight: 500; font-size: 1.02rem; max-width: none !important; }
+.home-step-number { position: static !important; box-shadow: 3px 3px 0 var(--nb-line); }
+
+/* Arrows between the steps (desktop), pointing down on small screens */
+@media (min-width: 901px) {
+  .home-method-card:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    z-index: 4;
+    top: 38%;
+    right: calc(clamp(36px, 4.4vw, 64px) / -2 - 22px);
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: var(--nb-border);
+    background: var(--accent-cyan);
+    color: #000;
+    font-size: 1.5rem;
+    font-weight: 900;
+    box-shadow: 3px 3px 0 var(--nb-line);
+  }
+}
+@media (max-width: 900px) {
+  .home-method-card:not(:last-child)::after {
+    content: '↓';
+    position: absolute;
+    left: 50%;
+    bottom: calc(clamp(34px, 6vw, 34px) / -2 - 22px);
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    transform: translateX(-50%);
+    border: var(--nb-border);
+    background: var(--accent-cyan);
+    color: #000;
+    font-size: 1.5rem;
+    font-weight: 900;
+    box-shadow: 3px 3px 0 var(--nb-line);
+    z-index: 4;
+  }
+}
+
+/* Contact: a full blue band with a very large title and two actions */
+.home-converge .home-contact-panel {
+  margin-top: 72px;
+  padding: clamp(36px, 5vw, 64px) clamp(20px, 4vw, 56px) !important;
+  border: var(--nb-border) !important;
+  background: var(--accent-fill) !important;
+  box-shadow: 8px 8px 0 var(--nb-line) !important;
+}
+.home-contact-panel h2 { max-width: 16ch !important; color: #fff; font-size: clamp(2.4rem, 5.4vw, 4.6rem) !important; font-weight: 900; line-height: 1.02; }
+.home-contact-panel > p { color: #fff !important; font-weight: 600; font-size: clamp(1.05rem, 1.5vw, 1.3rem) !important; }
+.home-contact-panel .eyebrow { background: var(--accent-cyan); }
+.home-contact-panel .button-primary { background: var(--accent-cyan) !important; color: #000 !important; }
+.home-contact-panel .button-outline { background: #fff !important; color: #000 !important; }
+.home-contact-panel .button { min-height: 54px; font-size: 1rem; }
+html.dark .home-converge .home-contact-panel { background: #2a55e8 !important; }
+
+/* ---------- End of the guide: mockup slide and summary ---------- */
+.guide-mockup-disclaimer { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; box-shadow: 4px 4px 0 var(--nb-line); }
+.guide-mockup-disclaimer * { color: #000 !important; }
+.guide-mockup-frame .psp-browser { border: 4px solid var(--nb-line) !important; border-radius: 0 !important; box-shadow: 8px 8px 0 var(--nb-line) !important; }
+.guide-mockup-activity { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--surface) !important; background-image: none !important; box-shadow: var(--nb-shadow) !important; }
+.guide-mockup-pages strong { color: var(--fg); font-weight: 900; }
+.guide-mockup-pages button {
+  border: var(--nb-border) !important;
+  border-radius: 0 !important;
+  background: var(--surface) !important;
+  color: var(--fg) !important;
+  font-weight: 800;
+  box-shadow: 3px 3px 0 var(--nb-line);
+}
+.guide-mockup-pages button:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--nb-line); }
+.guide-mockup-pages button[aria-current='page'] { background: var(--accent-fill) !important; color: #fff !important; transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--nb-line); }
+.guide-mockup-pages em, .guide-mockup-frame [data-new]::after { border: 2px solid var(--nb-line); border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; }
+
+.guide-summary > div { border: var(--nb-border) !important; border-left-width: 8px !important; border-radius: 0 !important; background: var(--surface) !important; box-shadow: var(--nb-shadow-sm) !important; }
+.guide-summary h3 { color: var(--fg) !important; font-weight: 900; }
+.guide-summary li { border: 2px solid var(--nb-line) !important; border-radius: 0 !important; background: var(--tint) !important; color: var(--fg) !important; font-weight: 800; }
+.guide-summary li svg { color: var(--fg) !important; }
+.guide-final-form { border-color: var(--nb-line) !important; }
+.guide-final-form::before { border-radius: 0 !important; height: 8px !important; background: var(--accent-fill) !important; }
+.guide-success-badge { border: var(--nb-border); border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; box-shadow: 5px 5px 0 var(--nb-line) !important; }
+.guide-error { border: var(--nb-border); border-radius: 0 !important; font-weight: 700; }
+
+/* The activity field inside the final form is not a card of its own */
+.guide-final-form .guide-activity { padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
+/* Headings that receive focus from the guide's own scrolling must not show a ring box */
+.stack-scene-inner h2[tabindex='-1']:focus, .stack-scene-inner h2[tabindex='-1']:focus-visible { outline: none !important; }
+
+/* ---------- Guide mockup: the demo site itself, as a bold neobrutalist wireframe ---------- */
+.guide-mockup-frame .psp-shell {
+  --psp-accent: #1f5bff;
+  --mk-ink: #000;
+  --mk-muted: #1b2a4a;
+  --mk-line: #000;
+  --mk-grad: #1f5bff;
+}
+.guide-mockup-frame .psp-toolbar { border-bottom: 3px solid #000 !important; background: #fff !important; }
+.guide-mockup-frame .psp-toolbar * { border-radius: 0 !important; }
+.guide-mockup-frame .psp-toolbar input, .guide-mockup-frame .psp-urlbar { border: 2px solid #000 !important; background: #fff !important; font-weight: 700; }
+.guide-mockup-frame .psp-device { border: 2px solid #000 !important; background: #fff !important; }
+.guide-mockup-frame .psp-device button[aria-pressed='true'] { background: #1f5bff !important; color: #fff !important; }
+.guide-mockup-frame .psp-dots i { border: 2px solid #000; }
+.guide-mockup-frame .psp-contexts { border-bottom: 3px solid #000 !important; background: #cfe2ff !important; }
+.guide-mockup-frame .psp-contexts button { font-weight: 900; color: #000 !important; }
+.guide-mockup-frame .psp-contexts button[aria-pressed='true'] { border-bottom: 5px solid #000 !important; background: #4fd8ff !important; color: #000 !important; }
+.guide-mockup-frame .psp-contexts button[data-new]::after { border: 2px solid #000; border-radius: 0 !important; background: #4fd8ff !important; box-shadow: none !important; }
+.guide-mockup-frame .psp-start-note, .guide-mockup-frame .psp-permanent-note { border: 0 !important; border-bottom: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; color: #000 !important; font-weight: 700; font-size: 11px !important; }
+
+.guide-mockup-frame .psp-canvas { background: #cfe2ff !important; }
+.guide-mockup-frame .psp-site { background: #cfe2ff !important; background-image: none !important; color: #000; }
+.guide-mockup-frame .psp-site h1, .guide-mockup-frame .psp-site h2, .guide-mockup-frame .psp-site h3, .guide-mockup-frame .psp-brand { font-weight: 900 !important; letter-spacing: -0.02em !important; color: #000; }
+.guide-mockup-frame .psp-site p, .guide-mockup-frame .psp-site li, .guide-mockup-frame .psp-site span { color: #1b2a4a; }
+
+/* Site header: a black-outlined bar */
+.guide-mockup-frame .psp-site-header { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; box-shadow: 5px 5px 0 #000 !important; backdrop-filter: none !important; }
+.guide-mockup-frame .psp-site-header::before { display: none !important; }
+.guide-mockup-frame .psp-brand::before { border: 2px solid #000; border-radius: 0 !important; background: #4fd8ff !important; }
+.guide-mockup-frame .psp-site-header nav button { font-weight: 800; color: #000 !important; border-radius: 0 !important; }
+.guide-mockup-frame .psp-site-header nav button[aria-current='page'] { background: #4fd8ff !important; color: #000 !important; border: 2px solid #000 !important; }
+
+/* Hero: big heavy title, flat colour block with square shapes instead of the gradient and circles */
+.guide-mockup-frame .psp-hero { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; box-shadow: 8px 8px 0 #000 !important; }
+.guide-mockup-frame .psp-hero h1 { font-size: clamp(34px, 4.6cqw, 58px) !important; line-height: 0.98 !important; font-weight: 900 !important; }
+.guide-mockup-frame .psp-hero p { color: #000 !important; font-size: 15px !important; font-weight: 500; }
+.guide-mockup-frame .psp-hero-copy small, .guide-mockup-frame .psp-home-section > small, .guide-mockup-frame .psp-intro small { border: 2px solid #000 !important; border-radius: 0 !important; background: #4fd8ff !important; color: #000 !important; font-weight: 900 !important; }
+.guide-mockup-frame .psp-hero-media {
+  border: 3px solid #000 !important;
+  border-radius: 0 !important;
+  background: #4fd8ff !important;
+  background-image: linear-gradient(#000 3px, transparent 3px), linear-gradient(90deg, #000 3px, transparent 3px) !important;
+  background-size: 100% 33.33%, 33.33% 100% !important;
+  background-position: 0 0, 0 0 !important;
+  box-shadow: 6px 6px 0 #000;
+}
+.guide-mockup-frame .psp-hero-media::after { inset: 18% 22% 18% 22% !important; border: 3px solid #000 !important; border-radius: 0 !important; background-color: #fff !important; background-image: linear-gradient(to top right, transparent calc(50% - 1.5px), #000 calc(50% - 1.5px), #000 calc(50% + 1.5px), transparent calc(50% + 1.5px)), linear-gradient(to bottom right, transparent calc(50% - 1.5px), #000 calc(50% - 1.5px), #000 calc(50% + 1.5px), transparent calc(50% + 1.5px)) !important; box-shadow: 8px 8px 0 #1f5bff; }
+.guide-mockup-frame .psp-products article::before, .guide-mockup-frame .psp-gallery button::before { background: #4fd8ff !important; border-bottom: 3px solid #000; }
+.guide-mockup-frame .psp-products article:nth-child(3n + 2)::before, .guide-mockup-frame .psp-gallery button:nth-child(3n + 2)::before { background: #1f5bff !important; }
+.guide-mockup-frame .psp-products article:nth-child(3n)::before, .guide-mockup-frame .psp-gallery button:nth-child(3n)::before { background: #ffe14d !important; }
+
+/* Buttons */
+.guide-mockup-frame .psp-primary, .guide-mockup-frame .psp-secondary { border: 3px solid #000 !important; border-radius: 0 !important; box-shadow: 4px 4px 0 #000 !important; font-weight: 900 !important; text-transform: none; }
+.guide-mockup-frame .psp-primary { background: #1f5bff !important; color: #fff !important; }
+.guide-mockup-frame .psp-secondary { background: #fff !important; color: #000 !important; }
+.guide-mockup-frame .psp-primary:hover, .guide-mockup-frame .psp-secondary:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 #000 !important; }
+
+/* Content blocks */
+.guide-mockup-frame .psp-home-about { background: #a9ccff !important; border-block: 3px solid #000; }
+.guide-mockup-frame .psp-home-section { background: transparent !important; }
+.guide-mockup-frame .psp-feature-links button, .guide-mockup-frame .psp-widget, .guide-mockup-frame .psp-products article, .guide-mockup-frame .psp-gallery button,
+.guide-mockup-frame .psp-cart-line, .guide-mockup-frame .psp-faq details, .guide-mockup-frame .psp-about-points > div, .guide-mockup-frame .psp-list > button,
+.guide-mockup-frame .psp-explainer, .guide-mockup-frame .psp-demo-form, .guide-mockup-frame .psp-notice, .guide-mockup-frame .psp-inline-detail, .guide-mockup-frame .psp-service-line {
+  border: 3px solid #000 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  background-image: none !important;
+  box-shadow: 5px 5px 0 #000 !important;
+}
+.guide-mockup-frame .psp-feature-icon { border: 2px solid #000; border-radius: 0 !important; background: #4fd8ff !important; color: #000 !important; }
+.guide-mockup-frame .psp-feature-links strong, .guide-mockup-frame .psp-service-line strong { color: #000 !important; font-weight: 900; }
+.guide-mockup-frame .psp-demo-form input, .guide-mockup-frame .psp-demo-form textarea, .guide-mockup-frame .psp-edit-label input { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; }
+.guide-mockup-frame .psp-site-footer { border-top: 3px solid #000 !important; background: #000 !important; color: #fff !important; }
+.guide-mockup-frame .psp-site-footer * { color: #fff !important; }
+.guide-mockup-frame .psp-success { border: 3px solid #000; border-radius: 0 !important; background: #4fd8ff !important; color: #000 !important; font-weight: 800; }
+.guide-mockup-frame [data-new]::after { border: 2px solid #000; border-radius: 0 !important; background: #4fd8ff !important; color: #000 !important; }
+
+/* The demo's text was 10 to 11px inside a very large frame: scale the desktop view up so it reads as a real preview */
+.guide-mockup-frame .psp-canvas:not(.device-mobile) .psp-site { zoom: 1.22; }
+.guide-mockup-frame .psp-mini-list > *, .guide-mockup-frame .psp-mini-list li { border: 2px solid #000 !important; border-radius: 0 !important; background: #fff !important; color: #000 !important; font-weight: 700; }
+.guide-mockup-frame .psp-list > button span { color: #000 !important; font-weight: 800; }
+.guide-mockup-frame .psp-category-list button, .guide-mockup-frame .psp-workspace-nav button, .guide-mockup-frame .psp-cart-controls button { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; color: #000 !important; font-weight: 900 !important; box-shadow: 3px 3px 0 #000; }
+.guide-mockup-frame .psp-category-list button[aria-pressed='true'], .guide-mockup-frame .psp-workspace-nav button.active { background: #1f5bff !important; color: #fff !important; }
+.guide-mockup-frame .psp-cart-page { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; box-shadow: 5px 5px 0 #000; }
+/* The demo browser is a fixed light wireframe in both themes: pin its toolbar colours so dark mode cannot invert parts of it */
+.guide-mockup-frame .psp-toolbar, .guide-mockup-frame .psp-toolbar * { color: #000 !important; }
+.guide-mockup-frame .psp-toolbar [class*='url'], .guide-mockup-frame .psp-toolbar [class*='address'], .guide-mockup-frame .psp-toolbar > div:nth-child(3) { background: #eaf1fa !important; border: 2px solid #000 !important; }
+.guide-mockup-frame .psp-device button { color: #000 !important; }
+.guide-mockup-frame .psp-device button[aria-pressed='true'] { color: #fff !important; }

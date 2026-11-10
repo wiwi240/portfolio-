@@ -5,6 +5,7 @@ import {
   type CSSProperties,
   type ReactNode,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -42,7 +43,7 @@ type SkillCategory =
   | 'Tool'
   | 'Platform'
 
-type OrbitingSkillsVariant = 'languages' | 'frameworks' | 'all'
+type OrbitingSkillsVariant = 'languages' | 'frameworks' | 'all' | 'front' | 'back' | 'tools'
 
 type SkillLanguage = 'fr' | 'en'
 
@@ -434,7 +435,17 @@ const variantFilters: Record<OrbitingSkillsVariant, (skill: SkillDefinition) => 
     ['typescript', 'javascript', 'python', 'ruby', 'html', 'css'].includes(skill.id),
   frameworks: (skill) =>
     ['react', 'nextjs', 'tailwind', 'bootstrap', 'graphql', 'rails', 'prisma'].includes(skill.id),
+  // Sorting groups shown as the filter bar. A skill can belong to several groups (JavaScript and TypeScript run on both sides).
+  front: (skill) => ['react', 'nextjs', 'typescript', 'javascript', 'html', 'css', 'tailwind', 'bootstrap'].includes(skill.id),
+  back: (skill) => ['rails', 'ruby', 'python', 'prisma', 'graphql', 'nextjs', 'typescript', 'javascript'].includes(skill.id),
+  tools: (skill) => ['docker', 'vscode', 'git', 'github', 'pnpm', 'turborepo'].includes(skill.id),
   all: () => true,
+}
+
+const filterOrder = ['all', 'front', 'back', 'tools'] as const
+const filterLabels: Record<SkillLanguage, { group: string; options: Record<(typeof filterOrder)[number], string> }> = {
+  fr: { group: 'Trier les compétences', options: { all: 'Tout', front: 'Front-end', back: 'Back-end', tools: 'Outils' } },
+  en: { group: 'Sort skills', options: { all: 'All', front: 'Front end', back: 'Back end', tools: 'Tools' } },
 }
 
 function useElementSize<T extends HTMLElement>() {
@@ -546,7 +557,7 @@ export default function OrbitingSkills({
 }: OrbitingSkillsProps) {
   const reducedMotion = useReducedMotion()
   const { ref, size } = useElementSize<HTMLDivElement>()
-  const variant = defaultVariant ?? 'all'
+  const [variant, setVariant] = useState<OrbitingSkillsVariant>(defaultVariant ?? 'all')
 
   const visibleOrbits = useMemo(() => {
     const filter = variantFilters[variant]
@@ -561,8 +572,43 @@ export default function OrbitingSkills({
 
   const containerSize = Math.min(size.width, size.height)
 
+  // Each skill counter-rotates against its orbit to stay upright. That only holds while both animations share a start time:
+  // skills added by a filter would otherwise start their counter-rotation from zero while the orbit is already turned.
+  useLayoutEffect(() => {
+    const canvas = ref.current
+    if (!canvas) return
+    canvas.querySelectorAll<HTMLElement>('.orbiting-skills__orbit-rotation').forEach((orbit) => {
+      const spin = orbit.getAnimations().find((animation) => (animation as CSSAnimation).animationName === 'orbiting-skills-spin')
+      if (!spin || spin.startTime === null) return
+      orbit.querySelectorAll<HTMLElement>('.orbiting-skills__counter-rotation').forEach((item) => {
+        item.getAnimations().forEach((animation) => {
+          if ((animation as CSSAnimation).animationName === 'orbiting-skills-spin') animation.startTime = spin.startTime
+        })
+      })
+    })
+  }, [ref, visibleOrbits, containerSize, reducedMotion])
+
+  const chooseVariant = (next: OrbitingSkillsVariant) => {
+    setVariant(next)
+    // The hovered skill may no longer exist once the wheel is filtered.
+    onSkillHoverChange?.(null)
+  }
+
   return (
     <div className="orbiting-skills">
+      <div className="orbiting-skills__filters" role="group" aria-label={filterLabels[language].group}>
+        {filterOrder.map((id) => (
+          <button
+            key={id}
+            type="button"
+            className="orbiting-skills__filter"
+            aria-pressed={variant === id}
+            onClick={() => chooseVariant(id)}
+          >
+            {filterLabels[language].options[id]}
+          </button>
+        ))}
+      </div>
       <div ref={ref} className="orbiting-skills__canvas" aria-label={orbitText[language].canvas}>
         <div className="orbiting-skills__center">
           <span>{orbitText[language].center}</span>

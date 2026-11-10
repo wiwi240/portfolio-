@@ -132,3 +132,11 @@ html.dark .illustration {
   .home-hero .home-actions { width: 100%; flex-direction: column; align-items: center; gap: 10px; margin-top: 24px; }
   .home-hero .home-actions .button { width: min(100%, 280px); }
 }
+
+/* Method card: visual on top, then number + title, then text. Contact: two actions side by side. */
+.home-method-head { display: flex; align-items: center; gap: 12px; }
+.home-method-head .home-step-number { position: static; flex: none; }
+.home-method-copy { padding: 16px 4px 0; }
+.home-contact-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 28px; }
+.home-contact-actions .button { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 560px) { .home-contact-actions { flex-direction: column; align-items: stretch; } }
