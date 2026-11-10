@@ -139,3 +139,37 @@ body::after { display: none !important; }
 .desktop-nav a[aria-current="page"]::after { height: 4px; background: var(--nb-line); }
 .eyebrow::before { display: none; }
 .section-heading::before, .faq-page-heading::before, .guide-final-form::before, .guide-mockup-frame::before { background-image: none !important; background: var(--nb-line) !important; height: 6px; }
+
+/* Method illustrations: one hard style for all three scenes (same borders, offset shadows, black lines, no soft shadows) */
+.illustration {
+  --ill-line: #000;
+  --ill-bar: #ffffff;
+  --ill-bar-ink: #000;
+  --ill-dot: #000;
+  --ill-canvas: #eaf2ff;
+  --ill-chat-line: #000;
+  --ill-shadow: #000;
+}
+.build-window, .delivery-site, .brief-document, .build-panel, .delivery-document, .brief-chat {
+  border: 3px solid var(--nb-line) !important;
+  border-radius: 0 !important;
+  background: var(--ill-paper) !important;
+  box-shadow: 5px 5px 0 var(--nb-line) !important;
+}
+.brief-target { border: 3px solid var(--nb-line) !important; box-shadow: 4px 4px 0 var(--nb-line) !important; }
+.scene-window-bar { border-bottom: 3px solid var(--nb-line) !important; }
+.build-field, .build-button, .build-preview-button, .home-method-card .illustration * { border-radius: 0 !important; }
+.build-field { border: 2px solid var(--nb-line) !important; }
+.build-button, .build-preview-button { border: 2px solid var(--nb-line); }
+.home-step-number { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; box-shadow: 3px 3px 0 var(--nb-line); }
+.home-method-card { padding: 0 0 4px; }
+.home-method-copy { padding-top: 24px; }
+.home-method-copy h3 { font-weight: 900; }
+.home-method-copy p, .home-section-heading p { color: var(--fg); font-weight: 500; }
+
+/* Titles were too tight: loosen the display letter-spacing */
+h1, h2, h3, h4, .home-hero h1 { letter-spacing: -0.015em !important; }
+
+/* Section bands: alternate blue tones so no band is a bare white page */
+.home-method { background: var(--tint) !important; }
+html.dark .illustration { --ill-line: #e8f1ff; --ill-bar: #0f1f5c; --ill-bar-ink: #fff; --ill-dot: #e8f1ff; --ill-canvas: #13287a; --ill-chat-line: #e8f1ff; --ill-shadow: #e8f1ff; }
