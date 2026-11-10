@@ -44,7 +44,9 @@ const plain: Record<string, [string, string]> = {
   events: ['Annoncer des événements', 'Announce events'],
   eventSignup: ['Inscriptions aux événements', 'Event sign-ups'],
   catalog: ['Présenter mes produits ou prestations', 'Show my products or services'],
-  productDetails: ['Une page par produit', 'One page per product'],
+  productDetails: ['Une page par produit ou service', 'One page per product or service'],
+  payment: ['Paiement ou acompte en ligne', 'Online payment or deposit'],
+  delivery: ['Livraison ou retrait des produits', 'Delivery or collection of products'],
   promotions: ['Codes de réduction', 'Discount codes'],
   clientArea: ['Un compte pour chaque client', 'An account for each client'],
   documents: ['Retrouver ses documents', 'Find their documents'],
@@ -94,8 +96,8 @@ const questions: Record<string, { ask: Localized; hint: Localized }> = {
     hint: ask('Actualités, questions fréquentes, menu ou carte, lettre d’information, événements et inscriptions.', 'News, frequently asked questions, menu, newsletter, events and sign-ups.'),
   },
   sell: {
-    ask: ask('Vendre vos produits avec paiement en ligne ?', 'Sell your products with online payment?'),
-    hint: ask('Catalogue, une page par produit, panier, paiement en ligne, livraison, codes de réduction, suivi de commande.', 'Catalogue, one page per product, basket, online payment, delivery, discount codes, order tracking.'),
+    ask: ask('Vendre vos produits ou vos services avec paiement en ligne ?', 'Sell your products or services with online payment?'),
+    hint: ask('Catalogue de produits ou de prestations, une page par offre, panier, paiement ou acompte en ligne, livraison ou retrait (produits physiques), codes de réduction, suivi de commande.', 'Catalogue of products or services, one page per offer, basket, online payment or deposit, delivery or collection (physical products), discount codes, order tracking.'),
   },
   clients: {
     ask: ask('Un espace personnel avec connexion pour chaque client ?', 'A personal login area for each client?'),

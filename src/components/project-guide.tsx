@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { Checkbox } from '@/components/ui/checkbox'
 import { guideIcon } from '@/data/guide-icons'
 import type { GuidePanelData } from '@/data/home-guide'
 import type { Language } from '@/data/portfolio-content'
@@ -37,7 +38,6 @@ export function GuidePanel({ language, panel, index, total, selected, onToggle, 
       const Icon = guideIcon(item.id)
       return (
         <label key={item.id} className={checked ? 'is-selected' : undefined}>
-          <input type="checkbox" checked={checked} onChange={() => onToggle(item.id)} />
           <span className="guide-item-icon" aria-hidden="true">
             <Icon size={22} strokeWidth={1.8} />
           </span>
@@ -45,9 +45,7 @@ export function GuidePanel({ language, panel, index, total, selected, onToggle, 
             <strong>{item.title[language]}</strong>
             <small>{item.description[language]}</small>
           </span>
-          <span className="guide-item-check" aria-hidden="true">
-            <Check size={14} strokeWidth={3} />
-          </span>
+          <Checkbox checked={checked} onCheckedChange={() => onToggle(item.id)} aria-label={item.title[language]} />
         </label>
       )
     })
