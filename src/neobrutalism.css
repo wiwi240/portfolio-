@@ -111,11 +111,16 @@ img { border-radius: 0; }
 .stack-scene--bg { background-color: var(--bg) !important; }
 .stack-scene--tint { background-color: var(--tint) !important; }
 .stack-scene--surface { background-color: var(--surface) !important; }
-.stack-scene--bg, .stack-scene--tint {
-  background-image: radial-gradient(var(--nb-line) 1.2px, transparent 1.4px) !important;
-  background-size: 22px 22px !important;
-  background-blend-mode: normal;
-}
 .expertise-section, .contact-section, .about-section { background-image: none !important; -webkit-mask-image: none; mask-image: none; }
 .home-method { background: var(--surface) !important; border-block: var(--nb-border) !important; }
 body { background-image: none; }
+
+/* One pattern for the whole site: the same fine dot grid on the page and on every band, no photo, grain, blur or gradient */
+:root { --nb-dots: radial-gradient(color-mix(in srgb, var(--nb-line) 28%, transparent) 1.2px, transparent 1.5px); }
+body::before { opacity: 1 !important; background-image: var(--nb-dots) !important; background-size: 22px 22px !important; background-repeat: repeat !important; }
+html.dark body::before { background-image: var(--nb-dots) !important; opacity: 1 !important; }
+body::after { display: none !important; }
+.stack-scene--bg, .stack-scene--tint, .stack-scene--surface { background-image: var(--nb-dots) !important; background-size: 22px 22px !important; background-repeat: repeat !important; }
+.home-hero::before, .home-hero::after { display: none !important; }
+.home-hero h1 em { background: var(--accent-cyan); color: #000; -webkit-text-fill-color: #000; padding: 0 .15em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.section-heading::before, .faq-page-heading::before, .guide-final-form::before, .guide-mockup-frame::before { background-image: none !important; background: var(--nb-line) !important; height: 6px; }
