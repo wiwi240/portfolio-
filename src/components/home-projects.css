@@ -1,6 +1,21 @@
 /* Home preview of finished projects: three cards, then a link to the full page. */
 .home-projects { padding-block: 72px 80px; }
-.home-projects-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); margin: 36px 0 0; padding: 0; list-style: none; }
+/* Marquee: three identical tracks side by side, all slide left by one track width, then the loop restarts unseen. */
+.home-projects-marquee { display: flex; width: 100vw; margin: 36px 0 0 calc(50% - 50vw); padding-block: 12px 18px; overflow: hidden; }
+.home-projects-track { display: flex; flex: none; gap: 28px; min-width: max-content; margin: 0; padding: 0 14px; list-style: none; animation: home-projects-scroll 48s linear infinite; }
+.home-projects-marquee:hover .home-projects-track,
+.home-projects-marquee:focus-within .home-projects-track,
+.home-projects-marquee.is-paused .home-projects-track { animation-play-state: paused; }
+@keyframes home-projects-scroll { to { transform: translateX(-100%); } }
+.home-projects-track li { flex: none; width: clamp(280px, 26vw, 360px); }
+.home-projects-toggle { display: grid; place-items: center; width: 44px; height: 44px; margin: 8px auto 0; cursor: pointer; }
+.home-projects-toggle svg { width: 18px; height: 18px; }
+@media (prefers-reduced-motion: reduce) {
+  .home-projects-marquee { overflow-x: auto; }
+  .home-projects-track { animation: none; }
+  .home-projects-track[aria-hidden] { display: none; }
+  .home-projects-toggle { display: none; }
+}
 .home-project-card { display: flex; flex-direction: column; height: 100%; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); color: inherit; text-decoration: none; transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
 .home-project-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
 .home-project-card:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
@@ -11,5 +26,6 @@
 .home-project-copy strong { font-family: var(--font-display); font-size: 1.25rem; }
 .home-project-copy span { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; }
 .home-projects .home-projects-all { display: flex; width: max-content; margin: 36px auto 0 !important; }
-@media (max-width: 900px) { .home-projects-grid { grid-template-columns: minmax(0, 1fr); } .home-projects { padding-block: 48px 56px; } }
+@media (max-width: 900px) { .home-projects { padding-block: 48px 56px; } }
 
+.home-projects .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

@@ -220,3 +220,5 @@ html.dark .illustration { --ill-line: #e8f1ff; --ill-bar: #0f1f5c; --ill-bar-ink
 .home-project-copy strong { font-weight: 900; }
 .home-project-copy span { color: var(--fg); font-weight: 500; }
 @media (prefers-reduced-motion: reduce) { .home-project-card:hover { transform: none; } }
+.home-projects-toggle { border: var(--nb-border); border-radius: 0; background: var(--surface); color: var(--fg); box-shadow: 3px 3px 0 var(--nb-line); }
+.home-projects-toggle:active { transform: translate(3px, 3px); box-shadow: none; }
