@@ -29,3 +29,24 @@
 @media (max-width: 900px) { .home-projects { padding-block: 48px 56px; } }
 
 .home-projects .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* The white text band only shows on hover or keyboard focus; the card is just the framed image otherwise.
+   On touch screens there is no hover, so the band stays visible under the image. */
+.home-project-card { position: relative; }
+.home-project-image { aspect-ratio: 4 / 3; }
+@media (hover: hover) {
+  .home-project-copy {
+    position: absolute;
+    inset: auto 0 0 0;
+    background: var(--surface);
+    transform: translateY(101%);
+    transition: transform var(--dur) var(--ease);
+  }
+  .home-project-card:hover .home-project-copy,
+  .home-project-card:focus-visible .home-project-copy { transform: none; }
+}
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+  .home-project-copy { transform: none; opacity: 0; transition: opacity var(--dur-fast) linear; }
+  .home-project-card:hover .home-project-copy,
+  .home-project-card:focus-visible .home-project-copy { opacity: 1; }
+}
