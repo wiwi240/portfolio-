@@ -1,0 +1,10 @@
+/* Home: what is included in a project, and how to prepare the first contact. */
+.home-included { padding-block: 40px 56px; }
+.home-included-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 36px); margin-top: 32px; }
+.home-included-card { display: flex; flex-direction: column; gap: 16px; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.home-included-card h3 { margin: 0; font-size: clamp(1.25rem, 2vw, 1.6rem); }
+.home-included-list { display: grid; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.home-included-list li { display: flex; align-items: flex-start; gap: 14px; line-height: 1.45; }
+.home-included-mark { display: grid; flex: none; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--tint); color: var(--accent); font-size: 0.85rem; font-weight: 800; }
+.home-included-note { margin: auto 0 0; color: var(--muted); }
+@media (max-width: 800px) { .home-included-grid { grid-template-columns: minmax(0, 1fr); } }
