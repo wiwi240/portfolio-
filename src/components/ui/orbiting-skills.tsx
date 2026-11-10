@@ -5,6 +5,7 @@ import {
   type CSSProperties,
   type ReactNode,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -570,6 +571,22 @@ export default function OrbitingSkills({
   }, [variant])
 
   const containerSize = Math.min(size.width, size.height)
+
+  // Each skill counter-rotates against its orbit to stay upright. That only holds while both animations share a start time:
+  // skills added by a filter would otherwise start their counter-rotation from zero while the orbit is already turned.
+  useLayoutEffect(() => {
+    const canvas = ref.current
+    if (!canvas) return
+    canvas.querySelectorAll<HTMLElement>('.orbiting-skills__orbit-rotation').forEach((orbit) => {
+      const spin = orbit.getAnimations().find((animation) => (animation as CSSAnimation).animationName === 'orbiting-skills-spin')
+      if (!spin || spin.startTime === null) return
+      orbit.querySelectorAll<HTMLElement>('.orbiting-skills__counter-rotation').forEach((item) => {
+        item.getAnimations().forEach((animation) => {
+          if ((animation as CSSAnimation).animationName === 'orbiting-skills-spin') animation.startTime = spin.startTime
+        })
+      })
+    })
+  }, [ref, visibleOrbits, containerSize, reducedMotion])
 
   const chooseVariant = (next: OrbitingSkillsVariant) => {
     setVariant(next)
