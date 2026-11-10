@@ -102,3 +102,20 @@ img { border-radius: 0; }
 @media (prefers-reduced-motion: reduce) {
   .button:hover, .guide-answers button:hover, .guide-items label:hover, .project-entry-card:hover, .service-card:hover, .project-card:hover { transform: none; }
 }
+
+/* Section backgrounds: flat blue bands separated by a thick line, no photo, no veil, no gradient */
+.stack-scene--bg, .stack-scene--tint, .stack-scene--surface {
+  background-image: none !important;
+  border-top: var(--nb-border);
+}
+.stack-scene--bg { background-color: var(--bg) !important; }
+.stack-scene--tint { background-color: var(--tint) !important; }
+.stack-scene--surface { background-color: var(--surface) !important; }
+.stack-scene--bg, .stack-scene--tint {
+  background-image: radial-gradient(var(--nb-line) 1.2px, transparent 1.4px) !important;
+  background-size: 22px 22px !important;
+  background-blend-mode: normal;
+}
+.expertise-section, .contact-section, .about-section { background-image: none !important; -webkit-mask-image: none; mask-image: none; }
+.home-method { background: var(--surface) !important; border-block: var(--nb-border) !important; }
+body { background-image: none; }
