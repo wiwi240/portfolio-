@@ -112,7 +112,6 @@ img { border-radius: 0; }
 .stack-scene--tint { background-color: var(--tint) !important; }
 .stack-scene--surface { background-color: var(--surface) !important; }
 .expertise-section, .contact-section, .about-section { background-image: none !important; -webkit-mask-image: none; mask-image: none; }
-.home-method { background: var(--surface) !important; border-block: var(--nb-border) !important; }
 body { background-image: none; }
 
 /* Flat blue everywhere: no photo, grain, dots, blur or gradient */
@@ -170,8 +169,6 @@ body::after { display: none !important; }
 /* Titles were too tight: loosen the display letter-spacing */
 h1, h2, h3, h4, .home-hero h1 { letter-spacing: -0.015em !important; }
 
-/* Section bands: alternate blue tones so no band is a bare white page */
-.home-method { background: var(--tint) !important; }
 html.dark .illustration { --ill-line: #e8f1ff; --ill-bar: #0f1f5c; --ill-bar-ink: #fff; --ill-dot: #e8f1ff; --ill-canvas: #13287a; --ill-chat-line: #e8f1ff; --ill-shadow: #e8f1ff; }
 
 /* Timeline: thick black rail with a blue fill, square markers, hard cards */
@@ -197,3 +194,20 @@ html.dark .illustration { --ill-line: #e8f1ff; --ill-bar: #0f1f5c; --ill-bar-ink
 .tl-half time { padding: 2px 8px; border: 2px solid var(--nb-line); background: var(--surface); color: var(--fg); font-weight: 800; width: max-content; }
 .tl-lead img { border: var(--nb-border); border-radius: 0; box-shadow: var(--nb-shadow); }
 .tl-hint { color: var(--fg); font-weight: 700; }
+
+/* Harmony: every full-width band is blue (alternating two tones); inner sections never paint their own box or lines */
+.stack-scene--bg, .stack-scene--surface { background-color: var(--bg) !important; }
+.stack-scene--tint { background-color: var(--tint) !important; }
+.home-method, .home-section { background: transparent !important; border: 0 !important; box-shadow: none !important; }
+.home-contact-panel { background: var(--surface) !important; border: var(--nb-border) !important; box-shadow: var(--nb-shadow) !important; }
+.illustration svg, .illustration img { filter: none !important; }
+.illustration * { box-shadow: none; }
+.build-window, .delivery-site, .brief-document, .build-panel, .delivery-document, .brief-chat { box-shadow: 5px 5px 0 var(--nb-line) !important; }
+.brief-target { box-shadow: 4px 4px 0 var(--nb-line) !important; }
+
+/* Entry cards: numbers match the method badges, images are squared and framed */
+.project-entry-image > span { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; font-weight: 800; box-shadow: 3px 3px 0 var(--nb-line); backdrop-filter: none !important; }
+.project-entry-image, .project-entry-image img, .project-entry-image video { border-radius: 0 !important; }
+.project-entry-image { border-bottom: var(--nb-border); }
+.project-entry-image::before, .project-entry-image::after { display: none !important; }
+.project-entry-copy strong { display: inline-block; width: max-content; max-width: 100%; padding: 4px 10px; border: var(--nb-border); background: var(--surface); color: #000 !important; text-shadow: none !important; font-weight: 900; box-shadow: 3px 3px 0 var(--nb-line); }
