@@ -82,35 +82,35 @@ export type GuideAnswer = 'yes' | 'no' | 'unsure'
 // Each question names the concrete result for the visitor, and the hint lists what it covers so the answer is never a guess.
 const questions: Record<string, { ask: Localized; hint: Localized }> = {
   present: {
-    ask: ask('Voulez-vous des pages qui expliquent qui vous êtes et ce que vous proposez ?', 'Do you want pages that explain who you are and what you offer?'),
+    ask: ask('Un site qui présente votre entreprise et vos services ?', 'A site that presents your business and services?'),
     hint: ask('Page d’accueil, présentation de l’entreprise, vos services, votre équipe, vos réalisations et les avis de vos clients.', 'Home page, about the business, your services, your team, your work and client reviews.'),
   },
   requests: {
-    ask: ask('Voulez-vous que vos clients puissent vous écrire ou réserver depuis le site ?', 'Do you want clients to be able to write to you or book from the site?'),
+    ask: ask('Des clients qui vous contactent ou réservent en ligne ?', 'Clients who contact you or book online?'),
     hint: ask('Formulaire de contact, demande de devis, envoi de fichiers, rendez-vous, réservation, plan d’accès.', 'Contact form, quote request, file upload, appointments, booking, directions.'),
   },
   inform: {
-    ask: ask('Voulez-vous publier des informations qui changent régulièrement ?', 'Do you want to publish information that changes regularly?'),
+    ask: ask('Publier des actualités, événements ou une FAQ ?', 'Publish news, events or an FAQ?'),
     hint: ask('Actualités, questions fréquentes, menu ou carte, lettre d’information, événements et inscriptions.', 'News, frequently asked questions, menu, newsletter, events and sign-ups.'),
   },
   sell: {
-    ask: ask('Voulez-vous que vos clients puissent acheter et payer directement sur le site ?', 'Do you want clients to be able to buy and pay directly on the site?'),
+    ask: ask('Vendre vos produits avec paiement en ligne ?', 'Sell your products with online payment?'),
     hint: ask('Catalogue, une page par produit, panier, paiement en ligne, livraison, codes de réduction, suivi de commande.', 'Catalogue, one page per product, basket, online payment, delivery, discount codes, order tracking.'),
   },
   clients: {
-    ask: ask('Voulez-vous que chaque client ait son compte personnel sur le site ?', 'Do you want each client to have a personal account on the site?'),
+    ask: ask('Un espace personnel avec connexion pour chaque client ?', 'A personal login area for each client?'),
     hint: ask('Se connecter, retrouver ses documents, vous écrire, suivre l’avancement de sa demande, être prévenu par email.', 'Log in, find their documents, message you, follow their request, get email updates.'),
   },
   content: {
-    ask: ask('Voulez-vous pouvoir modifier le site vous-même, sans faire appel à un développeur ?', 'Do you want to edit the site yourself, without calling a developer?'),
+    ask: ask('Modifier vous-même les textes et photos du site ?', 'Edit the site’s texts and photos yourself?'),
     hint: ask('Changer les textes et les photos, gérer vos produits ou prestations, publier des actualités, ajouter des langues ou des administrateurs.', 'Change texts and photos, manage your products or services, publish news, add languages or administrators.'),
   },
   manage: {
-    ask: ask('Voulez-vous un outil pour gérer vos clients et vos dossiers au quotidien ?', 'Do you want a tool to manage your clients and cases day to day?'),
+    ask: ask('Gérer vos clients, dossiers et devis au même endroit ?', 'Manage your clients, cases and quotes in one place?'),
     hint: ask('Fiches clients, suivi des dossiers, devis et documents, planning, liste des tâches, stocks.', 'Client records, case follow-up, quotes and documents, planning, to-do list, stock.'),
   },
   steer: {
-    ask: ask('Voulez-vous suivre votre activité avec des chiffres et automatiser des tâches ?', 'Do you want to follow your activity with figures and automate tasks?'),
+    ask: ask('Un tableau de bord avec chiffres et tâches automatiques ?', 'A dashboard with figures and automatic tasks?'),
     hint: ask('Tableau de bord, chiffres clés, accès différents selon les personnes, statut de chaque demande, tâches automatiques, liaison avec vos outils.', 'Dashboard, key figures, different access per person, status of each request, automatic tasks, links with your tools.'),
   },
 }
