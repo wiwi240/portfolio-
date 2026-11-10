@@ -169,7 +169,6 @@ body::after { display: none !important; }
 /* Titles were too tight: loosen the display letter-spacing */
 h1, h2, h3, h4, .home-hero h1 { letter-spacing: -0.015em !important; }
 
-html.dark .illustration { --ill-line: #e8f1ff; --ill-bar: #0f1f5c; --ill-bar-ink: #fff; --ill-dot: #e8f1ff; --ill-canvas: #13287a; --ill-chat-line: #e8f1ff; --ill-shadow: #e8f1ff; }
 
 /* Timeline: thick black rail with a blue fill, square markers, hard cards */
 .tl { --tl-fg: var(--fg); --tl-muted: var(--fg); --tl-active: var(--accent-fill); }
@@ -297,3 +296,15 @@ html.dark .orbiting-skills__logo { background: #ffffff !important; border-color:
   .orbiting-skills__logo { box-shadow: 2px 2px 0 var(--nb-line) !important; border-width: 2px !important; }
   .orbiting-skills__center span { font-size: 0.5rem !important; letter-spacing: 0.02em !important; }
 }
+
+/* Dark mode: the method illustrations use the blue palette instead of the grey-green product screens */
+html.dark .illustration {
+  --ill-paper: #0f1f5c; --ill-canvas: #142a80; --ill-line: #e8f1ff; --ill-ink: #ffffff; --ill-muted: #b9c9ff;
+  --ill-bar: #0f1f5c; --ill-bar-ink: #ffffff; --ill-dot: #e8f1ff; --ill-tint: #1d3aa0;
+  --ill-blue: #3d73ff; --ill-blue-ink: #8fb5ff; --ill-cyan: #4fd8ff; --ill-cyan-soft: #1c4fb8; --ill-cyan-bg: #1a3aa6;
+  --ill-skel: #e8f1ff; --ill-skel-soft: #7b93e6; --ill-chat: #12308f; --ill-chat-line: #e8f1ff; --ill-chat-bar: #4fd8ff; --ill-chat-bar-2: #8fb0ff;
+  --ill-shadow: #e8f1ff;
+}
+
+/* Footer: same hard line as the section bands */
+.site-footer { border-top: var(--nb-border) !important; background: var(--surface) !important; }
