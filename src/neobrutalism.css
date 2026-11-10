@@ -314,10 +314,3 @@ html.dark .illustration {
 html.dark .desktop-nav a[aria-current="page"]::after { background: var(--accent-cyan); }
 html.dark .mobile-nav a[aria-current="page"] { color: var(--accent-cyan); }
 html.dark .tl-stem { background: #000; }
-
-/* Home: included in every project / before contacting */
-.home-included-card { border: var(--nb-border); border-radius: 0; background: var(--surface); box-shadow: var(--nb-shadow); }
-.home-included-card h3 { font-weight: 900; }
-.home-included-list li { color: var(--fg); font-weight: 600; }
-.home-included-mark { border: var(--nb-border); border-radius: 0; background: var(--accent-cyan); color: #000; font-weight: 900; box-shadow: 2px 2px 0 var(--nb-line); }
-.home-included-note { padding: 10px 14px; border: var(--nb-border); background: var(--tint); color: var(--fg); font-weight: 700; }

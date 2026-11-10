@@ -6,7 +6,6 @@ import { guidePanels, type GuideAnswer } from '@/data/home-guide'
 import { markProgrammaticScroll, useScrollToScene } from '@/lib/scroll-stack'
 import { paths } from '@/site'
 import { MethodScene } from './home-illustrations'
-import { HomeIncluded } from './home-included'
 import { HomeProjects } from './home-projects'
 import { ProjectEntry } from './project-entry'
 import { GuidePanel } from './project-guide'
@@ -148,7 +147,6 @@ export function HomePage({ language }: { language: Language }) {
       </StackScene>
       <StackScene id="methode" tone="surface" className="home-converge">
         <section className="stack-scene-inner home-section home-method" aria-labelledby="method-title"><div className="home-section-heading home-section-heading--centered"><Eyebrow>{t.methodLabel}</Eyebrow><h2 id="method-title">{t.methodTitle}</h2><p>{t.methodIntro}</p></div><div className="home-method-grid">{t.steps.map(([title, description], i) => <article className="home-method-card" key={title}><span className="home-step-number">0{i + 1}</span><MethodScene step={i} language={language} /><div className="home-method-copy"><h3>{title}</h3><p>{description}</p></div></article>)}</div></section>
-        <HomeIncluded language={language} />
         <section className="stack-scene-inner home-section home-contact-panel" aria-labelledby="contact-title"><Eyebrow>{t.contactLabel}</Eyebrow><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactLead}</p><a className="button button-primary" href="#votre-projet">{t.projectContact}<ArrowUpRight aria-hidden="true" /></a><a className="home-contact-email" href={'mailto:' + contactEmail}>{contactEmail}</a></section>
       </StackScene>
     </ScrollStack>
