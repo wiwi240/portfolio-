@@ -293,9 +293,13 @@ html.dark .orbiting-skills__logo { background: #ffffff !important; border-color:
 .orbiting-skills .orbiting-skills__filter[aria-pressed='true'] { background: var(--accent-fill); color: #fff; transform: translate(3px, 3px); box-shadow: none; }
 
 /* Small wheels (phones): lighter shadows and a centre that fits inside the first orbit */
-@container (max-width: 340px) {
+@container (max-width: 420px) {
   .orbiting-skills__logo { box-shadow: 2px 2px 0 var(--nb-line) !important; border-width: 2px !important; }
-  .orbiting-skills__center span { font-size: 0.5rem !important; letter-spacing: 0.02em !important; }
+  .orbiting-skills__center span { font-size: 0.56rem !important; letter-spacing: 0 !important; }
+  .orbiting-skills .orbiting-skills__center { width: 21cqw !important; height: 21cqw !important; border-width: 3px !important; box-shadow: 3px 3px 0 var(--nb-line) !important; }
+  .orbiting-skills .orbiting-skills__item-button.orbiting-skills__item-button--lg,
+  .orbiting-skills .orbiting-skills__item-button.orbiting-skills__item-button--md,
+  .orbiting-skills .orbiting-skills__item-button.orbiting-skills__item-button--sm { --skill-size: 8.2cqw; }
 }
 
 /* Dark mode: the method illustrations use the blue palette instead of the grey-green product screens */
