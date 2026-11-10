@@ -162,6 +162,8 @@ html:not(.dark) .brand img, html:not(.dark) .footer-brand img { filter: brightne
 .project-image { aspect-ratio: 4 / 3; }
 @media (hover: hover) {
   .project-card { position: relative; }
+  .project-image { min-height: 22rem; }
+  .project-body { overflow-y: auto; }
   .project-body { position: absolute; inset: auto 0 0 0; max-height: 100%; overflow: hidden; background: var(--surface); transform: translateY(101%); transition: transform var(--dur) var(--ease); }
   .project-card:hover .project-body, .project-card:focus-within .project-body { transform: none; }
 }

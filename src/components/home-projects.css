@@ -24,7 +24,7 @@
 .home-project-number { position: absolute; top: 12px; left: 12px; padding: 6px 9px; border-radius: var(--radius-sm); background: var(--surface); color: var(--accent); font-size: .8rem; font-weight: 800; letter-spacing: .08em; }
 .home-project-copy { display: flex; flex-direction: column; gap: 8px; padding: 18px 20px 22px; }
 .home-project-copy strong { font-family: var(--font-display); font-size: 1.25rem; }
-.home-project-copy span { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; }
+.home-project-copy span { line-height: 1.5; }
 .home-projects .home-projects-all { display: flex; width: max-content; margin: 36px auto 0 !important; }
 @media (max-width: 900px) { .home-projects { padding-block: 48px 56px; } }
 
@@ -50,3 +50,8 @@
   .home-project-card:hover .home-project-copy,
   .home-project-card:focus-visible .home-project-copy { opacity: 1; }
 }
+
+/* The whole description must be readable on hover, so the card never gets shorter than its text band. */
+.home-project-image { min-height: 17rem; }
+.home-project-image img { position: absolute; inset: 0; }
+@media (hover: hover) { .home-project-copy { max-height: 100%; overflow-y: auto; } }
