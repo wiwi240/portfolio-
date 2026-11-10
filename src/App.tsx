@@ -11,6 +11,7 @@ import { metadata, paths, resolveRoute, siteOrigin, type PageId } from '@/site'
 import './App.css'
 import './redesign.css'
 import './visual-polish.css'
+import './neobrutalism.css'
 
 type MainPage = Exclude<PageId, 'notFound'>
 const navPages = ['home', 'projects', 'expertise', 'about', 'contact'] as const satisfies ReadonlyArray<MainPage>

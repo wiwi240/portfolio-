@@ -1,0 +1,104 @@
+/* Neobrutalism skin (blue). Loaded last: it only overrides tokens and adds hard borders, flat fills and offset shadows.
+   Remove the import in App.tsx to get the previous look back. */
+:root {
+  --nb-line: #000000;
+  --nb-border: 3px solid var(--nb-line);
+  --nb-shadow: 6px 6px 0 var(--nb-line);
+  --nb-shadow-sm: 4px 4px 0 var(--nb-line);
+
+  --bg: #cfe2ff;
+  --surface: #ffffff;
+  --tint: #a9ccff;
+  --fg: #000000;
+  --muted: #1b2a4a;
+  --border: #000000;
+  --border-strong: #000000;
+  --accent: #0a3fd6;
+  --accent-hover: #082fa3;
+  --accent-fill: #1f5bff;
+  --accent-fill-hover: #0a3fd6;
+  --on-accent: #ffffff;
+  --accent-cyan: #4fd8ff;
+  --focus: #000000;
+
+  --radius-sm: 0;
+  --radius: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --shadow-sm: var(--nb-shadow-sm);
+  --shadow: var(--nb-shadow);
+  --shadow-stack: none;
+  --font-display: 'Cabinet Grotesk', 'Satoshi', 'Segoe UI', sans-serif;
+}
+html.dark {
+  --nb-line: #e8f1ff;
+  --bg: #07123a;
+  --surface: #0f1f5c;
+  --tint: #13287a;
+  --fg: #ffffff;
+  --muted: #c3d4ff;
+  --border: #e8f1ff;
+  --border-strong: #e8f1ff;
+  --accent: #8fb5ff;
+  --accent-hover: #b4cdff;
+  --accent-fill: #3d73ff;
+  --focus: #ffffff;
+  --shadow-sm: var(--nb-shadow-sm);
+  --shadow: var(--nb-shadow);
+  --shadow-stack: none;
+}
+
+h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.03em; }
+.eyebrow { padding: 2px 10px; border: var(--nb-border); background: var(--accent-cyan); color: #000; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; }
+
+/* Flat blocks: borders, offset shadows, no gradients */
+.site-header, .service-card, .project-card, .project-entry-card, .home-contact-panel, .guide-summary > *, .guide-mockup-frame,
+.build-window, .build-panel, .brief-document, .about-values > *, .faq-page-list > *, .portrait-frame, .guide-final-form,
+.guide-items label, .guide-success {
+  border: var(--nb-border) !important;
+  border-radius: 0 !important;
+  background: var(--surface) !important;
+  background-image: none !important;
+  box-shadow: var(--nb-shadow) !important;
+}
+.site-header { box-shadow: 0 5px 0 var(--nb-line) !important; }
+
+/* Interactive: shadow shrinks on hover and press, as if the block is pushed in */
+.button, .guide-answers button {
+  border: var(--nb-border) !important;
+  border-radius: 0 !important;
+  background-image: none !important;
+  box-shadow: var(--nb-shadow-sm) !important;
+  font-weight: 800;
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.button-primary, .guide-answers button.is-selected { background: var(--accent-fill) !important; color: #fff !important; }
+.button-outline, .guide-answers button { background: var(--surface) !important; color: var(--fg) !important; }
+.button:hover, .guide-answers button:hover, .guide-items label:hover, .project-entry-card:hover, .service-card:hover, .project-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--nb-line) !important;
+}
+.button:active, .guide-answers button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--nb-line) !important;
+}
+
+/* Guide cards: selected = blue fill, icon and badge squared */
+.guide-items label.is-selected { background: var(--tint) !important; transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--nb-line) !important; }
+.guide-item-icon { border: var(--nb-border); border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; box-shadow: none !important; }
+.guide-items label.is-selected .guide-item-icon { background: var(--accent-fill) !important; color: #fff !important; }
+.guide-item-check { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--surface) !important; color: transparent; box-shadow: none !important; }
+.guide-items label.is-selected .guide-item-check { background: var(--accent-fill) !important; color: #fff !important; border-color: var(--nb-line) !important; transform: none; }
+.guide-progress { border: var(--nb-border); border-radius: 0 !important; background: var(--surface) !important; }
+.guide-progress span { border-radius: 0 !important; background: var(--accent-fill) !important; }
+
+/* Fields */
+input, textarea, select { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--surface) !important; color: var(--fg); }
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 4px solid var(--accent-cyan); outline-offset: 2px; }
+
+a.text-link { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 3px; }
+img { border-radius: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .button:hover, .guide-answers button:hover, .guide-items label:hover, .project-entry-card:hover, .service-card:hover, .project-card:hover { transform: none; }
+}
