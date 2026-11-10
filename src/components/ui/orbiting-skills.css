@@ -284,3 +284,28 @@ html:not(.dark) .orbiting-skills__logo-image[src*="/github/FFFFFF"],
 html:not(.dark) .orbiting-skills__logo-image[src*="/nextdotjs/FFFFFF"] {
   filter: brightness(0);
 }
+
+/* Sorting bar above the wheel */
+.orbiting-skills__filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0 auto 0.75rem;
+}
+.orbiting-skills__filter {
+  min-height: 40px;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.orbiting-skills__filter:hover { border-color: var(--accent); }
+.orbiting-skills__filter[aria-pressed='true'] { border-color: var(--accent); background: var(--accent-fill); color: var(--on-accent); }
+.orbiting-skills__filter:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }

@@ -250,7 +250,7 @@ html.dark .illustration { --ill-line: #e8f1ff; --ill-bar: #0f1f5c; --ill-bar-ink
   backdrop-filter: none !important;
 }
 .orbiting-skills__center::before { display: none !important; }
-.orbiting-skills__center span { color: #000 !important; font-weight: 900 !important; letter-spacing: 0.08em; }
+.orbiting-skills__center span { color: #000 !important; font-weight: 900 !important; letter-spacing: 0.04em !important; font-size: clamp(0.5rem, 1.75cqw, 0.8rem) !important; }
 .orbiting-skills__logo {
   border: 3px solid var(--nb-line) !important;
   border-radius: 0 !important;
@@ -273,3 +273,27 @@ html.dark .illustration { --ill-line: #e8f1ff; --ill-bar: #0f1f5c; --ill-bar-ink
   backdrop-filter: none !important;
 }
 html.dark .orbiting-skills__logo { background: #ffffff !important; border-color: var(--nb-line) !important; box-shadow: 4px 4px 0 var(--nb-line) !important; }
+
+/* Square tiles need more room than circles: size them from the wheel itself so neighbours on adjacent orbits never touch,
+   keep the shadow small, and lift the hovered orbit above the others so its label is never hidden. */
+.orbiting-skills .orbiting-skills__canvas { container-type: inline-size; }
+.orbiting-skills .orbiting-skills__item-button.orbiting-skills__item-button--lg { --skill-size: clamp(1rem, 5.2cqw, 2.8rem); }
+.orbiting-skills .orbiting-skills__item-button.orbiting-skills__item-button--md { --skill-size: clamp(1rem, 4.9cqw, 2.6rem); }
+.orbiting-skills .orbiting-skills__item-button.orbiting-skills__item-button--sm { --skill-size: clamp(1rem, 4.5cqw, 2.4rem); }
+.orbiting-skills__logo { border-width: 2px !important; box-shadow: 3px 3px 0 var(--nb-line) !important; }
+.orbiting-skills__item-button:hover .orbiting-skills__logo,
+.orbiting-skills__item-button:focus-visible .orbiting-skills__logo { box-shadow: 4px 4px 0 var(--nb-line) !important; }
+.orbiting-skills__orbit-layer:has(.orbiting-skills__item-button:hover, .orbiting-skills__item-button:focus-visible) { z-index: 10; }
+.orbiting-skills__label { border-width: 2px !important; box-shadow: 3px 3px 0 var(--nb-line) !important; }
+.orbiting-skills__center { width: clamp(2.2rem, 13.5cqw, 7rem) !important; height: clamp(2.2rem, 13.5cqw, 7rem) !important; border-width: 3px !important; box-shadow: 5px 5px 0 var(--nb-line) !important; }
+
+/* Sorting bar */
+.orbiting-skills .orbiting-skills__filter { border: var(--nb-border); border-radius: 0; background: var(--surface); color: var(--fg); font-weight: 900; box-shadow: 3px 3px 0 var(--nb-line); transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease); }
+.orbiting-skills .orbiting-skills__filter:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--nb-line); }
+.orbiting-skills .orbiting-skills__filter[aria-pressed='true'] { background: var(--accent-fill); color: #fff; transform: translate(3px, 3px); box-shadow: none; }
+
+/* Small wheels (phones): lighter shadows and a centre that fits inside the first orbit */
+@container (max-width: 340px) {
+  .orbiting-skills__logo { box-shadow: 2px 2px 0 var(--nb-line) !important; border-width: 2px !important; }
+  .orbiting-skills__center span { font-size: 0.5rem !important; letter-spacing: 0.02em !important; }
+}
