@@ -31,17 +31,18 @@
   --font-display: 'Cabinet Grotesk', 'Satoshi', 'Segoe UI', sans-serif;
 }
 html.dark {
-  --nb-line: #e8f1ff;
-  --bg: #07123a;
-  --surface: #0f1f5c;
-  --tint: #13287a;
+  /* Dark mode keeps the same hard black lines as light mode: a deep royal blue page, navy cards, black borders and shadows. */
+  --nb-line: #000000;
+  --bg: #1a3596;
+  --surface: #0d1b52;
+  --tint: #213fa6;
   --fg: #ffffff;
-  --muted: #c3d4ff;
-  --border: #e8f1ff;
-  --border-strong: #e8f1ff;
-  --accent: #8fb5ff;
-  --accent-hover: #b4cdff;
-  --accent-fill: #3d73ff;
+  --muted: #d3dfff;
+  --border: #000000;
+  --border-strong: #000000;
+  --accent: #9fc0ff;
+  --accent-hover: #c2d6ff;
+  --accent-fill: #4d7fff;
   --focus: #ffffff;
   --shadow-sm: var(--nb-shadow-sm);
   --shadow: var(--nb-shadow);
@@ -299,12 +300,17 @@ html.dark .orbiting-skills__logo { background: #ffffff !important; border-color:
 
 /* Dark mode: the method illustrations use the blue palette instead of the grey-green product screens */
 html.dark .illustration {
-  --ill-paper: #0f1f5c; --ill-canvas: #142a80; --ill-line: #e8f1ff; --ill-ink: #ffffff; --ill-muted: #b9c9ff;
-  --ill-bar: #0f1f5c; --ill-bar-ink: #ffffff; --ill-dot: #e8f1ff; --ill-tint: #1d3aa0;
+  --ill-paper: #0d1b52; --ill-canvas: #182f8c; --ill-line: #000000; --ill-ink: #ffffff; --ill-muted: #b9c9ff;
+  --ill-bar: #0d1b52; --ill-bar-ink: #ffffff; --ill-dot: #ffffff; --ill-tint: #213fa6;
   --ill-blue: #3d73ff; --ill-blue-ink: #8fb5ff; --ill-cyan: #4fd8ff; --ill-cyan-soft: #1c4fb8; --ill-cyan-bg: #1a3aa6;
-  --ill-skel: #e8f1ff; --ill-skel-soft: #7b93e6; --ill-chat: #12308f; --ill-chat-line: #e8f1ff; --ill-chat-bar: #4fd8ff; --ill-chat-bar-2: #8fb0ff;
-  --ill-shadow: #e8f1ff;
+  --ill-skel: #e8f1ff; --ill-skel-soft: #7b93e6; --ill-chat: #162a78; --ill-chat-line: #000000; --ill-chat-bar: #4fd8ff; --ill-chat-bar-2: #8fb0ff;
+  --ill-shadow: #000000;
 }
 
 /* Footer: same hard line as the section bands */
 .site-footer { border-top: var(--nb-border) !important; background: var(--surface) !important; }
+
+/* Dark mode: black accents that would disappear on navy switch to cyan */
+html.dark .desktop-nav a[aria-current="page"]::after { background: var(--accent-cyan); }
+html.dark .mobile-nav a[aria-current="page"] { color: var(--accent-cyan); }
+html.dark .tl-stem { background: #000; }
