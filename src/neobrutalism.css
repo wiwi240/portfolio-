@@ -421,3 +421,93 @@ html.dark .home-converge .home-contact-panel { background: #2a55e8 !important; }
 .guide-final-form .guide-activity { padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
 /* Headings that receive focus from the guide's own scrolling must not show a ring box */
 .stack-scene-inner h2[tabindex='-1']:focus, .stack-scene-inner h2[tabindex='-1']:focus-visible { outline: none !important; }
+
+/* ---------- Guide mockup: the demo site itself, as a bold neobrutalist wireframe ---------- */
+.guide-mockup-frame .psp-shell {
+  --psp-accent: #1f5bff;
+  --mk-ink: #000;
+  --mk-muted: #1b2a4a;
+  --mk-line: #000;
+  --mk-grad: #1f5bff;
+}
+.guide-mockup-frame .psp-toolbar { border-bottom: 3px solid #000 !important; background: #fff !important; }
+.guide-mockup-frame .psp-toolbar * { border-radius: 0 !important; }
+.guide-mockup-frame .psp-toolbar input, .guide-mockup-frame .psp-urlbar { border: 2px solid #000 !important; background: #fff !important; font-weight: 700; }
+.guide-mockup-frame .psp-device { border: 2px solid #000 !important; background: #fff !important; }
+.guide-mockup-frame .psp-device button[aria-pressed='true'] { background: #1f5bff !important; color: #fff !important; }
+.guide-mockup-frame .psp-dots i { border: 2px solid #000; }
+.guide-mockup-frame .psp-contexts { border-bottom: 3px solid #000 !important; background: #cfe2ff !important; }
+.guide-mockup-frame .psp-contexts button { font-weight: 900; color: #000 !important; }
+.guide-mockup-frame .psp-contexts button[aria-pressed='true'] { border-bottom: 5px solid #000 !important; background: #4fd8ff !important; color: #000 !important; }
+.guide-mockup-frame .psp-contexts button[data-new]::after { border: 2px solid #000; border-radius: 0 !important; background: #4fd8ff !important; box-shadow: none !important; }
+.guide-mockup-frame .psp-start-note, .guide-mockup-frame .psp-permanent-note { border: 0 !important; border-bottom: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; color: #000 !important; font-weight: 700; font-size: 11px !important; }
+
+.guide-mockup-frame .psp-canvas { background: #cfe2ff !important; }
+.guide-mockup-frame .psp-site { background: #cfe2ff !important; background-image: none !important; color: #000; }
+.guide-mockup-frame .psp-site h1, .guide-mockup-frame .psp-site h2, .guide-mockup-frame .psp-site h3, .guide-mockup-frame .psp-brand { font-weight: 900 !important; letter-spacing: -0.02em !important; color: #000; }
+.guide-mockup-frame .psp-site p, .guide-mockup-frame .psp-site li, .guide-mockup-frame .psp-site span { color: #1b2a4a; }
+
+/* Site header: a black-outlined bar */
+.guide-mockup-frame .psp-site-header { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; box-shadow: 5px 5px 0 #000 !important; backdrop-filter: none !important; }
+.guide-mockup-frame .psp-site-header::before { display: none !important; }
+.guide-mockup-frame .psp-brand::before { border: 2px solid #000; border-radius: 0 !important; background: #4fd8ff !important; }
+.guide-mockup-frame .psp-site-header nav button { font-weight: 800; color: #000 !important; border-radius: 0 !important; }
+.guide-mockup-frame .psp-site-header nav button[aria-current='page'] { background: #4fd8ff !important; color: #000 !important; border: 2px solid #000 !important; }
+
+/* Hero: big heavy title, flat colour block with square shapes instead of the gradient and circles */
+.guide-mockup-frame .psp-hero { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; box-shadow: 8px 8px 0 #000 !important; }
+.guide-mockup-frame .psp-hero h1 { font-size: clamp(34px, 4.6cqw, 58px) !important; line-height: 0.98 !important; font-weight: 900 !important; }
+.guide-mockup-frame .psp-hero p { color: #000 !important; font-size: 15px !important; font-weight: 500; }
+.guide-mockup-frame .psp-hero-copy small, .guide-mockup-frame .psp-home-section > small, .guide-mockup-frame .psp-intro small { border: 2px solid #000 !important; border-radius: 0 !important; background: #4fd8ff !important; color: #000 !important; font-weight: 900 !important; }
+.guide-mockup-frame .psp-hero-media {
+  border: 3px solid #000 !important;
+  border-radius: 0 !important;
+  background: #4fd8ff !important;
+  background-image: linear-gradient(#000 3px, transparent 3px), linear-gradient(90deg, #000 3px, transparent 3px) !important;
+  background-size: 100% 33.33%, 33.33% 100% !important;
+  background-position: 0 0, 0 0 !important;
+  box-shadow: 6px 6px 0 #000;
+}
+.guide-mockup-frame .psp-hero-media::after { inset: 18% 22% 18% 22% !important; border: 3px solid #000 !important; border-radius: 0 !important; background-color: #fff !important; background-image: linear-gradient(to top right, transparent calc(50% - 1.5px), #000 calc(50% - 1.5px), #000 calc(50% + 1.5px), transparent calc(50% + 1.5px)), linear-gradient(to bottom right, transparent calc(50% - 1.5px), #000 calc(50% - 1.5px), #000 calc(50% + 1.5px), transparent calc(50% + 1.5px)) !important; box-shadow: 8px 8px 0 #1f5bff; }
+.guide-mockup-frame .psp-products article::before, .guide-mockup-frame .psp-gallery button::before { background: #4fd8ff !important; border-bottom: 3px solid #000; }
+.guide-mockup-frame .psp-products article:nth-child(3n + 2)::before, .guide-mockup-frame .psp-gallery button:nth-child(3n + 2)::before { background: #1f5bff !important; }
+.guide-mockup-frame .psp-products article:nth-child(3n)::before, .guide-mockup-frame .psp-gallery button:nth-child(3n)::before { background: #ffe14d !important; }
+
+/* Buttons */
+.guide-mockup-frame .psp-primary, .guide-mockup-frame .psp-secondary { border: 3px solid #000 !important; border-radius: 0 !important; box-shadow: 4px 4px 0 #000 !important; font-weight: 900 !important; text-transform: none; }
+.guide-mockup-frame .psp-primary { background: #1f5bff !important; color: #fff !important; }
+.guide-mockup-frame .psp-secondary { background: #fff !important; color: #000 !important; }
+.guide-mockup-frame .psp-primary:hover, .guide-mockup-frame .psp-secondary:hover { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 #000 !important; }
+
+/* Content blocks */
+.guide-mockup-frame .psp-home-about { background: #a9ccff !important; border-block: 3px solid #000; }
+.guide-mockup-frame .psp-home-section { background: transparent !important; }
+.guide-mockup-frame .psp-feature-links button, .guide-mockup-frame .psp-widget, .guide-mockup-frame .psp-products article, .guide-mockup-frame .psp-gallery button,
+.guide-mockup-frame .psp-cart-line, .guide-mockup-frame .psp-faq details, .guide-mockup-frame .psp-about-points > div, .guide-mockup-frame .psp-list > button,
+.guide-mockup-frame .psp-explainer, .guide-mockup-frame .psp-demo-form, .guide-mockup-frame .psp-notice, .guide-mockup-frame .psp-inline-detail, .guide-mockup-frame .psp-service-line {
+  border: 3px solid #000 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  background-image: none !important;
+  box-shadow: 5px 5px 0 #000 !important;
+}
+.guide-mockup-frame .psp-feature-icon { border: 2px solid #000; border-radius: 0 !important; background: #4fd8ff !important; color: #000 !important; }
+.guide-mockup-frame .psp-feature-links strong, .guide-mockup-frame .psp-service-line strong { color: #000 !important; font-weight: 900; }
+.guide-mockup-frame .psp-demo-form input, .guide-mockup-frame .psp-demo-form textarea, .guide-mockup-frame .psp-edit-label input { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; }
+.guide-mockup-frame .psp-site-footer { border-top: 3px solid #000 !important; background: #000 !important; color: #fff !important; }
+.guide-mockup-frame .psp-site-footer * { color: #fff !important; }
+.guide-mockup-frame .psp-success { border: 3px solid #000; border-radius: 0 !important; background: #4fd8ff !important; color: #000 !important; font-weight: 800; }
+.guide-mockup-frame [data-new]::after { border: 2px solid #000; border-radius: 0 !important; background: #4fd8ff !important; color: #000 !important; }
+
+/* The demo's text was 10 to 11px inside a very large frame: scale the desktop view up so it reads as a real preview */
+.guide-mockup-frame .psp-canvas:not(.device-mobile) .psp-site { zoom: 1.22; }
+.guide-mockup-frame .psp-mini-list > *, .guide-mockup-frame .psp-mini-list li { border: 2px solid #000 !important; border-radius: 0 !important; background: #fff !important; color: #000 !important; font-weight: 700; }
+.guide-mockup-frame .psp-list > button span { color: #000 !important; font-weight: 800; }
+.guide-mockup-frame .psp-category-list button, .guide-mockup-frame .psp-workspace-nav button, .guide-mockup-frame .psp-cart-controls button { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; color: #000 !important; font-weight: 900 !important; box-shadow: 3px 3px 0 #000; }
+.guide-mockup-frame .psp-category-list button[aria-pressed='true'], .guide-mockup-frame .psp-workspace-nav button.active { background: #1f5bff !important; color: #fff !important; }
+.guide-mockup-frame .psp-cart-page { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; box-shadow: 5px 5px 0 #000; }
+/* The demo browser is a fixed light wireframe in both themes: pin its toolbar colours so dark mode cannot invert parts of it */
+.guide-mockup-frame .psp-toolbar, .guide-mockup-frame .psp-toolbar * { color: #000 !important; }
+.guide-mockup-frame .psp-toolbar [class*='url'], .guide-mockup-frame .psp-toolbar [class*='address'], .guide-mockup-frame .psp-toolbar > div:nth-child(3) { background: #eaf1fa !important; border: 2px solid #000 !important; }
+.guide-mockup-frame .psp-device button { color: #000 !important; }
+.guide-mockup-frame .psp-device button[aria-pressed='true'] { color: #fff !important; }
