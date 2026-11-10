@@ -238,4 +238,38 @@ html.dark .illustration { --ill-line: #e8f1ff; --ill-bar: #0f1f5c; --ill-bar-ink
 
 /* About and expertise page */
 .skill-detail { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--surface) !important; background-image: none !important; box-shadow: var(--nb-shadow) !important; }
-.orbit-frame * { font-weight: 800; }
+
+/* Skills wheel: dashed black orbits, square white tiles with hard shadows, boxed centre and labels */
+.orbit-frame { background: none !important; }
+.orbiting-skills__ring-guide { border: 3px dashed var(--nb-line) !important; border-radius: 50% !important; opacity: 0.55; }
+.orbiting-skills__center {
+  border: 4px solid var(--nb-line) !important;
+  border-radius: 0 !important;
+  background: var(--accent-cyan) !important;
+  box-shadow: 6px 6px 0 var(--nb-line) !important;
+  backdrop-filter: none !important;
+}
+.orbiting-skills__center::before { display: none !important; }
+.orbiting-skills__center span { color: #000 !important; font-weight: 900 !important; letter-spacing: 0.08em; }
+.orbiting-skills__logo {
+  border: 3px solid var(--nb-line) !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  box-shadow: 4px 4px 0 var(--nb-line) !important;
+  backdrop-filter: none !important;
+}
+.orbiting-skills__item-button:hover .orbiting-skills__counter-rotation,
+.orbiting-skills__item-button:focus-visible .orbiting-skills__counter-rotation { translate: -2px -2px; filter: none !important; }
+.orbiting-skills__item-button:hover .orbiting-skills__logo,
+.orbiting-skills__item-button:focus-visible .orbiting-skills__logo { background: var(--accent-cyan) !important; box-shadow: 6px 6px 0 var(--nb-line) !important; }
+.orbiting-skills__item-button:focus-visible { outline: none; }
+.orbiting-skills__label {
+  border: 3px solid var(--nb-line) !important;
+  border-radius: 0 !important;
+  background: var(--surface) !important;
+  color: var(--fg) !important;
+  font-weight: 900 !important;
+  box-shadow: 4px 4px 0 var(--nb-line) !important;
+  backdrop-filter: none !important;
+}
+html.dark .orbiting-skills__logo { background: #ffffff !important; border-color: var(--nb-line) !important; box-shadow: 4px 4px 0 var(--nb-line) !important; }
