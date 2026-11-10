@@ -389,3 +389,35 @@ html.dark .tl-stem { background: #000; }
 .home-contact-panel .button-outline { background: #fff !important; color: #000 !important; }
 .home-contact-panel .button { min-height: 54px; font-size: 1rem; }
 html.dark .home-converge .home-contact-panel { background: #2a55e8 !important; }
+
+/* ---------- End of the guide: mockup slide and summary ---------- */
+.guide-mockup-disclaimer { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; box-shadow: 4px 4px 0 var(--nb-line); }
+.guide-mockup-disclaimer * { color: #000 !important; }
+.guide-mockup-frame .psp-browser { border: 4px solid var(--nb-line) !important; border-radius: 0 !important; box-shadow: 8px 8px 0 var(--nb-line) !important; }
+.guide-mockup-activity { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--surface) !important; background-image: none !important; box-shadow: var(--nb-shadow) !important; }
+.guide-mockup-pages strong { color: var(--fg); font-weight: 900; }
+.guide-mockup-pages button {
+  border: var(--nb-border) !important;
+  border-radius: 0 !important;
+  background: var(--surface) !important;
+  color: var(--fg) !important;
+  font-weight: 800;
+  box-shadow: 3px 3px 0 var(--nb-line);
+}
+.guide-mockup-pages button:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--nb-line); }
+.guide-mockup-pages button[aria-current='page'] { background: var(--accent-fill) !important; color: #fff !important; transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--nb-line); }
+.guide-mockup-pages em, .guide-mockup-frame [data-new]::after { border: 2px solid var(--nb-line); border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; }
+
+.guide-summary > div { border: var(--nb-border) !important; border-left-width: 8px !important; border-radius: 0 !important; background: var(--surface) !important; box-shadow: var(--nb-shadow-sm) !important; }
+.guide-summary h3 { color: var(--fg) !important; font-weight: 900; }
+.guide-summary li { border: 2px solid var(--nb-line) !important; border-radius: 0 !important; background: var(--tint) !important; color: var(--fg) !important; font-weight: 800; }
+.guide-summary li svg { color: var(--fg) !important; }
+.guide-final-form { border-color: var(--nb-line) !important; }
+.guide-final-form::before { border-radius: 0 !important; height: 8px !important; background: var(--accent-fill) !important; }
+.guide-success-badge { border: var(--nb-border); border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; box-shadow: 5px 5px 0 var(--nb-line) !important; }
+.guide-error { border: var(--nb-border); border-radius: 0 !important; font-weight: 700; }
+
+/* The activity field inside the final form is not a card of its own */
+.guide-final-form .guide-activity { padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
+/* Headings that receive focus from the guide's own scrolling must not show a ring box */
+.stack-scene-inner h2[tabindex='-1']:focus, .stack-scene-inner h2[tabindex='-1']:focus-visible { outline: none !important; }
