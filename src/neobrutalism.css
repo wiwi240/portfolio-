@@ -225,3 +225,13 @@ html.dark .illustration { --ill-line: #e8f1ff; --ill-bar: #0f1f5c; --ill-bar-ink
 @media (hover: hover) { .home-project-copy { border-top: var(--nb-border); } }
 .home-project-image { border-bottom: 0; }
 @media (hover: none) { .home-project-image { border-bottom: var(--nb-border); } }
+
+/* Projects page cards */
+.project-card::after { display: none !important; }
+.project-image { border-bottom: 0 !important; }
+.project-image::before { border: var(--nb-border); border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; backdrop-filter: none !important; box-shadow: 3px 3px 0 var(--nb-line) !important; }
+@media (hover: hover) { .project-body { border-top: var(--nb-border); } }
+@media (hover: none) { .project-image { border-bottom: var(--nb-border) !important; } }
+.project-body h3 { font-weight: 900; }
+.project-body p { color: var(--fg); font-weight: 500; }
+.portfolio-badge { border: 2px solid var(--nb-line) !important; border-radius: 0 !important; background: var(--tint) !important; color: var(--fg) !important; font-weight: 800; }
