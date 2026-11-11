@@ -140,32 +140,7 @@ body::after { display: none !important; }
 .eyebrow::before { display: none; }
 .section-heading::before, .faq-page-heading::before, .guide-final-form::before, .guide-mockup-frame::before { background-image: none !important; background: var(--nb-line) !important; height: 6px; }
 
-/* Method illustrations: one hard style for all three scenes (same borders, offset shadows, black lines, no soft shadows) */
-.illustration {
-  --ill-line: #000;
-  --ill-bar: #ffffff;
-  --ill-bar-ink: #000;
-  --ill-dot: #000;
-  --ill-canvas: #eaf2ff;
-  --ill-chat-line: #000;
-  --ill-shadow: #000;
-}
-.build-window, .delivery-site, .brief-document, .build-panel, .delivery-document, .brief-chat {
-  border: 3px solid var(--nb-line) !important;
-  border-radius: 0 !important;
-  background: var(--ill-paper) !important;
-  box-shadow: 5px 5px 0 var(--nb-line) !important;
-}
-.brief-target { border: 3px solid var(--nb-line) !important; box-shadow: 4px 4px 0 var(--nb-line) !important; }
-.scene-window-bar { border-bottom: 3px solid var(--nb-line) !important; }
-.build-field, .build-button, .build-preview-button, .home-method-card .illustration * { border-radius: 0 !important; }
-.build-field { border: 2px solid var(--nb-line) !important; }
-.build-button, .build-preview-button { border: 2px solid var(--nb-line); }
-.home-step-number { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; box-shadow: 3px 3px 0 var(--nb-line); }
-.home-method-card { padding: 0 0 4px; }
-.home-method-copy { padding-top: 24px; }
-.home-method-copy h3 { font-weight: 900; }
-.home-method-copy p, .home-section-heading p { color: var(--fg); font-weight: 500; }
+
 
 /* Titles were too tight: loosen the display letter-spacing */
 h1, h2, h3, h4, .home-hero h1 { letter-spacing: -0.015em !important; }
@@ -200,10 +175,6 @@ h1, h2, h3, h4, .home-hero h1 { letter-spacing: -0.015em !important; }
 .stack-scene--tint { background-color: var(--tint) !important; }
 .home-method, .home-section { background: transparent !important; border: 0 !important; box-shadow: none !important; }
 .home-contact-panel { background: var(--surface) !important; border: var(--nb-border) !important; box-shadow: var(--nb-shadow) !important; }
-.illustration svg, .illustration img { filter: none !important; }
-.illustration * { box-shadow: none; }
-.build-window, .delivery-site, .brief-document, .build-panel, .delivery-document, .brief-chat { box-shadow: 5px 5px 0 var(--nb-line) !important; }
-.brief-target { box-shadow: 4px 4px 0 var(--nb-line) !important; }
 
 /* Entry cards: numbers match the method badges, images are squared and framed */
 .project-entry-image > span { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; font-weight: 800; box-shadow: 3px 3px 0 var(--nb-line); backdrop-filter: none !important; }
@@ -302,15 +273,6 @@ html.dark .orbiting-skills__logo { background: #ffffff !important; border-color:
   .orbiting-skills .orbiting-skills__item-button.orbiting-skills__item-button--sm { --skill-size: 8.2cqw; }
 }
 
-/* Dark mode: the method illustrations use the blue palette instead of the grey-green product screens */
-html.dark .illustration {
-  --ill-paper: #0d1b52; --ill-canvas: #182f8c; --ill-line: #000000; --ill-ink: #ffffff; --ill-muted: #b9c9ff;
-  --ill-bar: #0d1b52; --ill-bar-ink: #ffffff; --ill-dot: #ffffff; --ill-tint: #213fa6;
-  --ill-blue: #3d73ff; --ill-blue-ink: #8fb5ff; --ill-cyan: #4fd8ff; --ill-cyan-soft: #1c4fb8; --ill-cyan-bg: #1a3aa6;
-  --ill-skel: #e8f1ff; --ill-skel-soft: #7b93e6; --ill-chat: #162a78; --ill-chat-line: #000000; --ill-chat-bar: #4fd8ff; --ill-chat-bar-2: #8fb0ff;
-  --ill-shadow: #000000;
-}
-
 /* Footer: same hard line as the section bands */
 .site-footer { border-top: var(--nb-border) !important; background: var(--surface) !important; }
 
@@ -320,63 +282,8 @@ html.dark .mobile-nav a[aria-current="page"] { color: var(--accent-cyan); }
 html.dark .tl-stem { background: #000; }
 
 
-/* ---------- Home: method cards and contact band ---------- */
+/* ---------- Home: method section and contact band ---------- */
 .home-converge .home-method { padding-block: 8px 0; }
-.home-method-grid { gap: clamp(36px, 4.4vw, 64px) !important; margin-top: 44px !important; }
-.home-method-card {
-  border: var(--nb-border);
-  background: var(--surface);
-  box-shadow: var(--nb-shadow);
-  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
-}
-.home-method-card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--nb-line); }
-.home-method-visual { padding: 14px; border-bottom: var(--nb-border); background: var(--tint); }
-.home-method-visual .illustration { margin: 0; }
-.home-method-copy { padding: 18px 20px 22px !important; }
-.home-method-head h3 { font-size: clamp(1.2rem, 1.6vw, 1.5rem) !important; }
-.home-method-copy p { min-height: 0 !important; margin-top: 10px !important; color: var(--fg) !important; font-weight: 500; font-size: 1.02rem; max-width: none !important; }
-.home-step-number { position: static !important; box-shadow: 3px 3px 0 var(--nb-line); }
-
-/* Arrows between the steps (desktop), pointing down on small screens */
-@media (min-width: 901px) {
-  .home-method-card:not(:last-child)::after {
-    content: '→';
-    position: absolute;
-    z-index: 4;
-    top: 38%;
-    right: calc(clamp(36px, 4.4vw, 64px) / -2 - 22px);
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border: var(--nb-border);
-    background: var(--accent-cyan);
-    color: #000;
-    font-size: 1.5rem;
-    font-weight: 900;
-    box-shadow: 3px 3px 0 var(--nb-line);
-  }
-}
-@media (max-width: 900px) {
-  .home-method-card:not(:last-child)::after {
-    content: '↓';
-    position: absolute;
-    left: 50%;
-    bottom: calc(clamp(34px, 6vw, 34px) / -2 - 22px);
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    transform: translateX(-50%);
-    border: var(--nb-border);
-    background: var(--accent-cyan);
-    color: #000;
-    font-size: 1.5rem;
-    font-weight: 900;
-    box-shadow: 3px 3px 0 var(--nb-line);
-    z-index: 4;
-  }
-}
 
 /* Contact: a full blue band with a very large title and two actions */
 .home-converge .home-contact-panel {
@@ -515,3 +422,19 @@ html.dark .home-converge .home-contact-panel { background: #2a55e8 !important; }
 .guide-mockup-frame .psp-toolbar [class*='url'], .guide-mockup-frame .psp-toolbar [class*='address'], .guide-mockup-frame .psp-toolbar > div:nth-child(3) { background: #eaf1fa !important; border: 2px solid #000 !important; }
 .guide-mockup-frame .psp-device button { color: #000 !important; }
 .guide-mockup-frame .psp-device button[aria-pressed='true'] { color: #fff !important; }
+
+/* Method scene: one hard-edged board */
+.home-journey-board { border: var(--nb-border); box-shadow: var(--nb-shadow); }
+.home-journey-bar-track { border: 3px solid var(--nb-line); background: #fff; }
+.home-journey-marker { border: 3px solid var(--nb-line); box-shadow: 3px 3px 0 var(--nb-line); background: #fff; color: #000; }
+.home-journey-marker.is-reached { background: var(--accent-cyan); }
+.home-journey-phases { border-top: var(--nb-border); }
+.home-journey-bridge-line { border: 2px solid var(--nb-line); background: #fff; }
+.home-journey-bridge-line::after { background: var(--nb-line); }
+.home-journey-bridge-node { border: 3px solid var(--nb-line); box-shadow: 3px 3px 0 var(--nb-line); }
+.home-converge .home-contact-panel { margin-top: 0; }
+.home-journey-item + .home-journey-item { border-left: var(--nb-border); }
+.home-journey-item strong, .home-journey-item span:not(.home-journey-check) { color: var(--fg); }
+.home-journey-check { border: 3px solid var(--nb-line); background: #fff; }
+@media (max-width: 900px) { .home-journey-item:nth-child(n + 3) { border-top: var(--nb-border); } .home-journey-item:nth-child(3) { border-left: 0; } }
+@media (max-width: 520px) { .home-journey-item + .home-journey-item { border-left: 0; border-top: var(--nb-border); } }
