@@ -8,7 +8,8 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null)
 
   useEffect(() => {
-    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    // Smooth scrolling only for mouse users with motion allowed: touch screens keep the native, inertial scroll.
+    const query = window.matchMedia('(prefers-reduced-motion: reduce), (hover: none), (pointer: coarse)')
     const sync = () => {
       if (query.matches) {
         lenisRef.current?.destroy()

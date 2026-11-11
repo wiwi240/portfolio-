@@ -781,7 +781,7 @@ export const pathChoiceDetails: Record<string, { description: Localized; image: 
   },
   speed: {
     description: t('Examiner les lenteurs ressenties.', 'Look into the delays people experience.'),
-    image: '/service-assets/hosting-servers.png',
+    image: '/service-assets/hosting-servers.webp',
   },
   accessibility: {
     description: t(
@@ -802,7 +802,7 @@ export const pathChoiceDetails: Record<string, { description: Localized; image: 
       'Étudier l’hébergement ou la base technique.',
       'Review hosting or the technical foundation.',
     ),
-    image: '/service-assets/hosting-servers.png',
+    image: '/service-assets/hosting-servers.webp',
   },
   review: {
     description: t(
@@ -834,7 +834,7 @@ export const pathChoiceDetails: Record<string, { description: Localized; image: 
   },
   updates: {
     description: t('Prévoir les mises à jour nécessaires.', 'Plan the updates that are needed.'),
-    image: '/service-assets/hosting-servers.png',
+    image: '/service-assets/hosting-servers.webp',
   },
   ongoing: {
     description: t('Définir les interventions utiles dans le temps.', 'Define useful support over time.'),
@@ -846,7 +846,7 @@ export const pathChoiceDetails: Record<string, { description: Localized; image: 
   },
   hosting: {
     description: t('Organiser le déplacement sans perdre les données.', 'Plan a move without losing data.'),
-    image: '/service-assets/hosting-servers.png',
+    image: '/service-assets/hosting-servers.webp',
   },
 }
 function pathQuestionsFor(draft: ProjectDraft): { main: string[]; extra: string[] } {

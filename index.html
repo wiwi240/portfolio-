@@ -4,19 +4,29 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href="https://www.williammahi.dev/" />
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="image" href="/logo-portfolio.webp" type="image/webp" fetchpriority="high" />
+    <!-- Fonts load without blocking the first paint (swap shows the fallback font meanwhile). -->
     <link
       rel="stylesheet"
-      href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&display=swap"
+      href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&f[]=satoshi@400,500,700,900&display=swap"
+      media="print"
+      onload="this.media='all'"
     />
     <link
       rel="stylesheet"
-      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap"
-    />
-    <link
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap"
-      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <noscript>
+      <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&f[]=satoshi@400,500,700,900&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" />
+    </noscript>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
       content="William Mahi, développeur full-stack React, TypeScript et Node.js. Découvrez ses projets web, son parcours et ses compétences techniques."
@@ -31,14 +41,14 @@
       property="og:description"
       content="Portfolio de William Mahi, développeur full-stack spécialisé en React, TypeScript et Node.js."
     />
-    <meta property="og:image" content="https://www.williammahi.dev/projects/portfolio.png" />
+    <meta property="og:image" content="https://www.williammahi.dev/projects/portfolio-og.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="William Mahi | Développeur full-stack React & Node.js" />
     <meta
       name="twitter:description"
       content="Portfolio de William Mahi, développeur full-stack spécialisé en React, TypeScript et Node.js."
     />
-    <meta name="twitter:image" content="https://www.williammahi.dev/projects/portfolio.png" />
+    <meta name="twitter:image" content="https://www.williammahi.dev/projects/portfolio-og.png" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
