@@ -30,3 +30,10 @@
 .about-activity-chart [role='group'] span, .about-activity-chart [role='group'] button { border-radius: 0 !important; }
 .about-activity-chart canvas { background: transparent; }
 .about-activity-chart button[title='Less'], .about-activity-chart button[aria-label^='Highlight'] { border: 2px solid var(--nb-line, #000) !important; border-radius: 0 !important; box-shadow: none !important; }
+
+/* Phone: stats stack on one column so the big numbers no longer collide, text stays readable. */
+@media (max-width: 520px) {
+  .about-activity-chart > section { padding-inline: 10px; }
+  .about-activity-chart .grid.grid-cols-2 { grid-template-columns: minmax(0, 1fr) !important; }
+  .about-activity-chart .grid.grid-cols-2 .truncate { white-space: normal; }
+}

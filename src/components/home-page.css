@@ -25,12 +25,6 @@
 
 /* Method */
 .home-method { padding-block: 84px 90px; background: var(--surface); border-block: 1px solid var(--border); }
-.home-method-grid { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3.3vw, 48px); margin: 40px 0 0; }
-.home-method-card { position: relative; z-index: 2; display: flex; flex-direction: column; min-width: 0; }
-.home-step-number { position: absolute; z-index: 3; top: 10px; left: 8px; padding: 7px 9px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--tint); color: var(--accent); font-size: .8rem; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
-.home-method-copy { position: relative; z-index: 2; padding: 20px 4px 0; }
-.home-method-copy h3 { font-size: clamp(1.16rem, 1.5vw, 1.4rem); }
-.home-method-copy p { min-height: 3.1em; margin-top: 7px; max-width: 44ch; color: var(--muted); line-height: 1.5; }
 
 /* Closing call to action */
 .home-contact-panel { display: flex; flex-direction: column; align-items: center; padding-block: 88px 92px; text-align: center; }
@@ -39,104 +33,25 @@
 .home-contact-panel > .button { margin-top: 28px; }
 .home-contact-email { display: inline-block; margin-top: 17px; color: var(--accent); font-size: .95rem; font-weight: 700; overflow-wrap: anywhere; }
 
-/* Method illustrations. Decorative only: no focusable or interactive controls.
-   They mimic product screens, so they carry their own palette with a dark variant. */
-.illustration {
-  --ill-paper: #ffffff; --ill-canvas: #f7fbff; --ill-line: #cfe1ef; --ill-ink: #172940; --ill-muted: #7b8fa6;
-  --ill-bar: #f9fbfe; --ill-bar-ink: #72839a; --ill-dot: #a6bed3; --ill-tint: #eaf5ff;
-  --ill-blue: #0866e8; --ill-blue-ink: #0866e8; --ill-cyan: #61d7e8; --ill-cyan-soft: #bff4f8; --ill-cyan-bg: #dff8fb;
-  --ill-skel: #14315a; --ill-skel-soft: #9db5ca; --ill-chat: #e7faff; --ill-chat-line: #bee4ef; --ill-chat-bar: #48cee7; --ill-chat-bar-2: #8ab9ef;
-  --ill-shadow: #153e6818;
-  position: relative; container-type: inline-size; min-width: 0; color: var(--ill-ink); font-family: Arial, sans-serif;
-}
-html.dark .illustration {
-  --ill-paper: #1b3049; --ill-canvas: #142840; --ill-line: #2f4d6e; --ill-ink: #e6f1ff; --ill-muted: #8fa6bf;
-  --ill-bar: #172b43; --ill-bar-ink: #8fa6bf; --ill-dot: #4a6685; --ill-tint: #213f61;
-  --ill-blue: #0866e8; --ill-blue-ink: #7db6ff; --ill-cyan: #3bbcd3; --ill-cyan-soft: #1a4a58; --ill-cyan-bg: #15414f;
-  --ill-skel: #d6e6f8; --ill-skel-soft: #5b7894; --ill-chat: #14414d; --ill-chat-line: #266273; --ill-chat-bar: #3bbcd3; --ill-chat-bar-2: #5b8fd6;
-  --ill-shadow: #00000059;
-}
-.illustration svg { width: 1.25em; height: 1.25em; flex-shrink: 0; }
-.illustration small { display: block; font-size: .8em; line-height: 1.4; }
-.illustration p { font-size: inherit; line-height: 1.5; }
-.illustration strong, .illustration b { line-height: 1.3; }
-.scene-window-bar { height: 2.2em; padding: 0 1em; display: flex; align-items: center; justify-content: space-between; color: var(--ill-bar-ink); background: var(--ill-bar); border-bottom: 1px solid var(--ill-line); font-size: .73em; }
-.scene-window-bar > span:first-child { display: flex; gap: 4px; }
-.scene-window-bar i { width: 4px; height: 4px; background: var(--ill-dot); border-radius: 50%; }
-.method-scene { width: 100%; aspect-ratio: 1.34; }
-
-.brief-document { position: absolute; top: 8%; left: 8%; width: 76%; padding: 1.35em; font-size: 2.2cqw; background: var(--ill-paper); border: 1px solid var(--ill-line); border-radius: .75em; box-shadow: 0 12px 28px var(--ill-shadow); }
-.brief-header { display: flex; align-items: center; gap: .5em; color: var(--ill-blue-ink); font-size: .65em; }
-.brief-header > small { margin-left: auto; color: var(--ill-muted); }
-.brief-document > strong { display: block; margin: .75em 0; font-size: 1.35em; max-width: 16ch; }
-.brief-line { display: flex; align-items: center; gap: .8em; margin: .66em 0; }
-.brief-line > svg { padding: .2em; width: 1.7em; height: 1.7em; border-radius: .4em; background: var(--ill-tint); color: var(--ill-blue-ink); }
-.brief-line small { margin-top: .3em; color: var(--ill-muted); font-size: .7em; }
-.brief-target { position: absolute; top: 12%; right: 1%; width: 18% !important; height: auto !important; padding: 3.2%; color: var(--ill-blue-ink); background: var(--ill-paper); border: 1px solid var(--ill-line); border-radius: 50%; box-shadow: 0 8px 18px var(--ill-shadow); }
-.brief-chat { position: absolute; right: 4%; bottom: 13%; display: grid; gap: .5em; width: 27%; padding: 1em; border: 1px solid var(--ill-chat-line); border-radius: .75em; background: var(--ill-chat); box-shadow: 0 9px 20px var(--ill-shadow); }
-.brief-chat span { display: block; height: .48em; border-radius: 1em; background: var(--ill-chat-bar); }
-.brief-chat span:nth-child(2) { width: 74%; background: var(--ill-chat-bar-2); }
-.brief-chat span:nth-child(3) { width: 48%; background: var(--ill-blue); }
-
-.build-window, .delivery-site { position: absolute; overflow: hidden; border: 1px solid var(--ill-line); border-radius: .8em; background: var(--ill-paper); box-shadow: 0 12px 28px var(--ill-shadow); }
-.build-window { top: 9%; left: 7%; width: 78%; height: 70%; font-size: 2.25cqw; }
-.build-canvas { position: relative; height: calc(100% - 2.2em); overflow: hidden; background: var(--ill-canvas); }
-.build-shape { position: absolute; display: block; border-radius: 50%; }
-.build-shape--one { top: 16%; right: 8%; width: 38%; aspect-ratio: 1; background: var(--ill-cyan-soft); border: 1.1em solid var(--ill-blue); }
-.build-shape--two { right: 29%; bottom: -18%; width: 34%; aspect-ratio: 1; border: 1em solid var(--ill-cyan); }
-.build-preview-copy { position: absolute; top: 24%; left: 9%; display: grid; gap: 1em; width: 43%; }
-.build-preview-copy i { display: block; height: .7em; border-radius: 1em; background: var(--ill-skel); }
-.build-preview-copy i:nth-child(2) { width: 72%; background: var(--ill-skel-soft); }
-.build-preview-button { width: max-content; padding: .75em 1.1em; border-radius: .5em; background: var(--ill-blue); color: #fff; font-weight: 700; }
-.build-panel { position: absolute; right: 4%; bottom: 7%; display: grid; gap: .7em; width: 42%; padding: 1.15em; border: 1px solid var(--ill-line); border-radius: .75em; background: var(--ill-paper); box-shadow: 0 10px 24px var(--ill-shadow); font-size: 2.3cqw; }
-.build-panel b { color: var(--ill-ink); font-size: .85em; }
-.build-field, .build-button { display: block; height: 1.45em; border: 1px solid var(--ill-line); border-radius: .4em; background: var(--ill-canvas); }
-.build-button { width: 55%; border-color: var(--ill-blue); background: var(--ill-blue); }
-.method-cursor { position: absolute; top: 48%; right: 28%; z-index: 3; width: 9% !important; height: auto !important; color: var(--ill-blue-ink); fill: var(--ill-paper); filter: drop-shadow(0 3px 2px var(--ill-shadow)); }
-
-.delivery-site { top: 9%; left: 5%; width: 78%; height: 68%; font-size: 2.25cqw; }
-.delivery-site-body { position: relative; display: flex; flex-direction: column; justify-content: center; height: calc(100% - 2.2em); padding: 12%; background: var(--ill-canvas); }
-.delivery-site-body > span { position: absolute; top: 12%; right: 9%; width: 29%; aspect-ratio: 1; border: 1em solid var(--ill-cyan); border-radius: 50%; background: var(--ill-cyan-bg); }
-.delivery-site-body strong { z-index: 1; max-width: 9ch; color: var(--ill-ink); font-size: 1.65em; line-height: 1.05; }
-.delivery-site-body i { z-index: 1; display: block; width: 42%; height: .65em; margin-top: .8em; border-radius: 1em; background: var(--ill-skel-soft); }
-.delivery-site-body i:last-child { width: 24%; height: 1.7em; border-radius: .4em; background: var(--ill-blue); }
-.delivery-document { position: absolute; right: 4%; bottom: 6%; width: 53%; display: grid; gap: .78em; padding: 1.35em; border: 1px solid var(--ill-line); border-radius: .75em; background: var(--ill-paper); box-shadow: 0 10px 24px var(--ill-shadow); font-size: 2.35cqw; }
-.delivery-document > svg { font-size: 1.8em; color: var(--ill-blue-ink); }
-.delivery-document > b { font-size: 1.1em; }
-.delivery-document > span { display: flex; gap: .6em; align-items: center; font-size: .8em; }
-.delivery-document > span svg { color: var(--ill-blue-ink); }
-.delivery-plane { position: absolute; bottom: 12%; left: 12%; width: 16% !important; height: auto !important; color: var(--ill-blue-ink); fill: var(--ill-cyan-bg); filter: drop-shadow(0 6px 7px var(--ill-shadow)); transform: rotate(-12deg); }
-
 @media (max-width: 1024px) {
   .home-method, .home-contact-panel { padding-block: 72px 76px; }
-  .home-method-grid { gap: 24px; }
-  .home-method-copy p { min-height: 4.7em; }
 }
 @media (max-width: 760px) {
   .home-hero { min-height: 0; padding-block: 52px 56px; }
   .home-hero h1 { margin: 20px 0 18px; font-size: clamp(2.85rem, 8.8vw, 4rem); }
   .home-hero-lead, .home-page .home-hero-lead { max-width: 36ch; font-size: 1.05rem; }
   .home-method, .home-contact-panel { padding-block: 58px 64px; }
-  .home-method-grid { grid-template-columns: 1fr; gap: 34px; margin-top: 32px; }
-  .home-method-copy p { min-height: 0; }
-  .home-method-card { width: min(100%, 520px); margin-inline: auto; }
-  .method-scene { aspect-ratio: 1.4; }
-  .home-method-copy { padding-top: 14px; }
   .home-contact-panel > .button { width: min(100%, 290px); }
 }
 @media (max-width: 520px) {
   .home-hero h1 { font-size: 3.4rem; }
-  .home-method-copy p { font-size: .95rem; }
 }
 @media (max-width: 460px) {
   .home-hero .home-actions { width: 100%; flex-direction: column; align-items: center; gap: 10px; margin-top: 24px; }
   .home-hero .home-actions .button { width: min(100%, 280px); }
 }
 
-/* Method card: visual on top, then number + title, then text. Contact: two actions side by side. */
-.home-method-head { display: flex; align-items: center; gap: 12px; }
-.home-method-head .home-step-number { position: static; flex: none; }
-.home-method-copy { padding: 16px 4px 0; }
 .home-contact-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 28px; }
 .home-contact-actions .button { margin: 0; overflow-wrap: anywhere; }
 @media (max-width: 560px) { .home-contact-actions { flex-direction: column; align-items: stretch; } }
+

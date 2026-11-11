@@ -1,0 +1,52 @@
+/* One board: header (label, percent), the bar with its four markers, the four steps under it, then a bridge to the contact block. */
+.home-journey { width: 100%; margin: 40px 0 0; }
+.home-journey-board { background: var(--surface); }
+.home-journey-head { display: flex; align-items: center; gap: 16px; padding: 16px 20px 14px; }
+.home-journey-label { font-weight: 800; font-size: .95rem; }
+.home-journey-percent { margin-left: auto; font-family: var(--font-display); font-size: 2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+
+.home-journey-rail { position: relative; margin: 0 20px 20px; }
+.home-journey-bar-track { height: 34px; background: var(--tint); overflow: hidden; }
+.home-journey-bar-fill { display: block; height: 100%; width: 100%; transform-origin: left; transform: scaleX(var(--p, 0)); background: repeating-linear-gradient(135deg, #2a55e8 0 14px, #4a74ff 14px 28px); background-size: 40px 40px; animation: journey-stripes 1s linear infinite; transition: transform .6s var(--ease); }
+@keyframes journey-stripes { to { background-position: 40px 0; } }
+.home-journey-marker { position: absolute; top: 50%; display: grid; place-items: center; width: 42px; height: 42px; transform: translate(-100%, -50%); background: var(--surface); color: var(--fg); font-weight: 900; font-size: .9rem; transition: background-color .3s var(--ease); }
+.home-journey-marker svg { width: 18px; height: 18px; }
+.home-journey-marker.is-reached { background: var(--accent-cyan, var(--accent)); color: #000; }
+
+.home-journey-phases { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+.home-journey-item { display: flex; align-items: flex-start; gap: 12px; padding: 18px 20px 20px; line-height: 1.35; }
+.home-journey-item > * { opacity: .55; transition: opacity .3s var(--ease); }
+.home-journey-item strong { display: block; margin-bottom: 4px; font-family: var(--font-display); font-size: 1.1rem; font-weight: 900; }
+.home-journey-item span:not(.home-journey-check) { color: var(--muted); font-weight: 500; }
+.home-journey-check { display: grid; place-items: center; flex: none; width: 30px; height: 30px; background: var(--bg); color: transparent; transition: background-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease); }
+.home-journey-check svg { width: 19px; height: 19px; stroke-width: 3.5; }
+.home-journey-item.is-done > * { opacity: 1; }
+.home-journey-item.is-done .home-journey-check { background: var(--accent-cyan, var(--accent)); color: #000; transform: scale(1.12); }
+
+/* Bridge: a line drops from the board to the contact block once the project is complete. */
+.home-journey-bridge { position: relative; z-index: 3; display: flex; justify-content: center; height: 72px; margin-bottom: -22px; pointer-events: none; }
+.home-journey-bridge-line { width: 6px; height: 100%; background: var(--tint); }
+.home-journey-bridge-line::after { content: ''; display: block; width: 100%; height: 100%; background: var(--fg); transform-origin: top; transform: scaleY(0); transition: transform .6s var(--ease) .2s; }
+.home-journey-bridge.is-on .home-journey-bridge-line::after { transform: scaleY(1); }
+.home-journey-bridge-node { position: absolute; bottom: 0; left: 50%; display: grid; place-items: center; width: 44px; height: 44px; transform: translateX(-50%); background: var(--surface); color: var(--fg); transition: background-color .3s var(--ease) .7s; }
+.home-journey-bridge-node svg { width: 22px; height: 22px; stroke-width: 3; }
+.home-journey-bridge.is-on .home-journey-bridge-node { background: var(--accent-cyan, var(--accent)); color: #000; animation: journey-bounce .8s var(--ease) .7s both; }
+@keyframes journey-bounce { 0%, 100% { transform: translateX(-50%); } 40% { transform: translateX(-50%) translateY(6px); } 70% { transform: translateX(-50%) translateY(-2px); } }
+
+@media (max-width: 900px) {
+  .home-journey { margin-top: 32px; }
+  .home-journey-head { padding: 14px 14px 12px; }
+  .home-journey-percent { font-size: 1.6rem; }
+  .home-journey-bridge { height: 56px; }
+  .home-journey-rail { margin: 0 14px 14px; }
+  .home-journey-bar-track { height: 28px; }
+  .home-journey-marker { width: 32px; height: 32px; font-size: .8rem; }
+  .home-journey-phases { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-journey-item { padding: 14px; }
+}
+@media (max-width: 520px) { .home-journey-phases { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  .home-journey-bar-fill, .home-journey-item > *, .home-journey-check, .home-journey-marker { transition: none; }
+  .home-journey-bar-fill, .home-journey-bridge-node { animation: none; }
+  .home-journey-bridge-line::after, .home-journey-bridge-node { transition: none; }
+}

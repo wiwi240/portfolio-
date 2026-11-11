@@ -26,6 +26,7 @@
 .portfolio-hero {
   position: relative;
   min-height: calc(100vh - 79px);
+  min-height: calc(100svh - 79px);
   display: flex;
   align-items: center;
   padding: 4.5rem 0 5rem;

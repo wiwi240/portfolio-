@@ -5,7 +5,7 @@ import type { PathId } from '@/data/project-configurator'
 import { guidePanels, type GuideAnswer } from '@/data/home-guide'
 import { markProgrammaticScroll, useScrollToScene } from '@/lib/scroll-stack'
 import { paths } from '@/site'
-import { MethodScene } from './home-illustrations'
+import { HomeJourney } from './home-journey'
 import { HomeProjects } from './home-projects'
 import { ProjectEntry } from './project-entry'
 import { GuidePanel } from './project-guide'
@@ -21,22 +21,12 @@ const content = {
     heroRole: 'Développeur web freelance', lead: 'Des sites web et des outils sur mesure pour votre activité.', projects: 'Voir mes réalisations', contact: 'Décrire mon projet',
     projectLabel: 'Votre projet',
     methodLabel: 'Un projet construit avec vous', methodTitle: 'Une méthode claire et collaborative', methodIntro: 'Du premier échange à la mise en ligne, nous avançons ensemble.',
-    steps: [
-      ['Définir ensemble', 'Nous précisons vos besoins, vos priorités et le périmètre du projet.'],
-      ['Concevoir et développer', 'Vous validez les propositions aux étapes clés, puis votre solution prend forme.'],
-      ['Vérifier et livrer', 'Nous vérifions les parcours et préparons votre prise en main.'],
-    ],
     contactLabel: 'Parlons de votre projet', contactTitle: 'Donnons forme à votre idée.', contactLead: 'Présentez-moi votre besoin pour définir ensemble la suite.', projectContact: 'Décrire mon projet',
   },
   en: {
     heroRole: 'Freelance web developer', lead: 'Tailored websites and tools for your business.', projects: 'View my work', contact: 'Describe my project',
     projectLabel: 'Your project',
     methodLabel: 'A project built with you', methodTitle: 'A clear, collaborative process', methodIntro: 'From our first conversation to launch, we move forward together.',
-    steps: [
-      ['Define together', 'We clarify your needs, priorities and the scope of the project.'],
-      ['Design and develop', 'You approve proposals at key stages, then your solution takes shape.'],
-      ['Review and deliver', 'We check the user journeys and prepare your handover.'],
-    ],
     contactLabel: 'Let’s talk about your project', contactTitle: 'Let’s bring your idea to life.', contactLead: 'Tell me what you need so we can define the next steps together.', projectContact: 'Describe my project',
   },
 }
@@ -146,7 +136,7 @@ export function HomePage({ language }: { language: Language }) {
         <HomeProjects language={language} />
       </StackScene>
       <StackScene id="methode" tone="surface" className="home-converge">
-        <section className="stack-scene-inner home-section home-method" aria-labelledby="method-title"><div className="home-section-heading home-section-heading--centered"><Eyebrow>{t.methodLabel}</Eyebrow><h2 id="method-title">{t.methodTitle}</h2><p>{t.methodIntro}</p></div><div className="home-method-grid">{t.steps.map(([title, description], i) => <article className="home-method-card" key={title}><div className="home-method-visual"><MethodScene step={i} language={language} /></div><div className="home-method-copy"><div className="home-method-head"><span className="home-step-number">0{i + 1}</span><h3>{title}</h3></div><p>{description}</p></div></article>)}</div></section>
+        <section className="stack-scene-inner home-section home-method" aria-labelledby="method-title"><div className="home-section-heading home-section-heading--centered"><Eyebrow>{t.methodLabel}</Eyebrow><h2 id="method-title">{t.methodTitle}</h2><p>{t.methodIntro}</p></div><HomeJourney language={language} /></section>
         <section className="stack-scene-inner home-section home-contact-panel" aria-labelledby="contact-title"><Eyebrow>{t.contactLabel}</Eyebrow><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactLead}</p><div className="home-contact-actions"><a className="button button-primary" href="#votre-projet">{t.projectContact}<ArrowUpRight aria-hidden="true" /></a><a className="button button-outline home-contact-mail" href={'mailto:' + contactEmail}><Mail aria-hidden="true" />{contactEmail}</a></div></section>
       </StackScene>
     </ScrollStack>

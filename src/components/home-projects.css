@@ -55,3 +55,14 @@
 .home-project-image { min-height: 17rem; }
 .home-project-image img { position: absolute; inset: 0; }
 @media (hover: hover) { .home-project-copy { max-height: 100%; overflow-y: auto; } }
+
+/* Phones: no auto-scrolling marquee; the cards are one swipeable row (scroll right with a finger). */
+@media (max-width: 900px) {
+  .home-projects-marquee { overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; scroll-padding-inline: 14px; scrollbar-width: thin; cursor: grab; }
+  .home-projects-marquee.is-dragging { scroll-snap-type: none; cursor: grabbing; user-select: none; }
+  .home-projects-marquee.is-dragging a { pointer-events: none; }
+  .home-projects-track { animation: none; transform: none; }
+  .home-projects-track[aria-hidden] { display: none; }
+  .home-projects-track li { width: min(78vw, 340px); scroll-snap-align: start; }
+  .home-projects-toggle { display: none; }
+}

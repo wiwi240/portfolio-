@@ -1,0 +1,35 @@
+/* Mobile and touch tuning. Loaded last so it wins over the decorative layers. */
+
+/* Touch: no grey tap flash, no 300 ms double-tap delay, and never auto-zoom on focus. */
+a, button, summary, label, [role='button'] { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+@media (pointer: coarse) {
+  input, textarea, select { font-size: 16px !important; }
+}
+
+@media (max-width: 900px) {
+  /* Large blurred halos and glass panels are repainted on every scroll frame: drop them on phones. */
+  .home-hero::before, .home-hero::after, .guide-mockup-frame::before { display: none; }
+  .site-header, html[data-scrolled] .site-header, .contact-primary, .project-entry-image span,
+  .guide-mockup-frame .psp-site-header, .guide-mockup-frame .psp-brand, .psp-brand,
+  .orbiting-skills__center, .orbiting-skills__logo-svg, .orbiting-skills__label,
+  .orbiting-skills__item-button:focus-visible .orbiting-skills__label {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  .site-header { background: var(--surface) !important; }
+
+  /* 44 px touch targets for the header controls and footer links. */
+  .language-link, .theme-switch, .menu-toggle { min-width: 44px; min-height: 44px; }
+  .mobile-nav a { display: flex; align-items: center; min-height: 44px; }
+  .site-footer nav { flex-wrap: wrap; white-space: normal; row-gap: 0; }
+  .site-footer nav a, .site-footer nav .footer-link-button { display: inline-flex; align-items: center; min-height: 44px; padding-inline: .35rem; }
+
+  /* Readable small text. */
+  .eyebrow { font-size: .78rem; }
+  .portfolio-badge { font-size: .8rem; }
+}
+
+/* Hover effects that would stay "stuck" after a tap are only for real pointers. */
+@media (hover: none) {
+  .project-card:hover, .service-card:hover, .project-entry-card:hover, .home-project-card:hover { transform: none; }
+}
