@@ -438,3 +438,71 @@ html.dark .home-converge .home-contact-panel { background: #2a55e8 !important; }
 .home-journey-check { border: 3px solid var(--nb-line); background: #fff; }
 @media (max-width: 900px) { .home-journey-item:nth-child(n + 3) { border-top: var(--nb-border); } .home-journey-item:nth-child(3) { border-left: 0; } }
 @media (max-width: 520px) { .home-journey-item + .home-journey-item { border-left: 0; border-top: var(--nb-border); } }
+
+/* ---------- Yellow accent: only small touches, shared with the audience gate. Cyan stays the main accent. ---------- */
+:root { --accent-yellow: #ffd84d; }
+/* Numbered badges on project cards */
+.home-project-number, .project-entry-image > span, .project-image::before { background: var(--accent-yellow) !important; }
+/* Hover on outline buttons and the main action of the contact band */
+.button-outline:hover { background: var(--accent-yellow) !important; color: #000 !important; }
+.home-contact-panel .button-primary { background: var(--accent-yellow) !important; }
+
+/* ---------- About page timeline: heavier, blockier, a little off-axis ---------- */
+.tl .tl-eyebrow { box-shadow: 3px 3px 0 var(--nb-line); }
+.tl .tl-head h2 { font-size: clamp(2.2rem, 4.2vw, 3.8rem); font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1; }
+.tl .tl-period { border-width: 3px; padding: 0.45rem 1rem; box-shadow: 4px 4px 0 var(--nb-line); transform: rotate(2deg); font-weight: 900; }
+
+/* Rail: a thick black bar, the progress fill is striped like a hazard tape */
+.tl .tl-axis { height: 18px; border-width: 4px; background: var(--surface); box-shadow: 4px 4px 0 var(--nb-line); }
+.tl .tl-fill { background: repeating-linear-gradient(-45deg, var(--accent-fill) 0 10px, var(--accent-cyan) 10px 20px) !important; box-shadow: none; border-right: 4px solid var(--nb-line); }
+
+/* Markers: big squares with a hard shadow; the active one turns into a tilted cyan diamond */
+.tl .tl-dot { width: 30px; height: 30px; border: 4px solid var(--nb-line); background: var(--surface); box-shadow: 4px 4px 0 var(--nb-line); transform: translate(-8px, -50%); }
+.tl .tl-item.is-active .tl-dot { background: var(--accent-cyan); box-shadow: 5px 5px 0 var(--nb-line); transform: translate(-8px, -50%) rotate(45deg) scale(1.1); }
+.tl .tl-stem { width: 6px; }
+
+/* Cards: thick border, deep offset shadow, alternate tilt */
+.tl .tl-copy { border-width: 4px; padding: 1.2rem 1.25rem; box-shadow: 8px 8px 0 var(--nb-line); gap: 0.6rem; }
+.tl .tl-item.is-active.is-above .tl-copy { transform: rotate(-1.5deg); }
+.tl .tl-item.is-active.is-below .tl-copy { transform: rotate(1.5deg); }
+.tl .tl-icon { width: 46px; height: 46px; border-width: 3px; box-shadow: 3px 3px 0 var(--nb-line); }
+.tl .tl-icon svg { width: 22px; height: 22px; }
+.tl .tl-copy h3 { font-size: 1.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em; }
+.tl .tl-copy p { font-size: 0.9rem; font-weight: 600; }
+.tl .tl-tags span { border-width: 2px; background: var(--accent-cyan); color: #000; font-weight: 900; box-shadow: 2px 2px 0 var(--nb-line); }
+.tl .tl-half time { border-width: 3px; padding: 3px 10px; box-shadow: 4px 4px 0 var(--nb-line); font-weight: 900; font-size: 0.8rem; }
+.tl .tl-item.is-active .tl-half time { background: var(--accent-yellow); color: #000; }
+
+.tl .tl-lead img { border-width: 4px; box-shadow: 10px 10px 0 var(--nb-line); transform: rotate(-2deg); }
+.tl .tl-hint { width: max-content; max-width: calc(100% - 2rem); margin-inline: auto; padding: 4px 12px; border: 3px solid var(--nb-line); background: var(--surface); color: var(--fg); font-weight: 800; box-shadow: 3px 3px 0 var(--nb-line); }
+.tl.is-flat .tl-item::before { height: 10px !important; background: var(--nb-line) !important; transform: translateY(-50%); }
+@media (prefers-reduced-motion: reduce) { .tl-item.is-active.is-above .tl-copy, .tl-item.is-active.is-below .tl-copy { transform: none; } }
+
+/* Squares everywhere (timeline.css loads later and would otherwise keep the rounded corners) */
+.tl .tl-copy, .tl .tl-dot, .tl .tl-icon, .tl .tl-tags span, .tl .tl-period, .tl .tl-axis, .tl .tl-fill, .tl .tl-half time { border-radius: 0; }
+.tl .tl-copy { border-color: var(--nb-line); background: var(--surface); background-image: none; }
+.tl .tl-icon { border: 3px solid var(--nb-line); background: var(--accent-cyan); color: #000; }
+.tl .tl-tags span { border: 2px solid var(--nb-line); color: #000; }
+.tl .tl-dot { border-color: var(--nb-line); }
+.tl .tl-item.is-active .tl-dot { border-color: var(--nb-line); }
+.tl .tl-stem { background: var(--nb-line); }
+.tl .tl-period { border-color: var(--nb-line); }
+.tl .tl-axis { border-color: var(--nb-line); }
+.tl .tl-half time { border-color: var(--nb-line); color: var(--fg); }
+.tl .tl-item.is-active .tl-half time { color: #000; }
+.tl .tl-copy h3 { color: var(--fg); }
+.tl .tl-copy p { color: var(--fg); }
+
+/* Keep the centre fixed on the rail even when a card is tall: halves share the space equally and may overflow outward */
+.tl .tl-item { grid-template-rows: minmax(0, 1fr) 0 minmax(0, 1fr); }
+.tl .tl-copy { padding: 1rem 1.1rem; gap: 0.45rem; }
+.tl .tl-copy h3 { font-size: 1.05rem; text-transform: none; }
+.tl .tl-copy p { font-size: 0.86rem; line-height: 1.45; }
+.tl .tl-icon { width: 40px; height: 40px; }
+.tl .tl-icon svg { width: 20px; height: 20px; }
+
+/* "Votre projet" entry cards: the description and the link were white (made for a photo overlay) on a now-white card. Dark text, readable in both themes. */
+.project-entry.project-entry .project-entry-card .project-entry-text { color: var(--fg); font-weight: 600; }
+.project-entry.project-entry .project-entry-card .project-entry-cta { color: #000; background: var(--accent-cyan); border: 3px solid #000; font-weight: 800; box-shadow: 3px 3px 0 #000; }
+.project-entry.project-entry .project-entry-card:hover .project-entry-cta,
+.project-entry.project-entry .project-entry-card[aria-pressed='true'] .project-entry-cta { color: #fff; background: var(--accent-fill); border: 3px solid #000; }
