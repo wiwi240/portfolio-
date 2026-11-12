@@ -501,8 +501,8 @@ html.dark .home-converge .home-contact-panel { background: #2a55e8 !important; }
 .tl .tl-icon { width: 40px; height: 40px; }
 .tl .tl-icon svg { width: 20px; height: 20px; }
 
-/* "Votre projet" entry cards: the description and the link were white (made for a photo overlay) on a now-white card. Dark text, readable in both themes. */
-.project-entry.project-entry .project-entry-card .project-entry-text { color: var(--fg); font-weight: 600; }
+/* "Votre projet" entry cards: the photo fills the card, so the description sits in an opaque framed panel (readable on any image, both themes). */
+.project-entry.project-entry .project-entry-card .project-entry-text { display: block; width: 100%; margin-top: 10px; padding: 9px 12px; border: 3px solid #000; background: var(--surface); color: var(--fg); font-size: .9rem; font-weight: 600; line-height: 1.4; text-align: left; box-shadow: 3px 3px 0 #000; }
 .project-entry.project-entry .project-entry-card .project-entry-cta { color: #000; background: var(--accent-cyan); border: 3px solid #000; font-weight: 800; box-shadow: 3px 3px 0 #000; }
 .project-entry.project-entry .project-entry-card:hover .project-entry-cta,
 .project-entry.project-entry .project-entry-card[aria-pressed='true'] .project-entry-cta { color: #fff; background: var(--accent-fill); border: 3px solid #000; }
