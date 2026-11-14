@@ -1,0 +1,3 @@
+.admin-shortcut { position: fixed; left: 16px; bottom: 16px; z-index: 2000; padding: 8px 14px; background: #fde047; color: #000; border: 2px solid #000; box-shadow: 3px 3px 0 #000; font: 800 .8rem/1 system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; text-decoration: none; }
+.admin-shortcut:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #000; }
+.admin-shortcut:focus-visible { outline: 3px solid #000; outline-offset: 3px; }

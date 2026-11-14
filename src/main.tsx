@@ -7,6 +7,7 @@ import { initCardSpotlight } from './lib/card-spotlight'
 import { initPageEffects } from './lib/page-effects'
 import { AdminPage } from './components/admin-page'
 import { BookingPage } from './components/booking-page'
+import { AdminShortcut } from './components/admin-shortcut'
 import { trackOnce } from './lib/track'
 
 const route = window.location.pathname.replace(/\/+$/, '')
@@ -19,9 +20,10 @@ if (!isAdmin && !isBooking) {
 }
 
 createRoot(document.getElementById('root')!).render(
-  isAdmin ? <StrictMode><AdminPage /></StrictMode> : isBooking ? <StrictMode><BookingPage /></StrictMode> : <StrictMode>
+  isAdmin ? <StrictMode><AdminPage /></StrictMode> : isBooking ? <StrictMode><BookingPage /><AdminShortcut /></StrictMode> : <StrictMode>
     <SmoothScrollProvider>
       <App />
     </SmoothScrollProvider>
+    <AdminShortcut />
   </StrictMode>,
 )
