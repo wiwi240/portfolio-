@@ -1,3 +1,4 @@
+import { forgetAdmin, rememberAdmin } from '@/lib/admin-hint'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AdminDashboard } from '@/components/admin-dashboard'
 import { api, type RequestItem, type Settings } from '@/components/admin-api'
@@ -42,6 +43,11 @@ export function AdminPage() {
     setSettings(data.settings)
     setState('in')
   }), [fetchAll])
+
+  useEffect(() => {
+    if (state === 'in') rememberAdmin()
+    else if (state === 'out') forgetAdmin()
+  }, [state])
 
   useEffect(() => {
     document.title = 'Admin'
