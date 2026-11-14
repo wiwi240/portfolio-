@@ -245,10 +245,11 @@
 /* Mockup slide: the configurator's preview next to a short text. */
 .guide-mockup {
   display: grid;
-  grid-template-columns: minmax(0, 0.55fr) minmax(0, 1.45fr);
-  gap: clamp(24px, 4vw, 48px);
+  grid-template-columns: minmax(0, 0.48fr) minmax(0, 1.52fr);
+  gap: clamp(20px, 3vw, 40px);
   align-items: center;
-  max-width: var(--container);
+  width: min(1680px, calc(100% - 2 * var(--gutter)));
+  max-width: none;
 }
 .home-page .guide-mockup h2 {
   margin-top: 10px;

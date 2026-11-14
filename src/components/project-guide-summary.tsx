@@ -5,6 +5,7 @@ import { entryTitles, type GuidePanelData } from '@/data/home-guide'
 import type { Language } from '@/data/portfolio-content'
 import type { PathId } from '@/data/project-configurator'
 import { sendProjectRequest } from '@/data/project-submit'
+import { Honeypot } from './honeypot'
 import { paths } from '@/site'
 import './project-guide.css'
 
@@ -18,6 +19,7 @@ type GuideSummaryProps = { language: Language; path: PathId; panels: GuidePanelD
 export function GuideSummary({ language, path, panels, selected, activity, onActivityChange, onBack }: GuideSummaryProps) {
   const t = text[language]
   const [fields, setFields] = useState({ name: '', email: '', message: '' })
+  const [trap, setTrap] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [state, setState] = useState<'idle' | 'sending' | 'error'>('idle')
   const [error, setError] = useState('')
@@ -49,7 +51,7 @@ export function GuideSummary({ language, path, panels, selected, activity, onAct
     }
     setState('sending')
     try {
-      await sendProjectRequest({ path, selected, activity, ...fields }, t.errSend)
+      await sendProjectRequest({ path, selected, activity, ...fields, website: trap }, t.errSend)
       setSentKey(requestKey)
       setState('idle')
     } catch (failure) {
@@ -136,6 +138,7 @@ export function GuideSummary({ language, path, panels, selected, activity, onAct
           </div>
         ) : (
           <form onSubmit={submit} noValidate>
+            <Honeypot value={trap} onChange={setTrap} />
             <div className="guide-activity">
               {field('activity', t.activity, { placeholder: t.activityPlaceholder })}
               <button type="button" className="guide-undecided" onClick={() => set('activity')(t.undecided)}>

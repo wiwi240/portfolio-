@@ -1,3 +1,4 @@
+import { trackOnce } from '@/lib/track'
 import { useEffect, useState } from 'react'
 import { ArrowRight, ArrowUpRight, Mail } from 'lucide-react'
 import { contactEmail, type Language } from '@/data/portfolio-content'
@@ -53,9 +54,12 @@ export function HomePage({ language }: { language: Language }) {
   const [unlocked, setUnlocked] = useState(0)
   const [target, setTarget] = useState<{ panel: number; seq: number } | null>(null)
   const scrollToScene = useScrollToScene()
+  // Furthest slide opened by the visitor: shows where people stop in the guide.
+  useEffect(() => { if (unlocked > 0) trackOnce(`step-${unlocked}`, 'guide_step', String(unlocked)) }, [unlocked])
   const guide = guidePanels(path)
 
   const choosePath = (next: PathId) => {
+    trackOnce('guide-start', 'guide_start')
     markProgrammaticScroll()
     if (next !== path) {
       setSelected([])

@@ -550,3 +550,77 @@
   background: #00bdeb;
   box-shadow: 0 0 0 3px rgb(0 189 235 / 0.25);
 }
+
+/* ---------- Simple screen: a navbar and the expected features, nothing else ---------- */
+.guide-mockup-frame .psp-simple .psp-hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(18px, 4%, 40px); align-items: center; margin: 22px 4% 0; padding: clamp(20px, 4%, 40px); text-align: left; }
+.guide-mockup-frame .psp-simple .psp-hero-copy { display: grid; justify-items: start; padding: 0; }
+.guide-mockup-frame .psp-simple .psp-hero h1 { font-size: clamp(24px, 3vw, 40px) !important; }
+.guide-mockup-frame .psp-simple .psp-hero-copy > div { justify-content: flex-start; }
+/* A real photo instead of the grey wireframe placeholder: clients are not used to wireframes */
+.guide-mockup-frame .psp-simple .psp-hero-media { aspect-ratio: 4 / 3; min-height: 0; overflow: hidden; background: #fff !important; background-image: none !important; }
+.guide-mockup-frame .psp-simple .psp-hero-media::after, .guide-mockup-frame .psp-simple .psp-hero-media::before { display: none !important; }
+.guide-mockup-frame .psp-simple .psp-hero-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; }
+.guide-mockup-frame .psp-simple .psp-home-section { margin: 28px 4% 8px; padding: 0; border: 0; background: none; box-shadow: none; }
+.guide-mockup-frame .psp-simple .psp-home-section > small { display: flex; width: max-content; margin-inline: auto; }
+.guide-mockup-frame .psp-simple .psp-home-section > h2 { margin: 10px 0 6px; text-align: center; font-size: clamp(20px, 2.2vw, 28px); }
+.guide-mockup-frame .psp-simple .psp-hint { margin: 0 0 18px; text-align: center; font-size: 13px; font-weight: 700; color: var(--mk-muted); }
+.guide-mockup-frame .psp-simple .psp-feature-links { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.guide-mockup-frame .psp-simple .psp-feature-links button { padding: 18px 16px 20px; text-align: left; }
+.guide-mockup-frame .psp-simple .psp-site { padding-bottom: 28px; }
+@media (max-width: 760px) { .guide-mockup-frame .psp-simple .psp-hero { grid-template-columns: 1fr; } }
+
+/* No toolbar in the simple screen: the canvas used to subtract its height (97px) and left a white band under the page. It now fills the window. */
+.guide-mockup-frame .psp-simple .psp-browser { display: flex; flex-direction: column; }
+.guide-mockup-frame .psp-simple .psp-canvas { flex: 1 1 auto; height: auto; min-height: 0; }
+.guide-mockup-frame .psp-simple .psp-contexts { flex: none; }
+
+/* One scroller only (the site inside the window): two nested scrollers made the wheel get stuck on the outer one, so scrolling worked only with the scrollbar arrow. */
+.guide-mockup-frame .psp-simple .psp-canvas { overflow: hidden; }
+.guide-mockup-frame .psp-simple .psp-site { overflow-y: auto; overscroll-behavior: auto; }
+
+/* The navbar sticks flush to the top of the window: with a 10px gap, the page content scrolled visibly above it. */
+.guide-mockup-frame .psp-simple .psp-site-header { top: 0; z-index: 5; }
+
+/* Compact hero so the feature cards show without scrolling far */
+.guide-mockup-frame .psp-simple .psp-hero { margin-top: 16px; padding: clamp(14px, 3%, 26px); }
+.guide-mockup-frame .psp-simple .psp-hero h1 { font-size: clamp(20px, 2.3vw, 32px) !important; margin: 10px 0 8px; }
+.guide-mockup-frame .psp-simple .psp-hero-media { aspect-ratio: 16 / 10; }
+.guide-mockup-frame .psp-simple .psp-home-section { margin-top: 20px; }
+
+/* Left column: one calm stack that lines up with the window (same left edge, same width, buttons on one row) */
+.guide-mockup-copy { display: grid; align-content: center; gap: 0; min-width: 0; padding-right: 8px; }
+.guide-mockup-copy .guide-hint { max-width: 34ch; }
+.guide-mockup-copy .guide-mockup-activity { width: 100%; box-sizing: border-box; margin-top: 18px; padding: 14px 16px; }
+.guide-mockup-copy .guide-nav { flex-wrap: nowrap; gap: 10px; margin-top: 22px; }
+.guide-mockup-copy .guide-nav .button { flex: 1 1 0; min-width: 0; justify-content: center; padding-inline: 12px; white-space: nowrap; }
+.guide-mockup-copy { padding-right: 18px; }
+.guide-mockup-copy > .eyebrow { justify-self: start; }
+
+/* Classic navbar + hamburger gathering the feature pages (simple screen) */
+.guide-mockup-frame .psp-header-more { grid-template-columns: minmax(0, 1fr) auto; gap: 14px; }
+.guide-mockup-frame .psp-header-more nav { justify-content: flex-start; }
+.guide-mockup-frame .psp-header-more nav .psp-nav-extra { display: none; }
+.guide-mockup-frame .psp-header-more .psp-header-side { gap: 6px; align-items: center; }
+.guide-mockup-frame .psp-more { position: relative; }
+.guide-mockup-frame .psp-more-toggle { display: grid; place-items: center; width: 38px; height: 38px; border: 3px solid #000 !important; background: #fff !important; color: #000 !important; box-shadow: 3px 3px 0 #000; cursor: pointer; }
+.guide-mockup-frame .psp-more-toggle[aria-expanded='true'] { background: #4fd8ff !important; }
+.guide-mockup-frame .psp-more-menu { position: absolute; top: calc(100% + 12px); right: 0; z-index: 8; display: grid; gap: 4px; width: 230px; max-height: 320px; overflow: auto; padding: 10px; border: 3px solid #000; background: #fff; box-shadow: 5px 5px 0 #000; }
+.guide-mockup-frame .psp-more-menu small { padding: 2px 6px 6px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; color: #1b2a4a; }
+.guide-mockup-frame .psp-more-menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 2px solid transparent; background: transparent; color: #000; font-size: 13px; font-weight: 800; text-align: left; cursor: pointer; }
+.guide-mockup-frame .psp-more-menu button i { display: grid; place-items: center; width: 26px; height: 26px; border: 2px solid #000; background: #4fd8ff; flex: none; }
+.guide-mockup-frame .psp-more-menu button:nth-of-type(3n + 2) i { background: #ffd84d; }
+.guide-mockup-frame .psp-more-menu button:nth-of-type(3n) i { background: #1f5bff; color: #fff; }
+.guide-mockup-frame .psp-more-menu button:hover { border-color: #000; background: #eaf1fa; }
+.guide-mockup-frame .psp-more-menu button[aria-current='page'] { border-color: #000; background: #4fd8ff; }
+/* Wide enough: the classic inline navbar, even where the demo's own narrow rules would collapse it */
+@container (min-width: 560px) {
+  .guide-mockup-frame .psp-header-more { grid-template-columns: minmax(0, 1fr) auto; padding: 0 14px 0 18px; }
+  .guide-mockup-frame .psp-header-more nav { position: static; display: flex; max-height: none; overflow: visible; padding: 0; border: 0; background: none; }
+  .guide-mockup-frame .psp-header-more nav button { padding: 7px 12px; text-align: center; }
+  .guide-mockup-frame .psp-header-more .psp-menu-toggle { display: none !important; }
+}
+/* Too narrow for inline links: the demo's own collapsed menu takes over, with the feature pages in it */
+@container (max-width: 559px) {
+  .guide-mockup-frame .psp-header-more nav .psp-nav-extra { display: block; }
+  .guide-mockup-frame .psp-header-more .psp-more { display: none; }
+}

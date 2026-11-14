@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight, Info } from 'lucide-react'
+import { useMemo, useRef } from 'react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import type { Language } from '@/data/portfolio-content'
 import { initialDraft, setChoice, type PathId } from '@/data/project-configurator'
 import { entryTitles } from '@/data/home-guide'
@@ -24,27 +24,7 @@ export function GuideMockup({ newIds = [], language, path, selected, activity, o
     return next
   }, [path, selected, activity, t.undecided])
 
-  // The pills mirror the preview's own navigation, so they always match its pages and current page.
   const frameRef = useRef<HTMLDivElement>(null)
-  const [pages, setPages] = useState<{ id: string; label: string; current: boolean; isNew: boolean }[]>([])
-  useEffect(() => {
-    const root = frameRef.current
-    if (!root) return
-    const read = () => {
-      const next = [...root.querySelectorAll<HTMLButtonElement>('.psp-site-header nav button[data-page]')].map((button) => ({
-        id: button.dataset.page ?? '',
-        label: button.textContent?.trim() ?? '',
-        current: button.getAttribute('aria-current') === 'page',
-        isNew: button.hasAttribute('data-new'),
-      }))
-      setPages((current) => (JSON.stringify(current) === JSON.stringify(next) ? current : next))
-    }
-    read()
-    const observer = new MutationObserver(read)
-    observer.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['aria-current', 'data-new'] })
-    return () => observer.disconnect()
-  }, [])
-  const openPage = (id: string) => frameRef.current?.querySelector<HTMLButtonElement>(`.psp-site-header nav button[data-page="${id}"]`)?.click()
 
   return (
     <section className="stack-scene-inner guide-mockup" aria-labelledby="guide-mockup-title">
@@ -54,21 +34,6 @@ export function GuideMockup({ newIds = [], language, path, selected, activity, o
           {t.title}
         </h2>
         <p className="guide-hint">{t.intro}</p>
-        {pages.length > 1 && (
-          <div className="guide-mockup-pages">
-            <strong>{t.pagesTitle}</strong>
-            <ul>
-              {pages.map((page) => (
-                <li key={page.id}>
-                  <button type="button" aria-current={page.current ? 'page' : undefined} onClick={() => openPage(page.id)}>
-                    {page.label}
-                    {page.isNew && <em>{t.newBadge}</em>}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
         <div className="guide-field guide-mockup-activity">
           <label htmlFor="guide-mockup-activity">{t.activityLabel}</label>
           <input id="guide-mockup-activity" type="text" maxLength={160} placeholder={t.placeholder} value={activity} onChange={(event) => onActivityChange(event.target.value)} />
@@ -88,14 +53,8 @@ export function GuideMockup({ newIds = [], language, path, selected, activity, o
           </button>
         </div>
       </div>
-      <div className="guide-mockup-frame" ref={frameRef}>
-        <p className="guide-mockup-disclaimer">
-          <Info size={18} aria-hidden="true" />
-          <span>
-            <strong>{t.discTitle}</strong> {t.discText}
-          </span>
-        </p>
-        <ProjectStylePreview draft={draft} language={language} lastChanged="" changeSequence={0} newIds={newIds} />
+      <div className="guide-mockup-frame" ref={frameRef} data-lenis-prevent>
+        <ProjectStylePreview draft={draft} language={language} lastChanged="" changeSequence={0} newIds={newIds} simple />
       </div>
     </section>
   )

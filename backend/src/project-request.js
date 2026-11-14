@@ -393,4 +393,4 @@ function buildProjectSummary(project, company, message) {
   ].join('\n')
 }
 
-module.exports = { validateProject, buildProjectSummary }
+module.exports = { validateProject, buildProjectSummary, PATHS, CHOICES, ANSWERS, MATERIALS }
