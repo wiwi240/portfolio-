@@ -1,0 +1,16 @@
+.contact-message { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(230px, .7fr); gap: 1.5rem; align-items: start; margin-top: 1.5rem; }
+.contact-message-form, .contact-message-booking { padding: clamp(1.4rem, 3vw, 2.4rem); border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow-sm); }
+.contact-message-form h2 { margin: .6rem 0; }
+.contact-message-form > p { color: var(--muted); line-height: 1.6; }
+.contact-message-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-block: 1rem; }
+.contact-message label { display: grid; gap: .35rem; font-weight: 600; font-size: .92rem; }
+.contact-message input, .contact-message select, .contact-message textarea { width: 100%; padding: .65rem .8rem; background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: var(--radius-md, 8px); font: inherit; font-weight: 400; }
+.contact-message textarea { margin-bottom: 1rem; resize: vertical; }
+.contact-message input:focus-visible, .contact-message select:focus-visible, .contact-message textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.contact-message small { display: block; margin-top: .8rem; color: var(--muted); }
+.contact-message-ok { padding: .8rem 1rem; border: 1px solid var(--border); font-weight: 700; }
+.contact-message-error { margin-top: .8rem; font-weight: 700; }
+.contact-message-booking svg { width: 32px; height: 32px; }
+.contact-message-booking p { color: var(--muted); }
+@media (max-width: 780px) { .contact-message, .contact-message-grid { grid-template-columns: 1fr; } }
+.contact-message-form h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); line-height: 1.15; letter-spacing: -.04em; }

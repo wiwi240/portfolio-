@@ -24,6 +24,19 @@ import { previewContextFor, previewModules, type PreviewContext } from '@/data/p
 import './project-style-preview.css'
 
 const tr = (language: Language, fr: string, en: string) => (language === 'fr' ? fr : en)
+
+/** Scrolls only the demo site's own scroller. element.scrollIntoView would also move the whole page (and the slide it is pinned in). */
+function scrollInSite(id: string) {
+  const site = document.getElementById('psp-site')
+  const target = document.getElementById(id)
+  if (!site || !target) return
+  const siteBox = site.getBoundingClientRect()
+  // The demo can be zoomed: bounding boxes are in screen pixels, scrollTop in layout pixels.
+  const scale = site.clientHeight ? siteBox.height / site.clientHeight : 1
+  const header = site.querySelector('.psp-site-header')?.getBoundingClientRect().height ?? 0
+  const top = site.scrollTop + (target.getBoundingClientRect().top - siteBox.top - header) / scale - 8
+  site.scrollTo({ top: Math.max(0, top), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+}
 const demoKinds = [
   {
     match: /luminaire|lampe|éclairage|eclairage|lighting|light/i,
@@ -176,6 +189,7 @@ export function ProjectStylePreview({
   lastChanged,
   changeSequence,
   newIds,
+  simple = false,
 }: {
   draft: ProjectDraft
   language: Language
@@ -183,6 +197,8 @@ export function ProjectStylePreview({
   changeSequence: number
   /** Optional ids shown with a "new" badge (used by the home guide). */
   newIds?: string[]
+  /** Minimal screen: no browser chrome, only the site's navbar and the expected features. */
+  simple?: boolean
 }) {
   const modules = useMemo(() => previewModules(draft, language), [draft, language])
   const enabled = useMemo(() => new Set(modules.map((item) => item.id)), [modules])
@@ -193,6 +209,7 @@ export function ProjectStylePreview({
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop')
   const [expanded, setExpanded] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [moreOpen, setMoreOpen] = useState(false)
   const [notice, setNotice] = useState('')
   const [highlight, setHighlight] = useState('')
   const [detail, setDetail] = useState<number | null>(null)
@@ -245,6 +262,9 @@ export function ProjectStylePreview({
   const contextModules = modules.filter(
     (item) => item.context === currentContext && item.id !== 'presentActivity',
   )
+  // Simple screen: a classic navbar, with the extra feature pages gathered in a hamburger menu. On other contexts the first pages stay inline.
+  const inlineCount = simple ? (currentContext === 'public' ? 0 : 3) : contextModules.length
+  const extraModules = simple ? contextModules.slice(inlineCount) : []
   const fakeDomain = `${
     content.name
       .toLocaleLowerCase(language)
@@ -297,6 +317,7 @@ export function ProjectStylePreview({
     setHistory((previous) => [...previous.slice(0, historyIndex + 1), target])
     setHistoryIndex(historyIndex + 1)
     setMenuOpen(false)
+    setMoreOpen(false)
     setDetail(null)
     setConfirmation('')
     document.getElementById('psp-site')?.scrollTo({ top: 0, behavior: 'auto' })
@@ -687,7 +708,7 @@ export function ProjectStylePreview({
                   'Explore our work and shape the next step together.',
                 )}
               </p>
-              <div>
+              {(!simple || enabled.has('booking') || enabled.has('enquiries')) && <div>
                 <button
                   type="button"
                   className="psp-primary"
@@ -696,30 +717,27 @@ export function ProjectStylePreview({
                       ? navigate('booking')
                       : enabled.has('enquiries')
                         ? navigate('enquiries')
-                        : document.getElementById('psp-contact')?.scrollIntoView({
-                            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                              ? 'auto'
-                              : 'smooth',
-                          })
+                        : scrollInSite('psp-contact')
                   }
                 >
                   {tr(language, 'Parlons de votre projet', 'Let’s talk')}
                 </button>
-              </div>
+              </div>}
             </div>
             <div className="psp-hero-media">{media()}</div>
           </section>
-          <p className="psp-start-note">
+          {!simple && <p className="psp-start-note">
             {tr(
               language,
               'Exemple de départ — complétez votre configuration pour le personnaliser.',
               'Starting example — complete your configuration to personalise it.',
             )}
-          </p>
+          </p>}
           <section id="psp-services" className="psp-home-section">
             <small>{tr(language, 'NOS SERVICES', 'OUR SERVICES')}</small>
             <h2>{content.offering}</h2>
-            <div className="psp-service-line">
+            {simple && <p className="psp-hint">{tr(language, 'Cliquez sur une carte ou sur le menu pour visiter la page, comme sur un vrai site.', 'Click a card or the menu to visit the page, just like on a real site.')}</p>}
+            {!simple && <div className="psp-service-line">
               <strong>{tr(language, 'Une offre claire', 'A clear offer')}</strong>
               <span>
                 {tr(
@@ -728,7 +746,7 @@ export function ProjectStylePreview({
                   'See what we can create with you.',
                 )}
               </span>
-            </div>
+            </div>}
             {contextModules.length > 0 && (
               <div className="psp-feature-links">
                 {contextModules.map((item) => (
@@ -744,6 +762,7 @@ export function ProjectStylePreview({
               </div>
             )}
           </section>
+          {!simple && <>
           <section id="psp-about" className="psp-home-section psp-home-about">
             <small>{tr(language, 'À PROPOS', 'ABOUT')}</small>
             <h2>{tr(language, 'Une approche attentive à chaque détail', 'Care in every detail')}</h2>
@@ -781,6 +800,7 @@ export function ProjectStylePreview({
             </p>
             {simpleForm('contact')}
           </section>
+          </>}
         </>
       )
     if (currentPage === 'portfolio')
@@ -1722,11 +1742,11 @@ export function ProjectStylePreview({
   )
   return (
     <section
-      className={`psp-shell ${expanded ? 'is-expanded' : ''}`}
+      className={`psp-shell ${expanded ? 'is-expanded' : ''} ${simple ? 'psp-simple' : ''}`}
       aria-label={tr(language, 'Aperçu interactif du projet', 'Interactive project preview')}
     >
       <div className="psp-browser">
-        <div className="psp-toolbar">
+        {!simple && <div className="psp-toolbar">
           <div className="psp-dots" aria-hidden="true">
             <i />
             <i />
@@ -1787,8 +1807,8 @@ export function ProjectStylePreview({
             {expanded ? <X size={16} /> : <Expand size={16} />}
             <span>{expanded ? tr(language, 'Fermer', 'Close') : tr(language, 'Agrandir', 'Enlarge')}</span>
           </button>
-        </div>
-        <div
+        </div>}
+        {(!simple || contexts.length > 1) && <div
           className="psp-contexts"
           role="group"
           aria-label={tr(language, 'Vue de l’aperçu', 'Preview context')}
@@ -1804,14 +1824,14 @@ export function ProjectStylePreview({
               {contextName(context, language)}
             </button>
           ))}
-        </div>
-        <p className="psp-permanent-note">{demoNote}</p>
+        </div>}
+        {!simple && <p className="psp-permanent-note">{demoNote}</p>}
         <div className={`psp-canvas device-${device}`}>
           <div className="psp-site" id="psp-site">
-            <header className={`psp-site-header ${contextModules.length > 4 ? 'compact' : ''}`}>
-              <button type="button" className="psp-brand" onClick={() => navigate(base)}>
+            <header className={`psp-site-header ${simple ? 'psp-header-more' : contextModules.length > 4 ? 'compact' : ''}`}>
+              {!simple && <button type="button" className="psp-brand" onClick={() => navigate(base)}>
                 {content.name}
-              </button>
+              </button>}
               <nav
                 className={menuOpen ? 'open' : ''}
                 aria-label={tr(language, 'Navigation de la démonstration', 'Demo navigation')}
@@ -1832,28 +1852,21 @@ export function ProjectStylePreview({
                         navigate('home')
                         setTimeout(
                           () =>
-                            document.getElementById('psp-services')?.scrollIntoView({
-                              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                                ? 'auto'
-                                : 'smooth',
-                            }),
+                            scrollInSite('psp-services'),
                           0,
                         )
                       }}
                     >
                       {tr(language, 'Services', 'Services')}
                     </button>
+                    {!simple && <>
                     <button
                       type="button"
                       onClick={() => {
                         navigate('home')
                         setTimeout(
                           () =>
-                            document.getElementById('psp-about')?.scrollIntoView({
-                              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                                ? 'auto'
-                                : 'smooth',
-                            }),
+                            scrollInSite('psp-about'),
                           0,
                         )
                       }}
@@ -1867,11 +1880,7 @@ export function ProjectStylePreview({
                         navigate('home')
                         setTimeout(
                           () =>
-                            document.getElementById('psp-contact')?.scrollIntoView({
-                              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-                                ? 'auto'
-                                : 'smooth',
-                            }),
+                            scrollInSite('psp-contact'),
                           0,
                         )
                       }}
@@ -1879,15 +1888,17 @@ export function ProjectStylePreview({
                       {tr(language, 'Contact', 'Contact')}
                     </button>
 )}
+                    </>}
                   </>
                 )}
-                {contextModules.map((item) => (
+                {contextModules.map((item, index) => (
                   <button
                     type="button"
                     key={item.id}
                     data-page={item.id}
                     data-new={newIds?.includes(item.id) || undefined}
                     aria-current={currentPage === item.id ? 'page' : undefined}
+                    className={simple && index >= inlineCount ? 'psp-nav-extra' : undefined}
                     onClick={() => navigate(item.id)}
                   >
                     {pageName(item.id, language)}
@@ -1895,6 +1906,31 @@ export function ProjectStylePreview({
                 ))}
               </nav>
               <div className="psp-header-side">
+                {simple && extraModules.length > 0 && (
+                  <div className="psp-more">
+                    <button
+                      type="button"
+                      className="psp-more-toggle"
+                      aria-expanded={moreOpen}
+                      aria-haspopup="true"
+                      aria-label={moreOpen ? tr(language, 'Fermer le menu', 'Close menu') : tr(language, 'Ouvrir le menu des fonctionnalités', 'Open the features menu')}
+                      onClick={() => setMoreOpen(!moreOpen)}
+                    >
+                      {moreOpen ? <X size={21} /> : <Menu size={21} />}
+                    </button>
+                    {moreOpen && (
+                      <div className="psp-more-menu" role="menu">
+                        <small>{tr(language, 'Vos fonctionnalités', 'Your features')}</small>
+                        {extraModules.map((item) => (
+                          <button type="button" role="menuitem" key={item.id} data-new={newIds?.includes(item.id) || undefined} aria-current={currentPage === item.id ? 'page' : undefined} onClick={() => navigate(item.id)}>
+                            <i aria-hidden="true">{createElement(guideIcon(item.id), { size: 16, strokeWidth: 2 })}</i>
+                            {pageName(item.id, language)}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
                 {enabled.has('cart') && currentContext === 'public' && (
                   <button
                     type="button"
@@ -1933,10 +1969,10 @@ export function ProjectStylePreview({
                   ? clientContent()
                   : managementContent()}
             </div>
-            <footer className="psp-site-footer">
+            {!simple && <footer className="psp-site-footer">
               <strong>{content.name}</strong>
               <span>{tr(language, 'Exemple de démonstration', 'Sample demonstration')}</span>
-            </footer>
+            </footer>}
           </div>
         </div>
       </div>

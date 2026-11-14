@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type MouseEvent } from 'react'
 import { ArrowRight } from 'lucide-react'
 import type { Language } from '@/data/portfolio-content'
 import { paths } from '@/site'
+import { setAudience } from '@/lib/track'
 import './audience-gate.css'
 
 const STORAGE_KEY = 'audience-gate-seen'
@@ -109,7 +110,7 @@ export function AudienceGate({ language }: { language: Language }) {
         key={side.id}
         href={side.href}
         className={`audience-side audience-${side.id}`}
-        onClick={(event) => follow(event, side.href)}
+        onClick={(event) => { setAudience(side.id); follow(event, side.href) }}
         onMouseEnter={() => setHovered(side.id)}
         onMouseLeave={() => setHovered(null)}
         onFocus={() => setHovered(side.id)}

@@ -169,7 +169,7 @@ test('validateContactPayload rejects short names', () => {
   const { validateContactPayload } = loadBackend(DEFAULT_ENV)
   const result = validateContactPayload(buildContactPayload({ name: 'W' }))
   assert.equal(result.isValid, false)
-  assert.ok(result.errors.includes('Le nom doit contenir au moins 2 caracteres.'))
+  assert.ok(result.errors.includes('Le nom doit contenir entre 2 et 120 caracteres.'))
 })
 
 test('validateContactPayload rejects malformed emails without at sign', () => {
@@ -858,4 +858,267 @@ test('notifyOwner swallows provider failures', async () => {
     delete process.env.RESEND_API_KEY
     delete process.env.CONTACT_NOTIFY_TO
   }
+})
+
+test('notifyOwner attaches a recap PDF for project requests', async () => {
+  const { notifyOwner } = loadBackend()
+  process.env.RESEND_API_KEY = 'key'
+  process.env.CONTACT_NOTIFY_TO = 'moi@example.com'
+  try {
+    let body
+    const sent = await notifyOwner(
+      { name: 'Marie', email: 'marie@example.com', message: 'DEMANDE DE PROJET\nParcours : Créer un site', projectData: { path: 'create' } },
+      async (_url, init) => { body = JSON.parse(init.body); return { ok: true, status: 200 } },
+    )
+    assert.equal(sent, true)
+    assert.equal(body.attachments[0].filename, 'recap-projet.pdf')
+    assert.equal(Buffer.from(body.attachments[0].content, 'base64').subarray(0, 4).toString(), '%PDF')
+  } finally {
+    delete process.env.RESEND_API_KEY
+    delete process.env.CONTACT_NOTIFY_TO
+  }
+})
+
+// Stand-in for Google: the "credential" is `email|nonce`, so the test can control both claims.
+const fakeGoogle = async (credential) => {
+  const [email, nonce] = credential.split('|')
+  return { email, nonce, email_verified: true }
+}
+async function signIn(baseUrl, email, extraHeaders = {}, nonceOverride) {
+  const { body } = await requestJson(baseUrl, '/api/auth/config')
+  const nonce = nonceOverride ?? body.nonce
+  return requestJson(baseUrl, '/api/auth/google', { method: 'POST', headers: { 'content-type': 'application/json', ...extraHeaders }, body: JSON.stringify({ credential: `${email}|${body.nonce}`, nonce }) })
+}
+
+test('admin area is reserved to the Google account of ADMIN_EMAIL', async () => {
+  const backend = await startTestServer()
+  Object.assign(process.env, { ADMIN_EMAIL: 'moi@example.com', GOOGLE_CLIENT_ID: 'client-id', SESSION_SECRET: 'x'.repeat(40) })
+  backend.setGoogleVerifier(fakeGoogle)
+  const { baseUrl } = backend
+  try {
+    assert.equal((await requestJson(baseUrl, '/api/admin/requests')).response.status, 401)
+    assert.equal((await requestJson(baseUrl, '/api/admin/requests', { headers: { cookie: 'wm_admin=forged.sig' } })).response.status, 401)
+
+    const stranger = await signIn(baseUrl, 'autre@example.com')
+    assert.equal(stranger.response.status, 403)
+
+    // A token without a valid, matching server nonce is refused even for the right account.
+    assert.equal((await signIn(baseUrl, 'moi@example.com', {}, 'forged.nonce.sig')).response.status, 403)
+    const noNonce = await requestJson(baseUrl, '/api/auth/google', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ credential: 'moi@example.com|x' }) })
+    assert.equal(noNonce.response.status, 403)
+
+    const login = await signIn(baseUrl, 'MOI@example.com')
+    assert.equal(login.response.status, 200)
+    const cookie = login.response.headers.get('Set-Cookie')
+    assert.match(cookie, /HttpOnly/)
+    assert.match(cookie, /SameSite=Strict/)
+    const auth = { headers: { cookie: cookie.split(';')[0] } }
+
+    const created = await requestJson(baseUrl, '/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'Marie', email: 'marie@example.com', message: 'Bonjour, je voudrais un site.' }) })
+    const list = await requestJson(baseUrl, '/api/admin/requests', auth)
+    assert.equal(list.response.status, 200)
+    assert.equal(list.body.items[0].email, 'marie@example.com')
+    const pdf = await requestJson(baseUrl, `/api/admin/requests/${created.body.item.id}/pdf`, auth)
+    assert.equal(pdf.response.status, 200)
+    assert.equal(pdf.response.headers.get('Content-Type'), 'application/pdf')
+    assert.equal((await requestJson(baseUrl, '/api/auth/me', auth)).response.status, 200)
+
+    const id = created.body.item.id
+    const json = { ...auth.headers, 'content-type': 'application/json' }
+    assert.equal(list.body.items[0].status, 'new')
+    assert.equal((await requestJson(baseUrl, `/api/admin/requests/${id}`, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ status: 'quoted' }) })).response.status, 401)
+    const patched = await requestJson(baseUrl, `/api/admin/requests/${id}`, { method: 'PATCH', headers: json, body: JSON.stringify({ status: 'quoted', notes: 'Rappeler jeudi' }) })
+    assert.equal(patched.response.status, 200)
+    assert.deepEqual([patched.body.item.status, patched.body.item.notes], ['quoted', 'Rappeler jeudi'])
+    assert.equal((await requestJson(baseUrl, `/api/admin/requests/${id}`, { method: 'PATCH', headers: json, body: JSON.stringify({ status: 'nope' }) })).response.status, 400)
+    assert.equal((await requestJson(baseUrl, '/api/admin/requests/9999', { method: 'PATCH', headers: json, body: JSON.stringify({ notes: 'x' }) })).response.status, 404)
+  } finally { for (const key of ['ADMIN_EMAIL', 'GOOGLE_CLIENT_ID', 'SESSION_SECRET']) delete process.env[key] }
+})
+
+async function adminSession(backend) {
+  Object.assign(process.env, { ADMIN_EMAIL: 'moi@example.com', GOOGLE_CLIENT_ID: 'client-id', SESSION_SECRET: 'x'.repeat(40) })
+  backend.setGoogleVerifier(fakeGoogle)
+  const login = await signIn(backend.baseUrl, 'moi@example.com')
+  const cookie = login.response.headers.get('Set-Cookie').split(';')[0]
+  return { auth: { headers: { cookie } }, json: { cookie, 'content-type': 'application/json' } }
+}
+const clearAdminEnv = () => { for (const key of ['ADMIN_EMAIL', 'GOOGLE_CLIENT_ID', 'SESSION_SECRET']) delete process.env[key] }
+
+test('admin can follow a request through the pipeline, archive it, export it and delete it', async () => {
+  const backend = await startTestServer()
+  const { auth, json } = await adminSession(backend)
+  const { baseUrl } = backend
+  try {
+    const created = await requestJson(baseUrl, '/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'Paul Recruteur', email: 'Paul@Example.com', message: 'Nous recrutons un développeur.', audience: 'recruiter', company: 'ACME', phone: '06 12 34 56 78' }) })
+    assert.equal(created.response.status, 201)
+    const id = created.body.item.id
+    const patch = (body) => requestJson(baseUrl, `/api/admin/requests/${id}`, { method: 'PATCH', headers: json, body: JSON.stringify(body) })
+
+    const list = await requestJson(baseUrl, '/api/admin/requests', auth)
+    const item = list.body.items.find((row) => row.id === id)
+    assert.deepEqual([item.audience, item.company, item.phone, item.insights.kind, item.archived], ['recruiter', 'ACME', '06 12 34 56 78', 'message', false])
+
+    const quoted = await patch({ status: 'quoted', amount: 2400, followUpAt: '2026-12-01', declineReason: '' })
+    assert.equal(quoted.response.status, 200)
+    assert.deepEqual([quoted.body.item.amount, quoted.body.item.follow_up_at], [2400, '2026-12-01'])
+    const declined = await patch({ status: 'declined', declineReason: 'Budget' })
+    assert.equal(declined.body.item.decline_reason, 'Budget')
+    assert.deepEqual(declined.body.item.history.map((e) => [e.type, e.from, e.to]), [['status', 'new', 'quoted'], ['status', 'quoted', 'declined']])
+    const archived = await patch({ archived: true })
+    assert.equal(archived.body.item.archived, true)
+    assert.equal(archived.body.item.history.at(-1).type, 'archived')
+
+    for (const bad of [{ amount: -1 }, { amount: 1.5 }, { followUpAt: 'demain' }, { audience: 'alien' }, { archived: 'oui' }, { unknown: 1 }, {}]) {
+      assert.equal((await patch(bad)).response.status, 400, JSON.stringify(bad))
+    }
+
+    const csv = await requestJson(baseUrl, '/api/admin/requests.csv', auth)
+    assert.equal(csv.response.status, 200)
+    assert.match(csv.response.headers.get('Content-Type'), /text\/csv/)
+    assert.match(csv.body, /"Paul Recruteur";"Paul@Example.com"|"Paul Recruteur";"paul@example.com"/i)
+    assert.match(csv.body, /"declined"/)
+    assert.equal((await requestJson(baseUrl, '/api/admin/requests.csv')).response.status, 401)
+
+    const injected = await requestJson(baseUrl, '/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: '=HYPERLINK("x")', email: 'a@example.com', message: 'Un message assez long.' }) })
+    assert.equal(injected.response.status, 201)
+    assert.match((await requestJson(baseUrl, '/api/admin/requests.csv', auth)).body, /"'=HYPERLINK/)
+
+    const draft = await requestJson(baseUrl, `/api/admin/requests/${id}/draft`, auth)
+    assert.equal(draft.response.status, 200)
+    assert.equal(draft.body.templates.length, 4)
+
+    assert.equal((await requestJson(baseUrl, '/api/admin/purge', { method: 'POST', headers: json, body: JSON.stringify({ months: 0 }) })).response.status, 400)
+    assert.equal((await requestJson(baseUrl, '/api/admin/purge', { method: 'POST', headers: json, body: JSON.stringify({ months: 12 }) })).body.deleted, 0)
+
+    assert.equal((await requestJson(baseUrl, `/api/admin/requests/${id}`, { method: 'DELETE' })).response.status, 401)
+    assert.equal((await requestJson(baseUrl, `/api/admin/requests/${id}`, { method: 'DELETE', ...auth })).response.status, 204)
+    assert.equal((await requestJson(baseUrl, `/api/admin/requests/${id}`, { method: 'DELETE', ...auth })).response.status, 404)
+  } finally { clearAdminEnv() }
+})
+
+test('contact validation rejects an invalid phone number and unknown audiences fall back', async () => {
+  const backend = await startTestServer()
+  const send = (body, ip) => requestJson(backend.baseUrl, '/api/contact', { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': ip }, body: JSON.stringify(body) })
+  assert.equal((await send(buildContactPayload({ phone: 'abc' }), '203.0.113.1')).response.status, 400)
+  const ok = await send(buildContactPayload({ audience: 'bogus' }), '203.0.113.2')
+  assert.equal(ok.response.status, 201)
+  assert.equal(backend.validateContactPayload({ ...buildContactPayload(), audience: 'bogus' }).data.audience, 'other')
+})
+
+test('visitors can book a free slot once and the owner manages appointments', async () => {
+  const backend = await startTestServer()
+  const { auth, json } = await adminSession(backend)
+  const { baseUrl } = backend
+  const post = (path, body, ip = '203.0.113.9') => requestJson(baseUrl, path, { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': ip }, body: JSON.stringify(body) })
+  try {
+    const slots = await requestJson(baseUrl, '/api/slots')
+    assert.equal(slots.response.status, 200)
+    assert.ok(slots.body.slots.length > 0)
+    const slot = slots.body.slots[0]
+
+    assert.equal((await post('/api/appointments', { name: 'A', email: 'x', startsAt: slot })).response.status, 400)
+    assert.equal((await post('/api/appointments', { name: 'Marie Martin', email: 'marie@example.com', startsAt: '2020-01-01T10:00:00.000Z' })).response.status, 409)
+    const booked = await post('/api/appointments', { name: 'Marie Martin', email: 'marie@example.com', topic: 'Site vitrine', startsAt: slot })
+    assert.equal(booked.response.status, 201)
+    assert.equal((await post('/api/appointments', { name: 'Paul Durand', email: 'paul@example.com', startsAt: slot }, '203.0.113.10')).response.status, 409)
+    assert.equal((await requestJson(baseUrl, '/api/slots')).body.slots.includes(slot), false)
+
+    assert.equal((await requestJson(baseUrl, '/api/admin/appointments')).response.status, 401)
+    const list = await requestJson(baseUrl, '/api/admin/appointments', auth)
+    assert.equal(list.body.items.length, 1)
+    const id = list.body.items[0].id
+    const confirmed = await requestJson(baseUrl, `/api/admin/appointments/${id}`, { method: 'PATCH', headers: json, body: JSON.stringify({ status: 'confirmed' }) })
+    assert.equal(confirmed.body.item.status, 'confirmed')
+    assert.equal((await requestJson(baseUrl, `/api/admin/appointments/${id}`, { method: 'PATCH', headers: json, body: JSON.stringify({ status: 'nope' }) })).response.status, 400)
+    await requestJson(baseUrl, `/api/admin/appointments/${id}`, { method: 'PATCH', headers: json, body: JSON.stringify({ status: 'cancelled' }) })
+    assert.equal((await requestJson(baseUrl, '/api/slots')).body.slots.includes(slot), true)
+  } finally { clearAdminEnv() }
+})
+
+test('settings, anonymous events, statistics and health are served to the owner only', async () => {
+  const backend = await startTestServer()
+  const { auth, json } = await adminSession(backend)
+  const { baseUrl } = backend
+  const event = (body, ip = '203.0.113.20') => requestJson(baseUrl, '/api/events', { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': ip }, body: JSON.stringify(body) })
+  try {
+    assert.equal((await event({ type: 'visit', audience: 'client' })).response.status, 204)
+    assert.equal((await event({ type: 'guide_step', step: '3' })).response.status, 204)
+    assert.equal((await event({ type: 'request_sent' })).response.status, 204)
+    for (const bad of [{ type: 'hack' }, { type: 'visit', audience: 'x' }, { type: 'guide_step', step: 'a b' }, {}]) assert.equal((await event(bad)).response.status, 400)
+
+    for (const path of ['/api/admin/stats', '/api/admin/settings', '/api/admin/health']) assert.equal((await requestJson(baseUrl, path)).response.status, 401, path)
+    const stats = await requestJson(baseUrl, '/api/admin/stats', auth)
+    assert.deepEqual([stats.body.stats.funnel.visits, stats.body.stats.funnel.requestsSent, stats.body.stats.steps], [1, 1, [{ step: 3, count: 1 }]])
+
+    const settings = await requestJson(baseUrl, '/api/admin/settings', auth)
+    assert.equal(settings.body.settings.signature, 'William Mahi')
+    const next = { ...settings.body.settings, signature: 'W. Mahi', followUpDays: 5 }
+    assert.equal((await requestJson(baseUrl, '/api/admin/settings', { method: 'PUT', headers: json, body: JSON.stringify(next) })).body.settings.followUpDays, 5)
+    assert.equal((await requestJson(baseUrl, '/api/admin/settings', auth)).body.settings.signature, 'W. Mahi')
+    assert.equal((await requestJson(baseUrl, '/api/admin/settings', { method: 'PUT', headers: json, body: JSON.stringify({ ...next, followUpDays: 0 }) })).response.status, 400)
+
+    const health = await requestJson(baseUrl, '/api/admin/health', auth)
+    assert.deepEqual([health.body.database, health.body.google, health.body.email], ['memory', true, false])
+  } finally { clearAdminEnv() }
+})
+
+test('admin sign-in is rate limited', async () => {
+  const backend = await startTestServer()
+  Object.assign(process.env, { ADMIN_EMAIL: 'moi@example.com', GOOGLE_CLIENT_ID: 'client-id', SESSION_SECRET: 'x'.repeat(40) })
+  backend.setGoogleVerifier(async (credential) => fakeGoogle(`autre@example.com|${credential.split('|')[1]}`))
+  try {
+    const attempt = () => signIn(backend.baseUrl, 'autre@example.com', { 'x-forwarded-for': '203.0.113.30' })
+    for (let i = 0; i < 10; i += 1) assert.equal((await attempt()).response.status, 403)
+    assert.equal((await attempt()).response.status, 429)
+  } finally { clearAdminEnv() }
+})
+
+test('admin API refuses cross-site state-changing requests', async () => {
+  const backend = await startTestServer()
+  const { json } = await adminSession(backend)
+  try {
+    const crossSite = await requestJson(backend.baseUrl, '/api/admin/requests/1', { method: 'DELETE', headers: { ...json, 'sec-fetch-site': 'cross-site' } })
+    assert.equal(crossSite.response.status, 403)
+    const sameSite = await requestJson(backend.baseUrl, '/api/admin/requests/1', { method: 'DELETE', headers: { ...json, 'sec-fetch-site': 'same-origin' } })
+    assert.notEqual(sameSite.response.status, 403)
+  } finally { clearAdminEnv() }
+})
+
+test('contact validation refuses oversized names and addresses that could inject into mailto links or headers', () => {
+  const { validateContactPayload } = loadBackend(DEFAULT_ENV)
+  assert.equal(validateContactPayload(buildContactPayload({ name: 'x'.repeat(121) })).isValid, false)
+  for (const email of ['a@b.co?bcc=evil@x.com', 'a@b.co&body=x', 'a"b@c.fr', 'a@b.co,c@d.fr', `${'a'.repeat(65)}@b.fr`]) {
+    assert.equal(validateContactPayload(buildContactPayload({ email })).isValid, false, email)
+  }
+  const cleaned = validateContactPayload(buildContactPayload({ name: 'Marie\r\nBcc: evil@x.com' }))
+  assert.equal(cleaned.data.name.includes('\n'), false)
+  assert.equal(validateContactPayload(buildContactPayload({ email: 'marie.dupont+pro@exemple.fr' })).isValid, true)
+})
+
+test('admin patch ignores inherited property names and malformed JSON answers 400', async () => {
+  const backend = await startTestServer()
+  const { auth, json } = await adminSession(backend)
+  try {
+    const created = await requestJson(backend.baseUrl, '/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'Marie', email: 'marie@example.com', message: 'Bonjour, je voudrais un site.' }) })
+    const id = created.body.item.id
+    for (const key of ['constructor', '__proto__', 'toString', 'hasOwnProperty']) {
+      const response = await requestJson(backend.baseUrl, `/api/admin/requests/${id}`, { method: 'PATCH', headers: json, body: JSON.stringify({ [key]: 'x' }) })
+      assert.equal(response.response.status, 400, key)
+    }
+    assert.ok(auth)
+  } finally { clearAdminEnv() }
+})
+
+test('a filled honeypot gets a fake success and nothing is stored, sent or booked', async () => {
+  const backend = await startTestServer()
+  const { auth } = await adminSession(backend)
+  try {
+    const bot = await requestJson(backend.baseUrl, '/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'Bot', email: 'bot@example.com', message: 'Achetez mes pilules maintenant', website: 'http://spam.example' }) })
+    assert.equal(bot.response.status, 201)
+    const booking = await requestJson(backend.baseUrl, '/api/appointments', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'Bot', email: 'bot@example.com', startsAt: '2030-01-01T10:00:00.000Z', website: 'x' }) })
+    assert.equal(booking.response.status, 201)
+    const list = await requestJson(backend.baseUrl, '/api/admin/requests', auth)
+    assert.equal(list.body.items.some((item) => item.email === 'bot@example.com'), false)
+    assert.equal((await requestJson(backend.baseUrl, '/api/admin/appointments', auth)).body.items.some((item) => item.email === 'bot@example.com'), false)
+  } finally { clearAdminEnv() }
 })

@@ -506,3 +506,13 @@ html.dark .home-converge .home-contact-panel { background: #2a55e8 !important; }
 .project-entry.project-entry .project-entry-card .project-entry-cta { color: #000; background: var(--accent-cyan); border: 3px solid #000; font-weight: 800; box-shadow: 3px 3px 0 #000; }
 .project-entry.project-entry .project-entry-card:hover .project-entry-cta,
 .project-entry.project-entry .project-entry-card[aria-pressed='true'] .project-entry-cta { color: #fff; background: var(--accent-fill); border: 3px solid #000; }
+
+/* Mockup feature cards: the site's three accents in turn, so each page is recognisable at a glance */
+.guide-mockup-frame .psp-feature-links button:nth-child(3n + 2) .psp-feature-icon { background: #ffd84d !important; }
+.guide-mockup-frame .psp-feature-links button:nth-child(3n) .psp-feature-icon { background: #1f5bff !important; color: #fff !important; }
+.guide-mockup-frame .psp-feature-links button { cursor: pointer; }
+.guide-mockup-frame .psp-feature-links button:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #000 !important; }
+
+/* Mockup window: the browser frame is the only frame (no card around it, no top bar), so the screen is the focus */
+.guide-mockup-frame { border: 0 !important; background: none !important; box-shadow: none !important; padding: 0 !important; }
+.guide-mockup-frame::before { display: none !important; }
