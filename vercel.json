@@ -1,4 +1,7 @@
 {
+  "regions": [
+    "fra1"
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -51,6 +54,10 @@
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
     {
       "source": "/admin",
       "destination": "/index.html"
