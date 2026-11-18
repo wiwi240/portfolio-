@@ -16,6 +16,15 @@ const serviceId = `${siteOrigin}/#service`
 const locale = { fr: 'fr_FR', en: 'en_US' } as const
 const htmlLang = { fr: 'fr-FR', en: 'en' } as const
 
+// Town only: the business is run from home, so no street address is published.
+const address = { '@type': 'PostalAddress', addressLocality: 'Coulommiers', postalCode: '77120', addressRegion: 'Île-de-France', addressCountry: 'FR' }
+const areaServed = [
+  { '@type': 'City', name: 'Coulommiers' },
+  { '@type': 'AdministrativeArea', name: 'Seine-et-Marne' },
+  { '@type': 'AdministrativeArea', name: 'Île-de-France' },
+  { '@type': 'Country', name: 'France' },
+]
+
 export const pageUrl = (language: Language, page: IndexablePage) => siteOrigin + paths[language][page]
 
 const escapeAttr = (value: string) => value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -24,6 +33,12 @@ const labels = {
   fr: { home: 'Accueil', jobTitle: 'Développeur full-stack freelance', service: 'William Mahi — Développeur full-stack freelance', offers: 'Prestations de développement web', ogAlt: 'William Mahi, développeur full-stack' },
   en: { home: 'Home', jobTitle: 'Freelance full-stack developer', service: 'William Mahi — Freelance full-stack developer', offers: 'Web development services', ogAlt: 'William Mahi, full-stack developer' },
 } as const
+
+// Short names for breadcrumbs: Google titles are written for search results and are too long here.
+const crumbs: Record<Language, Record<Exclude<IndexablePage, 'home'>, string>> = {
+  fr: { projects: 'Réalisations', about: 'À propos', contact: 'Contact', faq: 'FAQ', legal: 'Mentions légales', terms: 'CGU', privacy: 'Politique de confidentialité', cookies: 'Cookies' },
+  en: { projects: 'Projects', about: 'About', contact: 'Contact', faq: 'FAQ', legal: 'Legal notice', terms: 'Terms of use', privacy: 'Privacy policy', cookies: 'Cookies' },
+}
 
 const pageTypes: Partial<Record<IndexablePage, string>> = { about: 'ProfilePage', contact: 'ContactPage', projects: 'CollectionPage', faq: 'FAQPage' }
 
@@ -39,6 +54,7 @@ function structuredData(language: Language, page: IndexablePage) {
     url: `${siteOrigin}/`,
     image: `${siteOrigin}/portrait-william-mahi.webp`,
     jobTitle: l.jobTitle,
+    address,
     email: `mailto:${contactEmail}`,
     sameAs: [githubUrl, linkedinUrl],
     knowsLanguage: ['fr', 'en'],
@@ -53,7 +69,9 @@ function structuredData(language: Language, page: IndexablePage) {
     image: ogImage,
     email: contactEmail,
     founder: { '@id': personId },
-    areaServed: { '@type': 'Country', name: 'France' },
+    address,
+    areaServed,
+    identifier: { '@type': 'PropertyValue', propertyID: 'SIRET', value: '10973696700018' },
     knowsLanguage: ['fr', 'en'],
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
@@ -105,7 +123,7 @@ function structuredData(language: Language, page: IndexablePage) {
       '@id': `${url}#breadcrumb`,
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: l.home, item: pageUrl(language, 'home') },
-        { '@type': 'ListItem', position: 2, name: title.replace(/ — William Mahi$/, ''), item: url },
+        { '@type': 'ListItem', position: 2, name: crumbs[language][page], item: url },
       ],
     })
   }

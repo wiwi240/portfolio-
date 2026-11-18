@@ -12,9 +12,9 @@ const content: Record<Language, Record<LegalPageKind, LegalCopy>> = {
   fr: {
     legal: {
       eyebrow: 'Informations légales', title: 'Mentions légales', intro: 'Identification de l’éditeur et informations relatives à ce portfolio.',
-      pending: ['Statut juridique et, s’il y a lieu, numéro d’immatriculation et de TVA', 'Adresse et numéro de téléphone professionnels'],
+      pending: ['Adresse et numéro de téléphone professionnels', 'Mention relative à la TVA (par exemple « TVA non applicable, article 293 B du CGI » en franchise en base)'],
       sections: [
-        { title: 'Éditeur du site', paragraphs: ['Ce portfolio est présenté sous le nom de William Mahi. Le contact public est l’adresse email indiquée ci-dessous. Les autres informations d’identification professionnelle doivent être confirmées par l’éditeur.'] },
+        { title: 'Éditeur du site', paragraphs: ['William Mahi, entrepreneur individuel (EI) sous le régime de la micro-entreprise.', 'SIREN : 109 736 967 — SIRET : 109 736 967 00018 — Code APE : 62.01Z (programmation informatique).', 'Établissement situé à Coulommiers (77120), Seine-et-Marne, France. Contact : adresse email indiquée ci-dessous.'] },
         { title: 'Hébergement', paragraphs: ['Le site est hébergé par Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis (vercel.com). Les fonctions serveur sont exécutées dans la région de Francfort (Allemagne). La base de données est hébergée par Neon, également dans la région de Francfort.'] },
         { title: 'Prestations présentées', paragraphs: ['Les pages décrivent des possibilités de prestations. Leur périmètre, leurs conditions et les éventuels frais sont définis dans une proposition distincte ; cette page ne constitue pas des conditions générales de vente.'] },
       ],
@@ -56,9 +56,9 @@ const content: Record<Language, Record<LegalPageKind, LegalCopy>> = {
   en: {
     legal: {
       eyebrow: 'Legal information', title: 'Legal notice', intro: 'Publisher identification and information about this portfolio.',
-      pending: ['Legal status and, where applicable, registration and VAT numbers', 'Professional address and telephone number'],
+      pending: ['Professional address and telephone number', 'VAT statement (for example “VAT not applicable, article 293 B of the French General Tax Code” under the VAT exemption scheme)'],
       sections: [
-        { title: 'Website publisher', paragraphs: ['This portfolio is presented under the name William Mahi. The public contact method is the email address below. The remaining professional identification details must be confirmed by the publisher.'] },
+        { title: 'Website publisher', paragraphs: ['William Mahi, sole trader (entrepreneur individuel, EI) under the French micro-enterprise scheme.', 'SIREN: 109 736 967 — SIRET: 109 736 967 00018 — APE code: 62.01Z (computer programming).', 'Business located in Coulommiers (77120), Seine-et-Marne, France. Contact: the email address below.'] },
         { title: 'Hosting', paragraphs: ['The site is hosted by Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, United States (vercel.com). Server functions run in the Frankfurt region (Germany). The database is hosted by Neon, also in the Frankfurt region.'] },
         { title: 'Services described', paragraphs: ['The pages describe possible services. Their scope, terms and any fees are defined in a separate proposal; this page is not a set of terms of sale.'] },
       ],

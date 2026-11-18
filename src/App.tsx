@@ -52,8 +52,8 @@ const ui = {
 
 
 const footerContent = {
-  fr: { role: 'Développeur web', nav: 'Informations utiles', faq: 'FAQ', legal: 'Mentions légales', terms: 'CGU', privacy: 'Politique de confidentialité', cookies: 'Cookies', exerciseRights: 'Exercer mes droits', copyright: '© 2026 William Mahi. Tous droits réservés.' },
-  en: { role: 'Web developer', nav: 'Useful information', faq: 'FAQ', legal: 'Legal notice', terms: 'Terms of use', privacy: 'Privacy policy', cookies: 'Cookies', exerciseRights: 'Exercise my rights', copyright: '© 2026 William Mahi. All rights reserved.' },
+  fr: { role: 'Création de sites internet · Seine-et-Marne', nav: 'Informations utiles', faq: 'FAQ', legal: 'Mentions légales', terms: 'CGU', privacy: 'Politique de confidentialité', cookies: 'Cookies', exerciseRights: 'Exercer mes droits', copyright: '© 2026 William Mahi. Tous droits réservés.' },
+  en: { role: 'Web developer · Paris area, France', nav: 'Useful information', faq: 'FAQ', legal: 'Legal notice', terms: 'Terms of use', privacy: 'Privacy policy', cookies: 'Cookies', exerciseRights: 'Exercise my rights', copyright: '© 2026 William Mahi. All rights reserved.' },
 } as const
 
 function ProjectCard({ project, language }: { project: ProjectItem; language: Language }) {
