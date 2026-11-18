@@ -10,91 +10,12 @@ export type ProjectItem = {
 }
 
 type Copy = {
-  meta: {
-    title: string
-    description: string
-  }
-  nav: {
-    skipToContent: string
-    sectionsLabel: string
-    projects: string
-    stack: string
-    journey: string
-    about: string
-    contact: string
-    menu: string
-    closeMenu: string
-  }
-  hero: {
-    label: string
-    titleLines: [string, string, string]
-    lead: string
-    primaryCta: string
-    secondaryCta: string
-    scroll: string
-  }
-  projects: {
-    label: string
-    title: string
-    description: string
-    viewAll: string
-    cardCta: string
-    techPlaceholder: string
-  }
-  stack: {
-    label: string
-    title: string
-    lead: string
-    overviewTitle: string
-    overview: Array<{ value: string; label: string }>
-  }
-  journey: {
-    label: string
-    title: string
-    intro: string
-  }
-  about: {
-    label: string
-    eyebrow: string
-    titlePrefix: string
-    titleAccent: string
-    lead: string
-    portraitAlt: string
-    cards: Array<{ title: string; text: string }>
-  }
-  contact: {
-    label: string
-    titleLineOne: string
-    titleLineTwo: string
-    lead: string
-    email: string
-    github: string
-    linkedin: string
-    emailHint: string
-    githubHint: string
-    linkedinHint: string
-  }
-  footer: {
-    role: string
-    legalLabel: string
-    legal: string
-    privacy: string
-    terms: string
-    rights: string
-  }
-  language: {
-    label: string
-  }
-  actions: {
-    copyEmail: string
-    copiedEmail: string
-    close: string
-    openMail: string
-  }
-  theme: {
-    light: string
-    dark: string
-  }
+  projects: { title: string }
+  stack: { label: string; lead: string }
+  journey: { label: string; title: string; intro: string }
+  about: { titlePrefix: string; titleAccent: string; lead: string; portraitAlt: string; cards: Array<{ title: string; text: string }> }
+  contact: { titleLineOne: string; titleLineTwo: string; lead: string }
+  theme: { light: string; dark: string }
 }
 
 export const contactEmail = 'william.mahipro@gmail.com'
@@ -103,51 +24,13 @@ export const linkedinUrl = 'https://www.linkedin.com/in/william-mahi-9727243a3/'
 
 export const copy: Record<Language, Copy> = {
   fr: {
-    meta: {
-      title: 'William Mahi | Développeur full-stack',
-      description:
-        'Portfolio de William Mahi, développeur full-stack. Interfaces React soignées, back-end Node fiable et expériences web rapides.',
-    },
-    nav: {
-      skipToContent: 'Aller au contenu',
-      sectionsLabel: 'Sections du portfolio',
-      projects: 'Projets',
-      stack: 'Stack',
-      journey: 'Parcours',
-      about: 'À propos',
-      contact: 'Contact',
-      menu: 'Ouvrir le menu',
-      closeMenu: 'Fermer le menu',
-    },
-    hero: {
-      label: 'Développeur fullstack',
-      titleLines: ['Code.', 'Design.', 'Build.'],
-      lead:
-        'Je conçois et développe des interfaces lisibles, des bases solides et des expériences web pensées pour durer.',
-      primaryCta: 'Voir mes projets',
-      secondaryCta: 'Me contacter',
-      scroll: 'Scroller',
-    },
     projects: {
-      label: 'Projets',
       title: 'Des projets réels, pensés pour être utiles et maintenables.',
-      description:
-        'Une sélection de produits et de sites conçus avec une attention particulière portée à la clarté, à l’interface et à la structure technique.',
-      viewAll: 'Voir tous les projets',
-      cardCta: 'Voir le projet',
-      techPlaceholder: 'Stack à préciser',
     },
     stack: {
       label: 'Stack',
-      title: 'Des outils modernes pour créer des solutions solides et évolutives.',
       lead:
         'J’utilise un écosystème de technologies sélectionnées pour leur performance, leur lisibilité et leur capacité à supporter une vraie évolution produit.',
-      overviewTitle: 'Overview',
-      overview: [
-        { value: '19', label: 'technologies' },
-        { value: '4', label: 'projets visibles' },
-        { value: '2', label: 'langues du site' },
-      ],
     },
     journey: {
       label: 'Parcours',
@@ -156,13 +39,11 @@ export const copy: Record<Language, Copy> = {
         'De ma reconversion à la conception d’applications modernes, chaque étape a construit les compétences que j’utilise aujourd’hui.',
     },
     about: {
-      label: 'À propos',
-      eyebrow: 'Développeur fullstack',
       titlePrefix: 'Passionné par le code, obsédé par la',
       titleAccent: 'qualité.',
       lead:
         'Je cherche à construire des projets que l’on comprend vite, que l’on reprend facilement et qui restent propres quand ils évoluent. Même exigence du front au back: interface nette, logique explicite, structure maintenable.',
-      portraitAlt: 'Mon portrait',
+      portraitAlt: 'Portrait de William Mahi, développeur full-stack',
       cards: [
         {
           title: 'Focus',
@@ -179,34 +60,10 @@ export const copy: Record<Language, Copy> = {
       ],
     },
     contact: {
-      label: 'Contact',
       titleLineOne: 'Un projet en tête ?',
       titleLineTwo: 'Discutons-en.',
       lead:
         'Disponible pour échanger autour d’un besoin produit, d’un site sur mesure ou d’une collaboration technique.',
-      email: 'Email',
-      github: 'GitHub',
-      linkedin: 'LinkedIn',
-      emailHint: 'Me contacter directement',
-      githubHint: 'Voir mon profil',
-      linkedinHint: 'Me retrouver ici',
-    },
-    footer: {
-      role: 'Développeur Fullstack',
-      legalLabel: 'Informations légales',
-      legal: 'Mentions légales',
-      privacy: 'Politique de confidentialité',
-      terms: 'Conditions d’utilisation',
-      rights: 'Tous droits réservés.',
-    },
-    language: {
-      label: 'Sélection de la langue',
-    },
-    actions: {
-      copyEmail: 'Copier le mail',
-      copiedEmail: 'Mail copié',
-      close: 'Fermer',
-      openMail: 'Ouvrir le contact par email',
     },
     theme: {
       light: 'Activer le thème clair',
@@ -214,51 +71,13 @@ export const copy: Record<Language, Copy> = {
     },
   },
   en: {
-    meta: {
-      title: 'William Mahi | Full-stack developer',
-      description:
-        'Portfolio of William Mahi, full-stack developer. Thoughtful React interfaces, reliable Node back-end, and fast web experiences.',
-    },
-    nav: {
-      skipToContent: 'Skip to content',
-      sectionsLabel: 'Portfolio sections',
-      projects: 'Projects',
-      stack: 'Stack',
-      journey: 'Journey',
-      about: 'About',
-      contact: 'Contact',
-      menu: 'Open menu',
-      closeMenu: 'Close menu',
-    },
-    hero: {
-      label: 'Full-stack developer',
-      titleLines: ['Code.', 'Design.', 'Build.'],
-      lead:
-        'I design and build readable interfaces, durable foundations, and web experiences meant to stay maintainable over time.',
-      primaryCta: 'View my projects',
-      secondaryCta: 'Contact me',
-      scroll: 'Scroll',
-    },
     projects: {
-      label: 'Projects',
       title: 'Real projects designed to stay useful and maintainable.',
-      description:
-        'A selection of products and websites built with a strong focus on clarity, interface quality, and technical structure.',
-      viewAll: 'View all projects',
-      cardCta: 'View project',
-      techPlaceholder: 'Stack to confirm',
     },
     stack: {
       label: 'Stack',
-      title: 'Modern tools to build solid and scalable solutions.',
       lead:
         'I work with a set of technologies chosen for performance, readability, and their ability to support real product growth.',
-      overviewTitle: 'Overview',
-      overview: [
-        { value: '19', label: 'technologies' },
-        { value: '4', label: 'visible projects' },
-        { value: '2', label: 'site languages' },
-      ],
     },
     journey: {
       label: 'Journey',
@@ -267,13 +86,11 @@ export const copy: Record<Language, Copy> = {
         'From my career transition to building modern applications, each step shaped the skills I rely on today.',
     },
     about: {
-      label: 'About',
-      eyebrow: 'Full-stack developer',
       titlePrefix: 'Passionate about code, obsessed with',
       titleAccent: 'quality.',
       lead:
         'I aim to build projects that are easy to understand, easy to pick up again, and still clean when they evolve. The same standard applies from front to back: sharp interface, explicit logic, maintainable structure.',
-      portraitAlt: 'My portrait',
+      portraitAlt: 'Portrait of William Mahi, full-stack developer',
       cards: [
         {
           title: 'Focus',
@@ -290,34 +107,10 @@ export const copy: Record<Language, Copy> = {
       ],
     },
     contact: {
-      label: 'Contact',
       titleLineOne: 'Got a project in mind?',
       titleLineTwo: 'Let’s talk.',
       lead:
         'Available to discuss a product need, a custom site, or a technical collaboration.',
-      email: 'Email',
-      github: 'GitHub',
-      linkedin: 'LinkedIn',
-      emailHint: 'Contact me directly',
-      githubHint: 'View my profile',
-      linkedinHint: 'Find me here',
-    },
-    footer: {
-      role: 'Full-stack developer',
-      legalLabel: 'Legal information',
-      legal: 'Legal notice',
-      privacy: 'Privacy policy',
-      terms: 'Terms of use',
-      rights: 'All rights reserved.',
-    },
-    language: {
-      label: 'Language selection',
-    },
-    actions: {
-      copyEmail: 'Copy email',
-      copiedEmail: 'Email copied',
-      close: 'Close',
-      openMail: 'Open contact by email',
     },
     theme: {
       light: 'Enable light theme',

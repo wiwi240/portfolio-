@@ -54,8 +54,7 @@ h1, h2, h3, h4 { font-weight: 800; letter-spacing: -0.03em; }
 
 /* Flat blocks: borders, offset shadows, no gradients */
 .site-header, .service-card, .project-card, .project-entry-card, .home-contact-panel, .guide-summary > *, .guide-mockup-frame,
-.build-window, .build-panel, .brief-document, .about-values > *, .faq-page-list > *, .portrait-frame, .guide-final-form,
-.guide-items label, .guide-success {
+.about-values > *, .faq-page-list > *, .portrait-frame, .guide-final-form, .guide-items label, .guide-success {
   border: var(--nb-border) !important;
   border-radius: 0 !important;
   background: var(--surface) !important;
@@ -302,22 +301,9 @@ html.dark .tl-stem { background: #000; }
 html.dark .home-converge .home-contact-panel { background: #2a55e8 !important; }
 
 /* ---------- End of the guide: mockup slide and summary ---------- */
-.guide-mockup-disclaimer { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; box-shadow: 4px 4px 0 var(--nb-line); }
-.guide-mockup-disclaimer * { color: #000 !important; }
 .guide-mockup-frame .psp-browser { border: 4px solid var(--nb-line) !important; border-radius: 0 !important; box-shadow: 8px 8px 0 var(--nb-line) !important; }
 .guide-mockup-activity { border: var(--nb-border) !important; border-radius: 0 !important; background: var(--surface) !important; background-image: none !important; box-shadow: var(--nb-shadow) !important; }
-.guide-mockup-pages strong { color: var(--fg); font-weight: 900; }
-.guide-mockup-pages button {
-  border: var(--nb-border) !important;
-  border-radius: 0 !important;
-  background: var(--surface) !important;
-  color: var(--fg) !important;
-  font-weight: 800;
-  box-shadow: 3px 3px 0 var(--nb-line);
-}
-.guide-mockup-pages button:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--nb-line); }
-.guide-mockup-pages button[aria-current='page'] { background: var(--accent-fill) !important; color: #fff !important; transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--nb-line); }
-.guide-mockup-pages em, .guide-mockup-frame [data-new]::after { border: 2px solid var(--nb-line); border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; }
+.guide-mockup-frame [data-new]::after { border: 2px solid var(--nb-line); border-radius: 0 !important; background: var(--accent-cyan) !important; color: #000 !important; }
 
 .guide-summary > div { border: var(--nb-border) !important; border-left-width: 8px !important; border-radius: 0 !important; background: var(--surface) !important; box-shadow: var(--nb-shadow-sm) !important; }
 .guide-summary h3 { color: var(--fg) !important; font-weight: 900; }
@@ -343,7 +329,7 @@ html.dark .home-converge .home-contact-panel { background: #2a55e8 !important; }
 }
 .guide-mockup-frame .psp-toolbar { border-bottom: 3px solid #000 !important; background: #fff !important; }
 .guide-mockup-frame .psp-toolbar * { border-radius: 0 !important; }
-.guide-mockup-frame .psp-toolbar input, .guide-mockup-frame .psp-urlbar { border: 2px solid #000 !important; background: #fff !important; font-weight: 700; }
+.guide-mockup-frame .psp-toolbar input { border: 2px solid #000 !important; background: #fff !important; font-weight: 700; }
 .guide-mockup-frame .psp-device { border: 2px solid #000 !important; background: #fff !important; }
 .guide-mockup-frame .psp-device button[aria-pressed='true'] { background: #1f5bff !important; color: #fff !important; }
 .guide-mockup-frame .psp-dots i { border: 2px solid #000; }
@@ -404,7 +390,7 @@ html.dark .home-converge .home-contact-panel { background: #2a55e8 !important; }
 }
 .guide-mockup-frame .psp-feature-icon { border: 2px solid #000; border-radius: 0 !important; background: #4fd8ff !important; color: #000 !important; }
 .guide-mockup-frame .psp-feature-links strong, .guide-mockup-frame .psp-service-line strong { color: #000 !important; font-weight: 900; }
-.guide-mockup-frame .psp-demo-form input, .guide-mockup-frame .psp-demo-form textarea, .guide-mockup-frame .psp-edit-label input { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; }
+.guide-mockup-frame .psp-demo-form input, .guide-mockup-frame .psp-demo-form textarea { border: 3px solid #000 !important; border-radius: 0 !important; background: #fff !important; }
 .guide-mockup-frame .psp-site-footer { border-top: 3px solid #000 !important; background: #000 !important; color: #fff !important; }
 .guide-mockup-frame .psp-site-footer * { color: #fff !important; }
 .guide-mockup-frame .psp-success { border: 3px solid #000; border-radius: 0 !important; background: #4fd8ff !important; color: #000 !important; font-weight: 800; }

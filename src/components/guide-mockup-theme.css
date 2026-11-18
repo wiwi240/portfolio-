@@ -3,27 +3,6 @@
    one clean neutral look (white, brand blue, soft cards) instead of imitating a client's style. */
 
 /* Disclaimer above the preview */
-.guide-mockup-disclaimer {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin: 0 0 12px;
-  padding: 10px 14px;
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
-  border-radius: 14px;
-  color: var(--fg);
-  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
-  font-size: 0.84rem;
-  line-height: 1.45;
-}
-.guide-mockup-disclaimer svg {
-  flex: none;
-  margin-top: 1px;
-  color: var(--accent);
-}
-.guide-mockup-disclaimer strong {
-  font-weight: 800;
-}
 
 .guide-mockup-frame .psp-shell {
   --psp-accent: #0866e8;
@@ -309,8 +288,7 @@
   box-shadow: 0 2px 4px rgb(11 43 85 / 0.04), 0 26px 44px -26px rgb(11 43 85 / 0.4);
 }
 .guide-mockup-frame .psp-demo-form input,
-.guide-mockup-frame .psp-demo-form textarea,
-.guide-mockup-frame .psp-edit-label input {
+.guide-mockup-frame .psp-demo-form textarea {
   border: 1px solid #d3e0ee;
   border-radius: 12px;
   background: #f9fbfe;
@@ -362,11 +340,6 @@
 }
 
 /* Disclaimer + browser share the slide height */
-.guide-mockup-disclaimer {
-  padding: 8px 12px;
-  font-size: 0.8rem;
-  line-height: 1.4;
-}
 .guide-mockup-frame .psp-browser {
   height: min(740px, calc(100dvh - var(--stack-pad-top) - var(--stack-pad-bottom) - 70px));
 }
@@ -416,49 +389,6 @@
 }
 
 /* ---------- Page pills (left column) ---------- */
-.guide-mockup-pages {
-  display: grid;
-  gap: 8px;
-  margin-top: 16px;
-}
-.guide-mockup-pages strong {
-  color: var(--muted);
-  font-size: 0.74rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.guide-mockup-pages ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.guide-mockup-pages button {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 6px 12px;
-  border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
-  border-radius: 999px;
-  color: var(--fg);
-  background: var(--surface);
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
-}
-.guide-mockup-pages button:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent);
-}
-.guide-mockup-pages button[aria-current='page'] {
-  color: var(--on-accent);
-  border-color: transparent;
-  background: linear-gradient(135deg, var(--accent-fill), color-mix(in srgb, var(--accent-fill) 60%, var(--accent-cyan)));
-}
-.guide-mockup-pages em,
 .guide-mockup-frame [data-new]::after {
   padding: 1px 7px;
   border-radius: 999px;

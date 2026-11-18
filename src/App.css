@@ -15,71 +15,6 @@
   top: 1rem;
 }
 
-.portfolio-hero {
-  position: relative;
-}
-
-.portfolio-hero {
-  border-bottom: 0;
-}
-
-.portfolio-hero {
-  position: relative;
-  min-height: calc(100vh - 79px);
-  min-height: calc(100svh - 79px);
-  display: flex;
-  align-items: center;
-  padding: 4.5rem 0 5rem;
-  background: transparent;
-}
-
-.portfolio-section-copy {
-  position: relative;
-  z-index: 1;
-}
-
-.portfolio-section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.77rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.portfolio-section-label::before {
-  content: '';
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: var(--radius-pill);
-  background: var(--accent);
-}
-
-.portfolio-section-title {
-  margin-top: 1rem;
-  text-wrap: balance;
-}
-
-.portfolio-section-title {
-  transition: color var(--transition);
-}
-
-.portfolio-section-copy:hover .portfolio-section-title,
-.portfolio-journey-head:hover .portfolio-section-title {
-  color: var(--fg);
-}
-
-.portfolio-section-text {
-  margin-top: 1.5rem;
-  max-width: 62ch;
-  color: var(--muted);
-  font-size: 1rem;
-  line-height: 1.8;
-}
-
 .portfolio-social-group {
   display: flex;
   flex-direction: column;
@@ -246,42 +181,16 @@
   background: color-mix(in srgb, var(--accent-cyan) 8%, transparent);
 }
 
-.portfolio-journey {
-  --journey-progress: 0;
-  --journey-axis-width: 8.75rem;
-  --journey-axis-half: calc(var(--journey-axis-width) / 2);
-  --journey-point-size: 0.62rem;
-  --journey-point-half: 0.31rem;
-}
-
-.portfolio-journey-head {
-  max-width: 52rem;
-  margin-bottom: 4rem;
-}
-
-.portfolio-journey-intro {
-  max-width: 48rem;
-}
-
 .footer-brand {
   cursor: default;
 }
 
 @media (max-width: 720px) {
 
-  .portfolio-hero {
-    min-height: auto;
-    padding: 3rem 0 4.25rem;
-  }
-
   .portfolio-social-links {
     width: 100%;
     justify-content: center;
     gap: 0.75rem;
-  }
-
-  .portfolio-journey-head {
-    margin-bottom: 2.5rem;
   }
 }
 
