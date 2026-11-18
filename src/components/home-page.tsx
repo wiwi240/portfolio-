@@ -19,13 +19,13 @@ import './home-stack.css'
 
 const content = {
   fr: {
-    heroRole: 'Développeur web freelance', lead: 'Des sites web et des outils sur mesure pour votre activité.', projects: 'Voir mes réalisations', contact: 'Décrire mon projet',
+    heroRole: 'Développeur web freelance', heroHeading: 'William Mahi, développeur full-stack freelance : sites et applications web sur mesure.', lead: 'Des sites web et des outils sur mesure pour votre activité.', projects: 'Voir mes réalisations', contact: 'Décrire mon projet',
     projectLabel: 'Votre projet',
     methodLabel: 'Un projet construit avec vous', methodTitle: 'Une méthode claire et collaborative', methodIntro: 'Du premier échange à la mise en ligne, nous avançons ensemble.',
     contactLabel: 'Parlons de votre projet', contactTitle: 'Donnons forme à votre idée.', contactLead: 'Présentez-moi votre besoin pour définir ensemble la suite.', projectContact: 'Décrire mon projet',
   },
   en: {
-    heroRole: 'Freelance web developer', lead: 'Tailored websites and tools for your business.', projects: 'View my work', contact: 'Describe my project',
+    heroRole: 'Freelance web developer', heroHeading: 'William Mahi, freelance full-stack developer: tailored websites and web apps.', lead: 'Tailored websites and tools for your business.', projects: 'View my work', contact: 'Describe my project',
     projectLabel: 'Your project',
     methodLabel: 'A project built with you', methodTitle: 'A clear, collaborative process', methodIntro: 'From our first conversation to launch, we move forward together.',
     contactLabel: 'Let’s talk about your project', contactTitle: 'Let’s bring your idea to life.', contactLead: 'Tell me what you need so we can define the next steps together.', projectContact: 'Describe my project',
@@ -116,7 +116,7 @@ export function HomePage({ language }: { language: Language }) {
     <ScrollStack>
       <StackScene id="accueil" tone="clear" labelledBy="home-title">
         <div className="stack-scene-inner home-hero">
-          <div className="home-hero-copy"><Eyebrow>{t.heroRole}</Eyebrow><h1 id="home-title"><span>Code. Design.</span><em>Build.</em></h1><p className="home-hero-lead">{t.lead}</p><div className="home-actions"><a className="button button-primary" href="#votre-projet" onClick={(event) => { event.preventDefault(); scrollToScene('votre-projet', { panel: 0, focusId: 'project-entry-title' }) }}>{t.contact}<ArrowRight /></a><a className="button button-outline" href={p.projects}>{t.projects}</a></div></div>
+          <div className="home-hero-copy"><Eyebrow>{t.heroRole}</Eyebrow><h1 id="home-title"><span className="sr-only">{t.heroHeading}</span><span aria-hidden="true">Code. Design.</span><em aria-hidden="true">Build.</em></h1><p className="home-hero-lead">{t.lead}</p><div className="home-actions"><a className="button button-primary" href="#votre-projet" onClick={(event) => { event.preventDefault(); scrollToScene('votre-projet', { panel: 0, focusId: 'project-entry-title' }) }}>{t.contact}<ArrowRight /></a><a className="button button-outline" href={p.projects}>{t.projects}</a></div></div>
         </div>
       </StackScene>
       <HorizontalScene id="votre-projet" label={t.projectLabel} unlocked={unlocked} panels={[

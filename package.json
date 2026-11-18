@@ -11,7 +11,7 @@
     "dev": "concurrently -k -n front,back -c cyan,magenta \"pnpm run dev:front\" \"pnpm run dev:back\"",
     "dev:front": "vite",
     "dev:back": "pnpm --dir backend run dev",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr --emptyOutDir && node scripts/prerender.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
