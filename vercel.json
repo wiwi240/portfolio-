@@ -20,7 +20,7 @@
         },
         {
           "key": "Content-Security-Policy-Report-Only",
-          "value": "default-src 'self'; script-src 'self' 'sha256-prBAMQ7RtoxX/UXxkk3oySuHYW2/NyRR5Jp9QF2lWuQ=' https://accounts.google.com/gsi/client; script-src-attr 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://api.fontshare.com https://accounts.google.com/gsi/style; font-src 'self' https://fonts.gstatic.com https://cdn.fontshare.com; img-src 'self' data: blob: https://cdn.simpleicons.org; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self' https://accounts.google.com; frame-src https://accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self'"
+          "value": "default-src 'self'; script-src 'self' 'sha256-prBAMQ7RtoxX/UXxkk3oySuHYW2/NyRR5Jp9QF2lWuQ=' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/style; font-src 'self'; img-src 'self' data: blob: https://cdn.simpleicons.org; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self' https://accounts.google.com; frame-src https://accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self'"
         }
       ]
     },
@@ -48,11 +48,45 @@
           "value": "no-referrer"
         }
       ]
+    },
+    {
+      "source": "/rendez-vous",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000"
+        }
+      ]
     }
   ],
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    {
+      "source": "/expertises",
+      "destination": "/a-propos#expertises",
+      "statusCode": 301
+    },
+    {
+      "source": "/en/expertise",
+      "destination": "/en/about#expertises",
+      "statusCode": 301
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -60,99 +94,91 @@
     },
     {
       "source": "/admin",
-      "destination": "/index.html"
+      "destination": "/app.html"
     },
     {
       "source": "/rendez-vous",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/projets",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/expertises",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/a-propos",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/contact",
-      "destination": "/index.html"
+      "destination": "/app.html"
     },
     {
       "source": "/configurateur",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/faq",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/mentions-legales",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/cgu",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/politique-de-confidentialite",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/cookies",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/projects",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/expertise",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/about",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/en/contact",
-      "destination": "/index.html"
+      "destination": "/app.html"
     },
     {
       "source": "/en/project-configurator",
-      "destination": "/index.html"
+      "destination": "/app.html"
+    },
+    {
+      "source": "/projets",
+      "destination": "/projets.html"
+    },
+    {
+      "source": "/a-propos",
+      "destination": "/a-propos.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    },
+    {
+      "source": "/faq",
+      "destination": "/faq.html"
+    },
+    {
+      "source": "/mentions-legales",
+      "destination": "/mentions-legales.html"
+    },
+    {
+      "source": "/cgu",
+      "destination": "/cgu.html"
+    },
+    {
+      "source": "/politique-de-confidentialite",
+      "destination": "/politique-de-confidentialite.html"
+    },
+    {
+      "source": "/cookies",
+      "destination": "/cookies.html"
+    },
+    {
+      "source": "/en/projects",
+      "destination": "/en/projects.html"
+    },
+    {
+      "source": "/en/about",
+      "destination": "/en/about.html"
+    },
+    {
+      "source": "/en/contact",
+      "destination": "/en/contact.html"
     },
     {
       "source": "/en/faq",
-      "destination": "/index.html"
+      "destination": "/en/faq.html"
     },
     {
       "source": "/en/legal-notice",
-      "destination": "/index.html"
+      "destination": "/en/legal-notice.html"
     },
     {
       "source": "/en/terms-of-use",
-      "destination": "/index.html"
+      "destination": "/en/terms-of-use.html"
     },
     {
       "source": "/en/privacy-policy",
-      "destination": "/index.html"
+      "destination": "/en/privacy-policy.html"
     },
     {
       "source": "/en/cookies",
-      "destination": "/index.html"
+      "destination": "/en/cookies.html"
+    },
+    {
+      "source": "/en",
+      "destination": "/en/index.html"
+    },
+    {
+      "source": "/en/",
+      "destination": "/en/index.html"
     }
   ]
 }

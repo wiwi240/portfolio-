@@ -1,14 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { lazy, StrictMode, Suspense } from 'react'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { SmoothScrollProvider } from './components/smooth-scroll-provider'
 import { initCardSpotlight } from './lib/card-spotlight'
 import { initPageEffects } from './lib/page-effects'
-import { AdminPage } from './components/admin-page'
-import { BookingPage } from './components/booking-page'
 import { AdminShortcut } from './components/admin-shortcut'
 import { trackOnce } from './lib/track'
+
+// Owner-only screens live in their own chunks so public visitors never download them.
+// (main.tsx is the entry point, not a hot-reloaded module: the fast-refresh rule does not apply here.)
+/* eslint-disable react-refresh/only-export-components */
+const AdminPage = lazy(() => import('./components/admin-page').then((m) => ({ default: m.AdminPage })))
+const BookingPage = lazy(() => import('./components/booking-page').then((m) => ({ default: m.BookingPage })))
+/* eslint-enable react-refresh/only-export-components */
 
 const route = window.location.pathname.replace(/\/+$/, '')
 const isAdmin = route === '/admin'
@@ -19,11 +24,22 @@ if (!isAdmin && !isBooking) {
   initPageEffects()
 }
 
-createRoot(document.getElementById('root')!).render(
-  isAdmin ? <StrictMode><AdminPage /></StrictMode> : isBooking ? <StrictMode><BookingPage /><AdminShortcut /></StrictMode> : <StrictMode>
+const container = document.getElementById('root')!
+
+if (isAdmin || isBooking) {
+  createRoot(container).render(<StrictMode>
+    <Suspense fallback={null}>{isAdmin ? <AdminPage /> : <BookingPage />}</Suspense>
+    {isBooking && <AdminShortcut />}
+  </StrictMode>)
+} else {
+  // Public pages ship pre-rendered at build time (scripts/prerender.mjs): attach to that markup instead of redrawing it.
+  // Same tree as src/entry-server.tsx.
+  const tree = <StrictMode>
     <SmoothScrollProvider>
       <App />
     </SmoothScrollProvider>
     <AdminShortcut />
-  </StrictMode>,
-)
+  </StrictMode>
+  if (container.hasChildNodes()) hydrateRoot(container, tree)
+  else createRoot(container).render(tree)
+}

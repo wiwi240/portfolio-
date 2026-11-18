@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type MouseEvent } from 'react'
+import { useCallback, useEffect, useState, useSyncExternalStore, type MouseEvent } from 'react'
 import { ArrowRight } from 'lucide-react'
 import type { Language } from '@/data/portfolio-content'
 import { paths } from '@/site'
@@ -67,8 +67,18 @@ function alreadySeen() {
   try { return window.sessionStorage.getItem(STORAGE_KEY) === '1' } catch { return false }
 }
 
+// Crawlers, link previews and audit tools get the page itself, never the welcome screen.
+const isRobot = () => /bot|crawl|spider|slurp|lighthouse|pagespeed|headless|preview|facebookexternalhit|embedly|whatsapp/i.test(navigator.userAgent)
+
+// Should the gate show on this visit? Read once on the client; false while pre-rendering and during hydration,
+// so the build output never contains the gate and the hydrated markup matches it.
+const noSubscription = () => () => {}
+const shouldOpen = () => !alreadySeen() && !isRobot()
+
 export function AudienceGate({ language }: { language: Language }) {
-  const [open, setOpen] = useState(() => typeof window !== 'undefined' && !alreadySeen())
+  const wanted = useSyncExternalStore(noSubscription, shouldOpen, () => false)
+  const [dismissed, setDismissed] = useState(false)
+  const open = wanted && !dismissed
   const [hovered, setHovered] = useState<'recruiter' | 'client' | null>(null)
   const content = buildContent(language)
   const homePath = paths[language].home
@@ -76,7 +86,7 @@ export function AudienceGate({ language }: { language: Language }) {
   const close = useCallback(() => {
     try { window.sessionStorage.setItem(STORAGE_KEY, '1') } catch { /* storage unavailable: the gate simply shows again next visit */ }
     document.body.style.overflow = ''
-    setOpen(false)
+    setDismissed(true)
   }, [])
 
   useEffect(() => {

@@ -3,69 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href="https://www.williammahi.dev/" />
-    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
-    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="preload" as="image" href="/logo-portfolio.svg" type="image/svg+xml" fetchpriority="high" />
-    <!-- Fonts load without blocking the first paint (swap shows the fallback font meanwhile). -->
-    <link
-      rel="stylesheet"
-      href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&f[]=satoshi@400,500,700,900&display=swap"
-      media="print"
-      onload="this.media='all'"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript>
-      <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&f[]=satoshi@400,500,700,900&display=swap" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" />
-    </noscript>
+    <!-- Self-hosted fonts (declared in src/fonts.css): the two used above the fold are fetched right away. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/satoshi-400.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/cabinet-grotesk-800.woff2" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta
-      name="description"
-      content="William Mahi, développeur full-stack React, TypeScript et Node.js. Découvrez ses projets web, son parcours et ses compétences techniques."
-    />
+    <!--seo:start-->
+    <!-- Dev defaults: replaced per page at build time by scripts/prerender.mjs (from src/seo.ts). -->
+    <title>William Mahi — Développeur Full-Stack freelance React &amp; Node.js</title>
+    <meta name="description" content="William Mahi, développeur Full-Stack freelance (React, TypeScript, Node.js), conçoit des sites et applications web sur mesure." />
+    <link rel="canonical" href="https://www.williammahi.dev/" />
+    <!--seo:end-->
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#FFFFFF" />
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="fr_FR" />
-    <meta property="og:title" content="William Mahi | Développeur full-stack React & Node.js" />
-    <meta
-      property="og:description"
-      content="Portfolio de William Mahi, développeur full-stack spécialisé en React, TypeScript et Node.js."
-    />
-    <meta property="og:image" content="https://www.williammahi.dev/og-william-mahi.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="William Mahi | Développeur full-stack React & Node.js" />
-    <meta
-      name="twitter:description"
-      content="Portfolio de William Mahi, développeur full-stack spécialisé en React, TypeScript et Node.js."
-    />
-    <meta name="twitter:image" content="https://www.williammahi.dev/og-william-mahi.png" />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "William Mahi",
-        "jobTitle": "Développeur full-stack",
-        "email": "mailto:william.mahipro@gmail.com",
-        "sameAs": [
-          "https://github.com/wiwi240",
-          "https://www.linkedin.com/in/william-mahi-9727243a3/"
-        ],
-        "knowsAbout": ["React", "TypeScript", "Node.js", "développement web"]
-      }
-    </script>
-    <title>William Mahi | Développeur full-stack React & Node.js</title>
     <script>
       const savedTheme = localStorage.getItem('theme') ?? 'light'
       document.documentElement.classList.toggle('dark', savedTheme === 'dark')

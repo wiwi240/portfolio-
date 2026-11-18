@@ -2,7 +2,6 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import { ArrowRight, Menu, X } from 'lucide-react'
 import { AudienceGate } from '@/components/audience-gate'
 import { ContactMessage } from '@/components/contact-message'
-import { HomePage } from '@/components/home-page'
 import { SocialLinks } from '@/components/social-links'
 import { ThemeSwitch } from '@/components/ui/theme-switch'
 import { faqContent } from '@/data/faq'
@@ -19,6 +18,7 @@ type MainPage = Exclude<PageId, 'notFound'>
 const navPages = ['home', 'projects', 'about', 'contact'] as const satisfies ReadonlyArray<MainPage>
 const JourneyTimeline = lazy(() => import('@/components/journey-timeline').then((m) => ({ default: m.JourneyTimeline })))
 const AboutActivity = lazy(() => import('@/components/about-activity').then((m) => ({ default: m.AboutActivity })))
+const HomePage = lazy(() => import('@/components/home-page').then((m) => ({ default: m.HomePage })))
 const LegalPage = lazy(() => import('@/components/legal-pages').then((m) => ({ default: m.LegalPage })))
 const OrbitingSkills = lazy(() => import('@/components/ui/orbiting-skills'))
 const ui = {

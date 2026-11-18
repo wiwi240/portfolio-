@@ -7,6 +7,8 @@ import path from 'node:path'
 // https://vite.dev/config/
 export default defineConfig({
   assetsInclude: ['**/*.glb'],
+  // Read by scripts/prerender.mjs to link each page's lazy chunks (and their CSS) in its HTML; deleted afterwards.
+  build: { manifest: true },
   plugins: [
     tailwindcss(),
     react(),
