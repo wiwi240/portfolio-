@@ -19,13 +19,13 @@ import './home-stack.css'
 
 const content = {
   fr: {
-    heroRole: 'Développeur web freelance', heroHeading: 'William Mahi, développeur full-stack freelance : sites et applications web sur mesure.', lead: 'Des sites web et des outils sur mesure pour votre activité.', projects: 'Voir mes réalisations', contact: 'Décrire mon projet',
+    heroRole: 'Développeur web freelance', heroHeading: 'Création de sites internet et d’outils sur mesure pour les TPE, artisans et commerçants — William Mahi, Coulommiers.', lead: 'Des sites web et des outils sur mesure pour votre activité.', projects: 'Voir mes réalisations', contact: 'Décrire mon projet',
     projectLabel: 'Votre projet',
     methodLabel: 'Un projet construit avec vous', methodTitle: 'Une méthode claire et collaborative', methodIntro: 'Du premier échange à la mise en ligne, nous avançons ensemble.',
     contactLabel: 'Parlons de votre projet', contactTitle: 'Donnons forme à votre idée.', contactLead: 'Présentez-moi votre besoin pour définir ensemble la suite.', projectContact: 'Décrire mon projet',
   },
   en: {
-    heroRole: 'Freelance web developer', heroHeading: 'William Mahi, freelance full-stack developer: tailored websites and web apps.', lead: 'Tailored websites and tools for your business.', projects: 'View my work', contact: 'Describe my project',
+    heroRole: 'Freelance web developer', heroHeading: 'William Mahi, freelance full-stack developer near Paris, France: tailored websites and web apps, working remotely.', lead: 'Tailored websites and tools for your business.', projects: 'View my work', contact: 'Describe my project',
     projectLabel: 'Your project',
     methodLabel: 'A project built with you', methodTitle: 'A clear, collaborative process', methodIntro: 'From our first conversation to launch, we move forward together.',
     contactLabel: 'Let’s talk about your project', contactTitle: 'Let’s bring your idea to life.', contactLead: 'Tell me what you need so we can define the next steps together.', projectContact: 'Describe my project',
