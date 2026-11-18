@@ -983,10 +983,6 @@
   font-size: 11px;
   line-height: 1.5;
 }
-
-.pc-page .psp-site h1 {
-  color: #292c31;
-}
 .psp-management-grid > button {
   display: grid;
   gap: 8px;
@@ -1071,8 +1067,7 @@
   max-width: 530px;
   margin-top: 18px;
 }
-.psp-demo-form label,
-.psp-edit-label {
+.psp-demo-form label {
   display: grid;
   gap: 6px;
   color: #334b60;
@@ -1080,8 +1075,7 @@
   font-weight: 700;
 }
 .psp-demo-form input,
-.psp-demo-form textarea,
-.psp-edit-label input {
+.psp-demo-form textarea {
   width: 100%;
   min-height: 42px;
   border: 1px solid #bdd1df;

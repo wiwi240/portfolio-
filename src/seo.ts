@@ -4,8 +4,8 @@ import { services } from './data/services'
 import { contactEmail, githubUrl, linkedinUrl, projects, type Language } from './data/portfolio-content'
 import { metadata, paths, siteOrigin, type PageId } from './site'
 
-// Old URLs (expertise, configurator) redirect elsewhere and are left out of the index.
-export type IndexablePage = Exclude<PageId, 'notFound' | 'expertise' | 'configurator'>
+// The old configurator URL only redirects to the home page guide, so it is left out of the index.
+export type IndexablePage = Exclude<PageId, 'notFound' | 'configurator'>
 export const indexablePages: IndexablePage[] = ['home', 'projects', 'about', 'contact', 'faq', 'legal', 'terms', 'privacy', 'cookies']
 export const languages: Language[] = ['fr', 'en']
 

@@ -229,9 +229,6 @@ export const project = (c: Cam, x: number, y: number, z: number): [number, numbe
   (x * c.sn + y * c.cs) * c.se - z * c.ce,
 ]
 
-/** Painter's depth for yaw in [0°, 90°]: larger is nearer the viewer, so draw ascending. */
-export const depthOf = (c: Cam, x: number, y: number): number => x * c.sn + y * c.cs
-
 export const mixRGB = (a: RGB, b: RGB, t: number): RGB => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
 export const luminance = (c: RGB): number => (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255
 

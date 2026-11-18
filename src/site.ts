@@ -1,13 +1,13 @@
 import type { Language } from './data/portfolio-content'
 
-export type PageId = 'home' | 'projects' | 'expertise' | 'about' | 'contact' | 'configurator' | 'faq' | 'legal' | 'terms' | 'privacy' | 'cookies' | 'notFound'
+export type PageId = 'home' | 'projects' | 'about' | 'contact' | 'configurator' | 'faq' | 'legal' | 'terms' | 'privacy' | 'cookies' | 'notFound'
 
 export const paths: Record<Language, Record<Exclude<PageId, 'notFound'>, string>> = {
   fr: {
-    home: '/', projects: '/projets', expertise: '/expertises', about: '/a-propos', contact: '/contact', configurator: '/configurateur', faq: '/faq', legal: '/mentions-legales', terms: '/cgu', privacy: '/politique-de-confidentialite', cookies: '/cookies',
+    home: '/', projects: '/projets', about: '/a-propos', contact: '/contact', configurator: '/configurateur', faq: '/faq', legal: '/mentions-legales', terms: '/cgu', privacy: '/politique-de-confidentialite', cookies: '/cookies',
   },
   en: {
-    home: '/en/', projects: '/en/projects', expertise: '/en/expertise', about: '/en/about', contact: '/en/contact', configurator: '/en/project-configurator', faq: '/en/faq', legal: '/en/legal-notice', terms: '/en/terms-of-use', privacy: '/en/privacy-policy', cookies: '/en/cookies',
+    home: '/en/', projects: '/en/projects', about: '/en/about', contact: '/en/contact', configurator: '/en/project-configurator', faq: '/en/faq', legal: '/en/legal-notice', terms: '/en/terms-of-use', privacy: '/en/privacy-policy', cookies: '/en/cookies',
   },
 }
 
@@ -29,7 +29,6 @@ export const metadata: Record<Language, Record<PageId, { title: string; descript
   fr: {
     home: { title: 'William Mahi — Développeur Full-Stack freelance React & Node.js', description: 'William Mahi, développeur Full-Stack freelance (React, TypeScript, Node.js), conçoit des sites et applications web sur mesure. Ouvert aux missions et opportunités.' },
     projects: { title: 'Projets — William Mahi', description: 'Découvrez les projets web de William Mahi : interfaces, applications et solutions développées pour des besoins concrets.' },
-    expertise: { title: 'Expertises — William Mahi', description: 'Compétences Full-Stack et prestations de William Mahi : sites web, applications, logiciels métier, refonte et maintenance.' },
     about: { title: 'À propos et expertises — William Mahi', description: 'Parcours, approche, compétences Full-Stack et prestations de William Mahi : sites web, applications, logiciels métier, refonte et maintenance.' },
     contact: { title: 'Contact — William Mahi', description: 'Contactez William Mahi pour un projet web, une mission freelance, une opportunité de recrutement ou une question.' },
     configurator: { title: 'Configurateur de projet — William Mahi', description: 'Décrivez votre projet web, explorez les fonctionnalités et transmettez une demande structurée.' },
@@ -43,7 +42,6 @@ export const metadata: Record<Language, Record<PageId, { title: string; descript
   en: {
     home: { title: 'William Mahi — Freelance Full-Stack Developer, React & Node.js', description: 'William Mahi, freelance Full-Stack developer (React, TypeScript, Node.js), builds tailored websites and web apps. Open to projects and job opportunities.' },
     projects: { title: 'Projects — William Mahi', description: 'Explore William Mahi’s web projects, interfaces and applications created for practical needs.' },
-    expertise: { title: 'Expertise — William Mahi', description: 'William Mahi’s Full-Stack skills and services: websites, web apps, business software, redesign and maintenance.' },
     about: { title: 'About and expertise — William Mahi', description: 'William Mahi’s background, approach, Full-Stack skills and services: websites, web apps, business software, redesign and maintenance.' },
     contact: { title: 'Contact — William Mahi', description: 'Contact William Mahi about a web project, freelance work, a recruitment opportunity or a question.' },
     configurator: { title: 'Project configurator — William Mahi', description: 'Describe your web project, explore possible features and send a structured request.' },
